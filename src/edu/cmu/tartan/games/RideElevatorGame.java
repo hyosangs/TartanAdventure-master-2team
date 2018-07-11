@@ -89,6 +89,5 @@ public class RideElevatorGame extends GameConfiguration {
         game.setDescription("The objective of this game is to demo an elevator");
 
         if (!(game.validate())) throw new InvalidGameException("Game improperly configured");
-        return;
     }
 }

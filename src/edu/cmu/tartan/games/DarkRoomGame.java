@@ -70,8 +70,5 @@ public class DarkRoomGame extends GameConfiguration {
         game.setDescription("Explore a dark room");
 
         if (!(game.validate())) throw new InvalidGameException("Game improperly configured");
-
-        return;
-
     }
 }
