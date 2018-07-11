@@ -73,6 +73,6 @@ public class CollectGame extends GameConfiguration {
 
         game.setDescription(sb.toString());
 
-        if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
+        if (!(game.validate())) throw new InvalidGameException("Game improperly configured");
     }
 }

@@ -90,7 +90,7 @@ public class DemoGame extends GameConfiguration {
 
         game.setDescription("Demo game rooms.");
 
-        if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
+        if (!(game.validate())) throw new InvalidGameException("Game improperly configured");
 
         return;
     }

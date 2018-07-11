@@ -73,7 +73,7 @@ public class LockRoomGame extends GameConfiguration {
 
         game.setDescription("The objective of this game is to unlock a room.");
 
-        if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
+        if (!(game.validate())) throw new InvalidGameException("Game improperly configured");
 
         return;
     }

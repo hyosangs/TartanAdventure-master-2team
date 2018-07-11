@@ -57,7 +57,7 @@ public class ExploreGame extends GameConfiguration {
 
         game.setDescription("Explore different connected rooms.");
 
-        if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
+        if (!(game.validate())) throw new InvalidGameException("Game improperly configured");
 
         return;
     }

@@ -61,7 +61,7 @@ public class ObscuredRoomGame extends GameConfiguration {
 
         game.setDescription("The objective of this game is to earn explore an obscured room");
 
-        if (game.validate() == false) throw new InvalidGameException("Game improperly configured");
+        if (!(game.validate())) throw new InvalidGameException("Game improperly configured");
 
     }
 }
