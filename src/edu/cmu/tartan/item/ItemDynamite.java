@@ -36,7 +36,7 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
     @Override
     public Boolean explode() {
         if (!this.exploded) {
-            if (this.relatedRoom != null && this.relatedRoom instanceof RoomObscured) {
+            if (this.relatedRoom instanceof RoomObscured) {
                 ((RoomObscured) this.relatedRoom).setObscured(false);
                 System.out.println(((RoomObscured) this.relatedRoom).unobscureMessage());
             }
@@ -49,7 +49,7 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
     }
 
     public void setExplodeMessage(String s) {
-        if (this.relatedRoom != null && this.relatedRoom instanceof RoomObscured) {
+        if (this.relatedRoom instanceof RoomObscured) {
             ((RoomObscured) this.relatedRoom).setUnobscureMessage(s);
         }
     }
