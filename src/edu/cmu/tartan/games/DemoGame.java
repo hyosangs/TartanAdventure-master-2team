@@ -5,13 +5,9 @@ import edu.cmu.tartan.GameConfiguration;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.goal.DemoGoal;
-import edu.cmu.tartan.goal.GameExploreGoal;
 import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.item.ItemCoffee;
 import edu.cmu.tartan.item.ItemLock;
 import edu.cmu.tartan.room.*;
-
-import java.util.Vector;
 
 /**
  * Example game to explore a series of rooms. This is the configuraion discussed in the project description.

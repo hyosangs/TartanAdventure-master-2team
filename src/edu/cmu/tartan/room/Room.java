@@ -3,7 +3,6 @@ package edu.cmu.tartan.room;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 

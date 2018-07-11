@@ -77,7 +77,6 @@ public class ItemSafe extends Item implements Hostable, Openable {
     @Override
     public Boolean open() {
         Scanner s = new Scanner(System.in);
-        String input = "";
         System.out.println("Enter the four-digit PIN number.");
         Integer p = Integer.parseInt(s.nextLine());
         if (p.intValue() == this.pin.intValue()) {

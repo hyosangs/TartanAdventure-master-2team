@@ -1,9 +1,5 @@
 package edu.cmu.tartan.room;
 
-import edu.cmu.tartan.action.Action;
-
-import java.util.LinkedList;
-
 /**
  * The class for a dark room. Players must have a Luminous item to enter this room safely
  * from this class.
