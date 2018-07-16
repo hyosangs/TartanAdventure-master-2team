@@ -32,9 +32,13 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
      */
     private String[] aliases;
     private static LinkedList<Item> sharedInstances;
+    
+    // items can open rooms, call elevators, etc (e.g., an ItemButton instance)
+    Room relatedRoom; 
+    
+    // items can also affect other items, like setting other items breakable (like a junction box);
+    Item relatedItem; 
 
-    Room relatedRoom; // items can open rooms, call elevators, etc (e.g., an ItemButton instance)
-    Item relatedItem; // items can also affect other items, like setting other items breakable (like a junction box);
     private String inspectMessage;
 
     /**
@@ -74,7 +78,6 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         sharedInstances.add(new ItemFridge("fridge", "white refrigerator", new String[]{"fridge", "refrigerator"}));
         sharedInstances.add(new ItemFlashlight("flashlight", "battery operated flashlight", new String[]{"flashlight"}));
         sharedInstances.add(new ItemTorch("torch", "metal torch", new String[]{"torch", "candle"}));
-//        sharedInstances.add(new ItemWatch("watch", "smart watch", new String[]{"watch"}));
         sharedInstances.add(new ItemMagicBox("pit", "bottomless pit", new String[]{"pit", "hole"}));
         sharedInstances.add(new ItemVendingMachine("machine", "vending machine with assorted candies and treats", new String[]{"machine", "vendor"}));
         sharedInstances.add(new ItemSafe("safe", "bullet-proof safe", new String[]{"safe"}));
