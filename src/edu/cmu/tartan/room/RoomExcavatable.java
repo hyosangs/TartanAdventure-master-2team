@@ -2,13 +2,14 @@ package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.item.Item;
 
+import java.util.List;
 import java.util.LinkedList;
 
 public class RoomExcavatable extends Room {
 
 	protected String digMessage;
 	protected boolean wasDugUp;
-	protected LinkedList<Item> revealableItems;
+	protected List<Item> revealableItems;
 
 	public RoomExcavatable(String description, String shortDescription, String digMessage) {
 		super(description, shortDescription);
