@@ -126,354 +126,608 @@ public class Game {
 		this.showIntro();
 	}
 
-	/**
-	 * Execute an action in the game. This method is where gameplay really occurs.
-	 * 
-	 * @param a
-	 *            The action to execute
-	 */
-	private void executeAction(Action a) {
+    /**
+     * Execute an action in the game. This method is where gameplay really occurs.
+     * @param a The action to execute
+     */
+    private void executeAction(Action a) throws NumberFormatException {
 
 		switch (a.type()) {
 
-		// Handle navigation
-		case TYPE_DIRECTIONAL:
-			player.move(a);
-			break;
+            // Handle navigation
+            case TYPE_DIRECTIONAL:
+            	executeTypeDirectonal(a);
+                break;
 
-		// A direct item is an item that is required for an action. These
-		// items can be picked up, eaten, pushed
-		// destroyed, etc.
+            // A direct item is an item that is required for an action. These
+            // items can be picked up, eaten, pushed
+            // destroyed, etc.
 
-		case TYPE_HASDIRECTOBJECT:
-			switch (a) {
+            case TYPE_HASDIRECTOBJECT:
+            	executeTypeHasDirectObject(a);
+            	break;
+            // Indirect objects are secondary objects that may be used by direct objects, such as a key for a lock
+            case TYPE_HASINDIRECTOBJECT:
+            	executeTypeHasIndirectObject(a);
+                break;
+            // Some actions do not require an object
+            case TYPE_HASNOOBJECT: {
+                executeTypeHasObject(a);
+                break;
+            }
+            case TYPE_UNKNOWN: {
+                executeTypeUnknown(a);
+                break;
+            }
+            default:
+                System.out.println("I don't understand that");
+                break;
+        }
+    }
 
-			case ActionPickUp: {
-				Item o = a.directObject();
-				Item container = null;
-				if (this.player.currentRoom().hasItem(o)) {
-					if (o instanceof Holdable) {
-						System.out.println("Taken.");
+	/**
+	 * Execute action in Action Type TYPE_DIRECTIONAL
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeTypeDirectonal(Action a) throws NumberFormatException {
+		player.move(a);
+	}
+	
+	/**
+	 * @param a
+	 * Execute action in Action Type TYPE_HASDIRECTOBJECT
+	 * @throws NumberFormatException
+	 */
+	private void executeTypeHasDirectObject(Action a) throws NumberFormatException {
+		switch(a) {
 
-						this.player.currentRoom().remove(o);
-						this.player.pickup(o);
-						this.player.score(((Holdable) o).value());
-					} else {
-						System.out.println("You cannot pick up this item.");
-					}
-				} else if ((container = containerForItem(o)) != null) {
+		    case ActionPickUp: {
+		        executeActionPickup(a);
+		        break;
+		    }
+		    case ActionDestroy: {
+		        executeActionDestroy(a);
+		        break;
+		    }
+		    case ActionInspect: {
+		        executeActionInspect(a);
+		        break;
+		    }
+		    case ActionDrop: {
+		        executeActionDrop(a);
+		        break;
+		    }
+		    case ActionThrow: {
+		        executeActionThrow(a);
+		        break;
+		    }
+		    case ActionShake: {
+		        executeActionShake(a);
+		        break;
+		    }
+		    case ActionEnable: {
+		        executeActionEnable(a);
+		        break;
 
-					System.out.println("Taken.");
-					((Hostable) container).uninstall(o);
-					this.player.pickup(o);
-					this.player.score(((Holdable) o).value());
-				} else if (this.player.hasItem(o)) {
-					System.out.println("You already have that item in your inventory.");
-				} else {
-					System.out.println("I don't see that here.");
-				}
-				break;
-			}
-			case ActionDestroy: {
-				Item item = a.directObject();
-				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-					if (item instanceof Destroyable) {
-						System.out.println("Smashed.");
-						((Destroyable) item).destroy();
-						item.setDescription("broken " + item.toString());
-						item.setDetailDescription("broken " + item.detailDescription());
-						if (((Destroyable) item).disappears()) {
-							this.player.drop(item);
-							this.player.currentRoom().remove(item);
-							// Get points!
-							this.player.score(item.value());
-						}
-
-						if (item instanceof Hostable) {
-							this.player.currentRoom().putItem(((Hostable) item).installedItem());
-							((Hostable) item).uninstall(((Hostable) item).installedItem());
-						}
-					} else {
-						System.out.println("You cannot break this item.");
-					}
-				} else {
-					System.out.println("I don't see that here.");
-				}
-				break;
-			}
-			case ActionInspect: {
-				Item item = a.directObject();
-				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-					if (item instanceof Inspectable) {
-						((Inspectable) item).inspect();
-					} else {
-						System.out.println("You cannot inspect this item.");
-					}
-				} else {
-					System.out.println("I don't see that here.");
-				}
-				break;
-			}
-			case ActionDrop: {
-				Item item = a.directObject();
-				if (this.player.hasItem(item)) {
-					if (item instanceof Holdable) {
-						System.out.println("Dropped.");
-						this.player.drop(item);
-						System.out.println(
-								"You Dropped '" + item.description() + "' costing you " + item.value() + " points.");
-						this.player.currentRoom().putItem(item);
-					} else {
-						System.out.println("You cannot drop this item.");
-					}
-				} else {
-					System.out.println("You don't have that item to drop.");
-				}
-				if (this.player.currentRoom() instanceof RoomRequiredItem) {
-					RoomRequiredItem r = (RoomRequiredItem) this.player.currentRoom();
-					r.playerDidDropRequiredItem();
-				}
-				break;
-			}
-			case ActionThrow: {
-				Item item = a.directObject();
-				if (this.player.hasItem(item)) {
-					if (item instanceof Chuckable) {
-						System.out.println("Thrown.");
-						((Chuckable) item).chuck();
-						this.player.drop(item);
-						this.player.currentRoom().putItem(item);
-					} else {
-						System.out.println("You cannot throw this item.");
-					}
-				} else {
-					System.out.println("You don't have that item to throw.");
-				}
-				break;
-			}
-			case ActionShake: {
-				Item item = a.directObject();
-				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-					if (item instanceof Shakeable) {
-						((Shakeable) item).shake();
-						if (((Shakeable) item).accident()) {
-							this.player.terminate();
-						}
-					} else {
-						System.out.println("I don't know how to do that.");
-					}
-				} else {
-					System.out.println("I don't see that here.");
-				}
-				break;
-			}
-			case ActionEnable: {
-				Item item = a.directObject();
-				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-					if (item instanceof Startable) {
-						System.out.println("Done.");
-						((Startable) item).start();
-					} else {
-						System.out.println("I don't know how to do that.");
-					}
-				} else {
-					System.out.println("I don't see that here.");
-				}
-				break;
-
-			}
-			case ActionPush: {
-				Item item = a.directObject();
-				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-					if (item instanceof Pushable) {
-
-						// Pushing the button is worth points
-						Pushable p = (Pushable) item;
-						p.push();
-						this.player.score(item.value());
-
-						if (item.relatedRoom() instanceof RoomElevator) { // player is next to an elevator
-							((RoomElevator) item.relatedRoom()).call(this.player.currentRoom());
-						} else if (this.player.currentRoom() instanceof RoomElevator) { // player is in an elevator
-							((RoomElevator) this.player.currentRoom()).call(Integer.parseInt(item.getAliases()[0]) - 1);
-						}
-					} else {
-						System.out.println("Nothing happens.");
-					}
-				} else {
-					System.out.println("I don't see that here.");
-				}
-				break;
-			}
-			case ActionDig: {
-				Item item = a.directObject();
-				if (this.player.currentRoom() instanceof RoomExcavatable && item.description() == "Shovel") {
-					RoomExcavatable curr = (RoomExcavatable) this.player.currentRoom();
-					curr.dig();
-				} else {
-					System.out.println("You are not allowed to dig here");
-				}
-				break;
-			}
-			case ActionEat: {
-				Item item = a.directObject();
-				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
-					if (item instanceof Edible) {
-						// eating something gives scores
-						Edible e = (Edible) item;
-						e.eat();
-						player.score(item.value());
-						// Once we eat it, then it's gone
-						this.player.currentRoom().remove(item);
-					} else {
-						if (item instanceof Holdable) {
-							System.out.println(
-									"As you  shove the " + a.directObject() + " down your throat, you begin to choke.");
-							this.player.terminate();
-						} else {
-							System.out.println("That cannot be consumed.");
-						}
-					}
-				}
-				break;
-			}
-			case ActionOpen: {
-				Item item = a.directObject();
-				if (this.player.hasItem(item) || this.player.currentRoom().hasItem(item)) {
-					if (item instanceof Openable) {
-						Openable o = ((Openable) item);
-						// if you can open the item , you score!
-						if (o.open() == true) {
-							player.score(item.value());
-							this.player.currentRoom().remove(item);
-						}
-					} else {
-						System.out.println("You cannot open this.");
-					}
-				} else {
-					System.out.println("I don't see that here.");
-				}
-				break;
-			}
-			case ActionExplode: {
-				Item dynamite = a.directObject();
-				if (this.player.currentRoom().hasItem(dynamite)) {
-					if (dynamite instanceof Explodable) {
-						if (this.player.currentRoom().isAdjacentToRoom(dynamite.relatedRoom())) {
-							Explodable explode = (Explodable) dynamite;
-							explode.explode();
-							this.player.score(explode.value());
-						} else {
-							System.out.println("There isn't anything to blow up here.");
-						}
-					} else {
-						System.out.println("That item is not an explosive.");
-					}
-				} else {
-					System.out.println("You do not have that item in your inventory.");
-				}
-				break;
-			}
-
-			}
-			// Indirect objects are secondary objects that may be used by direct objects,
-			// such as a key for a lock
-		case TYPE_HASINDIRECTOBJECT:
-			switch (a) {
-			case ActionPut: {
-				Item itemToPut = a.directObject();
-				Item itemToBePutInto = a.indirectObject();
-				if (!this.player.hasItem(itemToPut)) {
-					System.out.println("You don't have that object in your inventory.");
-					break;
-				} else if (itemToBePutInto == null) {
-					System.out.println("You must supply an indirect object.");
-					break;
-				} else if (!this.player.currentRoom().hasItem(itemToBePutInto)) {
-					System.out.println("That object doesn't exist in this room.");
-					break;
-				} else if (itemToBePutInto instanceof ItemMagicBox && !(itemToPut instanceof Valuable)) {
-					System.out.println("This item has no value--putting it in this " + itemToBePutInto
-							+ " will not score you any points.");
-				} else if (!(itemToBePutInto instanceof Hostable) || !(itemToPut instanceof Installable)) {
-					System.out.println("You cannot put a " + itemToPut + " into this " + itemToBePutInto);
-				} else {
-					System.out.println("Done.");
-					this.player.drop(itemToPut);
-					this.player.putItemInItem(itemToPut, itemToBePutInto);
-				}
-				break;
-			}
-			case ActionTake: {
-				Item contents = a.directObject();
-				Item container = a.indirectObject();
-				if (!this.player.currentRoom().hasItem(container)) {
-					System.out.println("I don't see that here.");
-				} else if (!(container instanceof Hostable)) {
-					System.out.println("You can't have an item inside that.");
-				} else {
-					if (((Hostable) container).installedItem() == contents) {
-						((Hostable) container).uninstall(contents);
-						this.player.pickup(contents);
-						System.out.println("Taken.");
-					} else {
-						System.out.println("That item is not inside this " + container);
-					}
-				}
-				break;
-			}
-			}
-			// Some actions do not require an object
-		case TYPE_HASNOOBJECT: {
-			switch (a) {
-			case ActionLook:
-				this.player.lookAround();
-				break;
-			case ActionClimb:
-				player.move(Action.ActionGoUp);
-				break;
-			case ActionJump:
-				player.move(Action.ActionGoDown);
-				break;
-			case ActionViewItems:
-				Vector<Item> items = this.player.getCollectedItems();
-				if (items.size() > 0) {
-					System.out.println("You don't have any items.");
-				} else {
-					for (Item item : this.player.getCollectedItems()) {
-						System.out.println("You have a " + item.description() + ".");
-					}
-				}
-				break;
-			case ActionDie:
-				this.player.terminate();
-				break;
-			case ActionHelp:
-				help();
-				break;
-			}
-			break;
-		}
-		case TYPE_UNKNOWN: {
-			switch (a) {
-			case ActionPass: {
-				// intentionally blank
-				break;
-			}
-			case ActionError: {
-				System.out.println("I don't understand that.");
-				break;
-			}
-			case ActionUnknown: {
-				System.out.println("I don't understand that.");
-				break;
-			}
-			}
-			break;
-		}
+		    }
+		    case ActionPush: {
+		        executeActionPush(a);
+		        break;
+		    }
+		    case ActionDig: {
+		        executeActionDig(a);
+		        break;
+		    }
+		    case ActionEat: {
+		        executeActionEat(a);
+		        break;
+		    }
+		    case ActionOpen: {
+		        executeActionOpen(a);
+		        break;
+		    }
+		    case ActionExplode: {
+		        executeActionExplode(a);
+		        break;
+		    }
 		default:
-			System.out.println("I don't understand that");
 			break;
+
+		}
+	}
+
+	/**
+	 * Execute action in Action Type TYPE_HASINDIRECTOBJECT
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeTypeHasIndirectObject(Action a) throws NumberFormatException {
+		switch(a) {
+		    case ActionPut:
+		    	executionActionPut(a);
+		        break;
+		    case ActionTake:
+		    	executionActionTask(a);
+		        break;
+		default:
+			break;
+		}
+	}
+	
+	/**
+	 * Execute action in Action Type TYPE_HASDIRECTOBJECT
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeTypeHasObject(Action a) throws NumberFormatException {
+		switch(a) {
+		    case ActionLook:
+		    	executeActionLook();
+		        break;
+		    case ActionClimb:
+		    	executeActionClimb();
+		        break;
+		    case ActionJump:
+		    	executeActionJump();
+		        break;
+		    case ActionViewItems:
+		    	executeActionViewItems();
+		        break;
+		    case ActionDie:
+		    	executeActionDie();
+		        break;
+		    case ActionHelp:
+		        help();
+		        break;
+		default:
+			break;
+		}
+	}
+	
+	/**
+	 * Execute action in Action Type TYPE_UNKNOWN
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeTypeUnknown(Action a) throws NumberFormatException {
+		switch(a) {
+		    case ActionPass: {
+		        // intentionally blank
+		        break;
+		    }
+		    case ActionError: {
+		        executeActionError();
+		        break;
+		    }
+		    case ActionUnknown: {
+		        executeActionError();
+		        break;
+		    }
+		default:
+			break;
+		}
+	}
+	
+	/**
+	 * Execute ActionPickup of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionPickup(Action a) throws NumberFormatException {
+		Item o = a.directObject();
+		Item container = null;
+		if(this.player.currentRoom().hasItem(o)) {
+		    if(o instanceof Holdable) {
+		        System.out.println("Taken.");
+
+		        this.player.currentRoom().remove(o);
+		        this.player.pickup(o);
+		        this.player.score( ((Holdable)o).value());
+		    }
+		    else {
+		        System.out.println("You cannot pick up this item.");
+		    }
+		}
+		else if((container = containerForItem(o)) != null) {
+
+		    System.out.println("Taken.");
+		    ((Hostable)container).uninstall(o);
+		    this.player.pickup(o);
+		    this.player.score( ((Holdable)o).value());
+		}
+		else if(this.player.hasItem(o)) {
+		    System.out.println("You already have that item in your inventory.");
+		}
+		else {
+		    System.out.println("I don't see that here.");
+		}
+	}
+	
+	/**
+	 * Execute ActionError of ActionLists
+	 * @throws NumberFormatException
+	 */
+	private void executeActionError() throws NumberFormatException {
+		System.out.println("I don't understand that.");
+	}
+
+	/**
+	 * Execute ActionDie of ActionLists
+	 * @throws NumberFormatException
+	 */
+	private void executeActionDie() throws NumberFormatException {
+		this.player.terminate();
+	}
+
+	/**
+	 * Execute ActionViewItems of ActionLists
+	 * @throws NumberFormatException
+	 */
+	private void executeActionViewItems() throws NumberFormatException {
+		Vector<Item> items = this.player.getCollectedItems();
+		if (items.size() == 0) {
+		    System.out.println("You don't have any items.");
+		}
+		else {
+		    for(Item item : this.player.getCollectedItems()) {
+		        System.out.println("You have a " + item.description() + ".");
+		    }
+		}
+	}
+
+	/**
+	 * Execute ActionError of ActionLists
+	 * @throws NumberFormatException
+	 */
+	private void executeActionJump() throws NumberFormatException {
+		player.move(Action.ActionGoDown);
+	}
+
+	/**
+	 * Execute ActionClimb of ActionLists
+	 * @throws NumberFormatException
+	 */
+	private void executeActionClimb() throws NumberFormatException {
+		player.move(Action.ActionGoUp);
+	}
+
+	/**
+	 * Execute ActionLook of ActionLists
+	 * @throws NumberFormatException
+	 */
+	private void executeActionLook() throws NumberFormatException {
+		this.player.lookAround();
+	}
+
+	/**
+	 * Execute ActionTask of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executionActionTask(Action a) throws NumberFormatException {
+		Item contents = a.directObject();
+		Item container = a.indirectObject();
+		if(!this.player.currentRoom().hasItem(container)) {
+		    System.out.println("I don't see that here.");
+		}
+		else if(!(container instanceof Hostable)) {
+		    System.out.println("You can't have an item inside that.");
+		}
+		else {
+		    if(((Hostable)container).installedItem() == contents) {
+		        ((Hostable)container).uninstall(contents);
+		        this.player.pickup(contents);
+		        System.out.println("Taken.");
+		    }
+		    else {
+		        System.out.println("That item is not inside this " + container);
+		    }
+		}
+	}
+
+	/**
+	 * Execute ActionPut of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executionActionPut(Action a) throws NumberFormatException {
+		Item itemToPut = a.directObject();
+		Item itemToBePutInto = a.indirectObject();
+		if(!this.player.hasItem(itemToPut)) {
+		    System.out.println("You don't have that object in your inventory.");
+		}
+		else if(itemToBePutInto == null) {
+		    System.out.println("You must supply an indirect object.");
+		}
+		else if(!this.player.currentRoom().hasItem(itemToBePutInto)) {
+		    System.out.println("That object doesn't exist in this room.");
+		}
+		else if(itemToBePutInto instanceof ItemMagicBox && !(itemToPut instanceof Valuable)) {
+		    System.out.println("This item has no value--putting it in this " + itemToBePutInto + " will not score you any points.");
+		}
+		else if(!(itemToBePutInto instanceof Hostable) || !(itemToPut instanceof Installable)) {
+		    System.out.println("You cannot put a " + itemToPut + " into this " + itemToBePutInto);
+		}
+		else {
+		    System.out.println("Done.");
+		    this.player.drop(itemToPut);
+		    this.player.putItemInItem(itemToPut, itemToBePutInto);
+		}
+	}
+
+	/**
+	 * Execute ActionExplode of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionExplode(Action a) throws NumberFormatException {
+		Item dynamite = a.directObject();
+		if(this.player.currentRoom().hasItem(dynamite)) {
+		    if(dynamite instanceof Explodable) {
+		        if(this.player.currentRoom().isAdjacentToRoom(dynamite.relatedRoom())) {
+		            Explodable explode = (Explodable)dynamite;
+		            explode.explode();
+		            this.player.score(explode.value());
+		        }
+		        else {
+		            System.out.println("There isn't anything to blow up here.");
+		        }
+		    }
+		    else {
+		        System.out.println("That item is not an explosive.");
+		    }
+		}
+		else {
+		    System.out.println("You do not have that item in your inventory.");
+		}
+	}
+
+	/**
+	 * Execute ActionOpen of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionOpen(Action a) throws NumberFormatException {
+		Item item = a.directObject();
+		if(this.player.hasItem(item) || this.player.currentRoom().hasItem(item)) {
+		    if(item instanceof Openable) {
+		        Openable o = ((Openable)item);
+		        // if you can open the item , you score!
+		        if (o.open() == true) {
+		            player.score(item.value());
+		            this.player.currentRoom().remove(item);
+		        }
+		    }
+		    else {
+		        System.out.println("You cannot open this.");
+		    }
+		}
+		else {
+		    System.out.println("I don't see that here.");
+		}
+	}
+
+	/**
+	 * Execute ActionEat of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionEat(Action a) throws NumberFormatException {
+		Item item = a.directObject();
+		if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+		    if(item instanceof Edible) {
+		        // eating something gives scores
+		        Edible e = (Edible)item;
+		        e.eat();
+		        player.score(item.value());
+		        // Once we eat it, then it's gone
+		        this.player.currentRoom().remove(item);
+		    }
+		    else {
+		        if(item instanceof Holdable) {
+		            System.out.println("As you  shove the " + a.directObject() + " down your throat, you begin to choke.");
+		            executeActionDie();
+		        }
+		        else {
+		            System.out.println("That cannot be consumed.");
+		        }
+		    }
+		}
+	}
+
+	/**
+	 * Execute ActionDig of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionDig(Action a) throws NumberFormatException {
+		Item item = a.directObject();
+		if (this.player.currentRoom() instanceof RoomExcavatable && item.description() == "Shovel") {
+		    RoomExcavatable curr = (RoomExcavatable) this.player.currentRoom();
+		    curr.dig();
+		} else {
+		    System.out.println("You are not allowed to dig here");
+		}
+	}
+
+	/**
+	 * Execute ActionPush of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionPush(Action a) throws NumberFormatException {
+		Item item = a.directObject();
+		if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+		    if(item instanceof Pushable) {
+
+		        // Pushing the button is worth points
+		        Pushable p = (Pushable) item;
+		        p.push();
+		        this.player.score(item.value());
+
+		        if(item.relatedRoom() instanceof RoomElevator) { // player is next to an elevator
+		            ((RoomElevator)item.relatedRoom()).call(this.player.currentRoom());
+		        }
+		        else if(this.player.currentRoom() instanceof RoomElevator) { // player is in an elevator
+		            ((RoomElevator)this.player.currentRoom()).call(Integer.parseInt(item.getAliases()[0])-1);
+		        }
+		    }
+		    else {
+		        System.out.println("Nothing happens.");
+		    }
+		}
+		else {
+		    System.out.println("I don't see that here.");
+		}
+	}
+
+	/**
+	 * Execute ActionEnable of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionEnable(Action a) throws NumberFormatException {
+		Item item = a.directObject();
+		if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+		    if(item instanceof Startable) {
+		        System.out.println("Done.");
+		        ((Startable)item).start();
+		    }
+		    else {
+		        System.out.println("I don't know how to do that.");
+		    }
+		}
+		else {
+		    System.out.println("I don't see that here.");
+		}
+	}
+
+	/**
+	 * Execute ActionShake of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionShake(Action a) throws NumberFormatException {
+		Item item = a.directObject();
+		if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+		    if(item instanceof Shakeable) {
+		        ((Shakeable)item).shake();
+		        if(((Shakeable)item).accident()) {
+		            executeActionDie();
+		        }
+		    }
+		    else {
+		        System.out.println("I don't know how to do that.");
+		    }
+		}
+		else {
+		    System.out.println("I don't see that here.");
+		}
+	}
+
+	/**
+	 * Execute ActionThrow of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionThrow(Action a) throws NumberFormatException {
+		Item item = a.directObject();
+		if(this.player.hasItem(item)) {
+		    if(item instanceof Chuckable) {
+		        System.out.println("Thrown.");
+		        ((Chuckable)item).chuck();
+		        this.player.drop(item);
+		        this.player.currentRoom().putItem(item);
+		    }
+		    else {
+		        System.out.println("You cannot throw this item.");
+		    }
+		}
+		else {
+		    System.out.println("You don't have that item to throw.");
+		}
+	}
+
+	/**
+	 * Execute ActionDrop of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionDrop(Action a) throws NumberFormatException {
+		Item item = a.directObject();
+		if(this.player.hasItem(item)) {
+		    if(item instanceof Holdable) {
+		        System.out.println("Dropped.");
+		        this.player.drop(item);
+		        System.out.println("You Dropped '" +item.description() + "' costing you "
+		                + item.value() + " points.");
+		        this.player.currentRoom().putItem(item);
+		    }
+		    else {
+		        System.out.println("You cannot drop this item.");
+		    }
+		}
+		else {
+		    System.out.println("You don't have that item to drop.");
+		}
+		if(this.player.currentRoom() instanceof RoomRequiredItem) {
+		    RoomRequiredItem r = (RoomRequiredItem)this.player.currentRoom();
+		    r.playerDidDropRequiredItem();
+		}
+	}
+
+	/**
+	 * Execute ActionInspect of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionInspect(Action a) throws NumberFormatException {
+		Item item = a.directObject();
+		if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+		    if(item instanceof Inspectable) {
+		        ((Inspectable)item).inspect();
+		    }
+		    else {
+		        System.out.println("You cannot inspect this item.");
+		    }
+		}
+		else {
+		    System.out.println("I don't see that here.");
+		}
+	}
+
+	/**
+	 * Execute ActionDestroy of ActionLists
+	 * @param a
+	 * @throws NumberFormatException
+	 */
+	private void executeActionDestroy(Action a) throws NumberFormatException {
+		Item item = a.directObject();
+		if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
+		    if (item instanceof Destroyable) {
+		        System.out.println("Smashed.");
+		        ((Destroyable)item).destroy();
+		        item.setDescription("broken " + item.toString());
+		        item.setDetailDescription("broken " + item.detailDescription());
+		        if (((Destroyable)item).disappears()) {
+		            this.player.drop(item);
+		            this.player.currentRoom().remove(item);
+		            // Get points!
+		            this.player.score(item.value());
+		        }
+
+		        if(item instanceof Hostable) {
+		            this.player.currentRoom().putItem(((Hostable)item).installedItem());
+		            ((Hostable)item).uninstall(((Hostable)item).installedItem());
+		        }
+		    }
+		    else {
+		        System.out.println("You cannot break this item.");
+		    }
+		}
+		else {
+		    System.out.println("I don't see that here.");
 		}
 	}
 
