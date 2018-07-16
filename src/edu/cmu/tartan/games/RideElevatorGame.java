@@ -64,13 +64,13 @@ public class RideElevatorGame extends GameConfiguration {
         b4.setRelatedRoom(elevator);
         floor4.putItem(b4);
 
-        ArrayList<Room> list = new ArrayList<Room>();
+        ArrayList<Room> list = new ArrayList<>();
         list.add(floor1);
         list.add(floor2);
         list.add(floor3);
         list.add(floor4);
 
-        ArrayList<String> descriptions = new ArrayList<String>();
+        ArrayList<String> descriptions = new ArrayList<>();
         descriptions.add("Elevator -- floor 1.");
         descriptions.add("Elevator -- floor 2");
         descriptions.add("Elevator -- floor 3");
@@ -78,7 +78,7 @@ public class RideElevatorGame extends GameConfiguration {
 
 
         elevator.setFloors(descriptions, list, Action.ActionGoEast, 1);
-        ArrayList<Integer> restrictedFloors = new ArrayList<Integer>();
+        ArrayList<Integer> restrictedFloors = new ArrayList<>();
         restrictedFloors.add(2);
         elevator.setRestrictedFloors(restrictedFloors);
 

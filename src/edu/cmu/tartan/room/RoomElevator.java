@@ -37,14 +37,15 @@ public class RoomElevator extends Room {
      */
 	public RoomElevator(String description, String shortDescription) {
 		super(description, shortDescription);
-		this.restrictedFloors = new ArrayList<Integer>();
+		this.restrictedFloors = new ArrayList<>();
 	}
 
     /**
      * Set the elevator floors
      * @param descriptions the floor descriptions
      * @param floors the
-     * @param directionOfFloors
+     * @param directionOfFloors3
+     * 
      * @param initial
      */
 	public void setFloors(List<String> descriptions, List<Room> floors, Action directionOfFloors, int initial) {

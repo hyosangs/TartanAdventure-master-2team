@@ -62,7 +62,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
      */
     private static void initSharedInstances() {
 
-        sharedInstances = new LinkedList<Item>();
+        sharedInstances = new LinkedList<>();
         sharedInstances.add(new ItemShovel("shovel", "metal shovel", new String[]{"shovel"}));
         sharedInstances.add(new ItemBrick("brick", "clay brick", new String[]{"brick"}));
         sharedInstances.add(new ItemFood("food", "food", new String[]{"food"}));

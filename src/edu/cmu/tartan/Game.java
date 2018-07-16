@@ -86,7 +86,7 @@ public class Game {
 	 */
 	private void configureGame() {
 
-		Vector<GameConfiguration> menu = new Vector<GameConfiguration>();
+		Vector<GameConfiguration> menu = new Vector<>();
 
 		// These are the currently supported games.
 		menu.add(new CollectGame());

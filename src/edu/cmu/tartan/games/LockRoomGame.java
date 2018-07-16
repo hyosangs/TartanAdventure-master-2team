@@ -43,7 +43,7 @@ public class LockRoomGame extends GameConfiguration {
 
         end.setAdjacentRoom(Action.ActionGoNortheast, mid1);
 
-        LinkedList<Item> startItems = new LinkedList<Item>();
+        LinkedList<Item> startItems = new LinkedList<>();
         Item lock = Item.getInstance("lock");
 
         // Install the lock and key to unlock the locked room. You must 'open' or 'unlock' the lock
