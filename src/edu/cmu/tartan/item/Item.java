@@ -5,6 +5,7 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 import edu.cmu.tartan.room.Room;
 
+import java.util.List;
 import java.util.LinkedList;
 
 /**
@@ -31,7 +32,7 @@ public class Item implements Comparable<Object>, Inspectable, Visible, Valuable 
      * Items can have a list of unique aliases
      */
     private String[] aliases;
-    private static LinkedList<Item> sharedInstances;
+    private static List<Item> sharedInstances;
     
     // items can open rooms, call elevators, etc (e.g., an ItemButton instance)
     Room relatedRoom; 

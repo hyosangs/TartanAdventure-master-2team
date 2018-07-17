@@ -13,7 +13,10 @@ import edu.cmu.tartan.room.RoomExcavatable;
 import edu.cmu.tartan.room.RoomRequiredItem;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.Vector;
+
+import java.util.List;
+import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * The main class for game logic. Many if not all decisions about game play are
@@ -46,7 +49,7 @@ public class Game {
 	/**
 	 * The set of goals for a game
 	 */
-	private Vector<GameGoal> goals = new Vector<>();
+	private List<GameGoal> goals = new LinkedList<>();
 
 	/**
 	 * Create and configure a new game.
@@ -72,11 +75,11 @@ public class Game {
 	 * @param menu
 	 *            The game menu
 	 */
-	private void printMenu(Vector<GameConfiguration> menu) {
+	private void printMenu(List<GameConfiguration> menu) {
 
 		StringBuilder sb = new StringBuilder("Choose a game from the options to below or type 'help' for help. \n");
 		for (int i = 0; i < menu.size(); i++) {
-			sb.append((i + 1) + ":  " + menu.elementAt(i).name + "\n");
+			sb.append((i + 1) + ":  " + menu.get(i).name + "\n");
 		}
 		System.out.println(sb.toString());
 	}
@@ -86,7 +89,7 @@ public class Game {
 	 */
 	private void configureGame() {
 
-		Vector<GameConfiguration> menu = new Vector<>();
+		List<GameConfiguration> menu = new LinkedList<>();
 
 		// These are the currently supported games.
 		menu.add(new CollectGame());
@@ -114,7 +117,7 @@ public class Game {
 				continue;
 			}
 			try {
-				GameConfiguration gameConfig = menu.elementAt(choice);
+				GameConfiguration gameConfig = menu.get(choice);
 				gameName = gameConfig.name;
 				gameConfig.configure(this);
 				break;
@@ -436,7 +439,7 @@ public class Game {
 				player.move(Action.ActionGoDown);
 				break;
 			case ActionViewItems:
-				Vector<Item> items = this.player.getCollectedItems();
+				List<Item> items = this.player.getCollectedItems();
 				if (items.size() > 0) {
 					System.out.println("You don't have any items.");
 				} else {
@@ -549,7 +552,7 @@ public class Game {
 	 * @return
 	 */
 	private Boolean evaluateGame() {
-		Vector<GameGoal> goals = player.getGoals();
+		List<GameGoal> goals = player.getGoals();
 
 		for (Iterator<GameGoal> iterator = goals.iterator(); iterator.hasNext();) {
 			GameGoal g = iterator.next();
@@ -565,8 +568,8 @@ public class Game {
 		System.out.println("- There are " + goals.size() + " goals to achieve:");
 
 		for (int i = 0; i < goals.size(); i++) {
-			System.out.println("  * " + (i + 1) + ": " + goals.elementAt(i).describe() + ", status: "
-					+ goals.elementAt(i).getStatus());
+			System.out.println("  * " + (i + 1) + ": " + goals.get(i).describe() + ", status: "
+					+ goals.get(i).getStatus());
 		}
 		System.out.println("\n");
 		System.out.println("- Current room:  " + player.currentRoom() + "\n");
@@ -589,7 +592,7 @@ public class Game {
 		System.out.println("\n");
 
 		System.out.println("- Rooms visited: ");
-		Vector<Room> rooms = player.getRoomsVisited();
+		List<Room> rooms = player.getRoomsVisited();
 		if (rooms.size() > 0) {
 			System.out.println("You have not been to any rooms.");
 		} else {
