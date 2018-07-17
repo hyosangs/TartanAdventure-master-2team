@@ -77,7 +77,7 @@ public class RideElevatorGame extends GameConfiguration {
         descriptions.add("Elevator -- floor 4");
 
 
-        elevator.setFloors(descriptions, list, Action.ActionGoEast, 1);
+        elevator.setFloors(descriptions, list, Action.ACTION_GO_EAST, 1);
         ArrayList<Integer> restrictedFloors = new ArrayList<Integer>();
         restrictedFloors.add(2);
         elevator.setRestrictedFloors(restrictedFloors);

@@ -148,7 +148,7 @@ public class Game {
 		case TYPE_HASDIRECTOBJECT:
 			switch (a) {
 
-			case ActionPickUp: {
+			case ACTION_PICK_UP: {
 				Item o = a.directObject();
 				Item container = null;
 				if (this.player.currentRoom().hasItem(o)) {
@@ -174,7 +174,7 @@ public class Game {
 				}
 				break;
 			}
-			case ActionDestroy: {
+			case ACTION_DESTROY: {
 				Item item = a.directObject();
 				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
 					if (item instanceof Destroyable) {
@@ -201,7 +201,7 @@ public class Game {
 				}
 				break;
 			}
-			case ActionInspect: {
+			case ACTION_INSPECT: {
 				Item item = a.directObject();
 				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
 					if (item instanceof Inspectable) {
@@ -214,7 +214,7 @@ public class Game {
 				}
 				break;
 			}
-			case ActionDrop: {
+			case ACTION_DROP: {
 				Item item = a.directObject();
 				if (this.player.hasItem(item)) {
 					if (item instanceof Holdable) {
@@ -235,7 +235,7 @@ public class Game {
 				}
 				break;
 			}
-			case ActionThrow: {
+			case ACTION_THROW: {
 				Item item = a.directObject();
 				if (this.player.hasItem(item)) {
 					if (item instanceof Chuckable) {
@@ -251,7 +251,7 @@ public class Game {
 				}
 				break;
 			}
-			case ActionShake: {
+			case ACTION_SHAKE: {
 				Item item = a.directObject();
 				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
 					if (item instanceof Shakeable) {
@@ -267,7 +267,7 @@ public class Game {
 				}
 				break;
 			}
-			case ActionEnable: {
+			case ACTION_ENABLE: {
 				Item item = a.directObject();
 				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
 					if (item instanceof Startable) {
@@ -282,7 +282,7 @@ public class Game {
 				break;
 
 			}
-			case ActionPush: {
+			case ACTION_PUSH: {
 				Item item = a.directObject();
 				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
 					if (item instanceof Pushable) {
@@ -305,7 +305,7 @@ public class Game {
 				}
 				break;
 			}
-			case ActionDig: {
+			case ACTION_DIG: {
 				Item item = a.directObject();
 				if (this.player.currentRoom() instanceof RoomExcavatable && item.description() == "Shovel") {
 					RoomExcavatable curr = (RoomExcavatable) this.player.currentRoom();
@@ -315,7 +315,7 @@ public class Game {
 				}
 				break;
 			}
-			case ActionEat: {
+			case ACTION_EAT: {
 				Item item = a.directObject();
 				if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
 					if (item instanceof Edible) {
@@ -337,7 +337,7 @@ public class Game {
 				}
 				break;
 			}
-			case ActionOpen: {
+			case ACTION_OPEN: {
 				Item item = a.directObject();
 				if (this.player.hasItem(item) || this.player.currentRoom().hasItem(item)) {
 					if (item instanceof Openable) {
@@ -355,7 +355,7 @@ public class Game {
 				}
 				break;
 			}
-			case ActionExplode: {
+			case ACTION_EXPLODE: {
 				Item dynamite = a.directObject();
 				if (this.player.currentRoom().hasItem(dynamite)) {
 					if (dynamite instanceof Explodable) {
@@ -380,7 +380,7 @@ public class Game {
 			// such as a key for a lock
 		case TYPE_HASINDIRECTOBJECT:
 			switch (a) {
-			case ActionPut: {
+			case ACTION_PUT: {
 				Item itemToPut = a.directObject();
 				Item itemToBePutInto = a.indirectObject();
 				if (!this.player.hasItem(itemToPut)) {
@@ -404,7 +404,7 @@ public class Game {
 				}
 				break;
 			}
-			case ActionTake: {
+			case ACTION_TAKE: {
 				Item contents = a.directObject();
 				Item container = a.indirectObject();
 				if (!this.player.currentRoom().hasItem(container)) {
@@ -426,16 +426,16 @@ public class Game {
 			// Some actions do not require an object
 		case TYPE_HASNOOBJECT: {
 			switch (a) {
-			case ActionLook:
+			case ACTION_LOOK:
 				this.player.lookAround();
 				break;
-			case ActionClimb:
-				player.move(Action.ActionGoUp);
+			case ACTION_CLIMB:
+				player.move(Action.ACTION_GO_UP);
 				break;
-			case ActionJump:
-				player.move(Action.ActionGoDown);
+			case ACTION_JUMP:
+				player.move(Action.ACTION_GO_DOWN);
 				break;
-			case ActionViewItems:
+			case ACTION_VIEW_ITMES:
 				Vector<Item> items = this.player.getCollectedItems();
 				if (items.size() > 0) {
 					System.out.println("You don't have any items.");
@@ -445,10 +445,10 @@ public class Game {
 					}
 				}
 				break;
-			case ActionDie:
+			case ACTION_DIE:
 				this.player.terminate();
 				break;
-			case ActionHelp:
+			case ACTIONH_ELP:
 				help();
 				break;
 			}
@@ -456,15 +456,15 @@ public class Game {
 		}
 		case TYPE_UNKNOWN: {
 			switch (a) {
-			case ActionPass: {
+			case ACTION_PASS: {
 				// intentionally blank
 				break;
 			}
-			case ActionError: {
+			case ACTION_ERROR: {
 				System.out.println("I don't understand that.");
 				break;
 			}
-			case ActionUnknown: {
+			case ACTION_UNKNOWN: {
 				System.out.println("I don't understand that.");
 				break;
 			}
