@@ -178,17 +178,7 @@ public class Player {
             String message = messages.get(directionOfTravel);
             int delay = this.currentRoom.transitionDelay();
             if(message != null) {
-                if(delay != 0) {
-                    for(int i=0; i < 3; i++) {
-                        System.out.println("...");
-                        try{
-                            Thread.sleep(delay);
-                        }
-                        catch(Exception e1) {
-                            // pass
-                        }
-                    }
-                }
+                sleepFor(delay);
                 System.out.println(message);
             }
         }
@@ -203,6 +193,22 @@ public class Player {
         this.currentRoom = nextRoom;
         saveRoom(currentRoom);
         System.out.println(this.currentRoom.description());
+    }
+
+    private boolean sleepFor(int delay){
+        if(delay != 0) {
+            for(int i=0; i < 3; i++) {
+                System.out.println("...");
+                try{
+                    Thread.sleep(delay);
+                }
+                catch(Exception e1) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -228,6 +234,23 @@ public class Player {
      */
     public void move(Action action) {
 
+        checkTerminate(action);
+
+        if(this.currentRoom.canMoveToRoomInDirection(action)) {
+            Room nextRoom = this.currentRoom.getRoomForDirection(action);
+
+            if(!isValidNextRoom(nextRoom)){
+                return;
+            }
+
+            move(nextRoom);
+        }
+        else {
+            System.out.println("You can't move that way.");
+        }
+    }
+
+    private void checkTerminate(Action action){
         if(this.currentRoom instanceof RoomRequiredItem) {
             RoomRequiredItem room = (RoomRequiredItem)this.currentRoom;
 
@@ -243,34 +266,30 @@ public class Player {
                 this.terminate();
             }
         }
+    }
 
-        if(this.currentRoom.canMoveToRoomInDirection(action)) {
-            Room nextRoom = this.currentRoom.getRoomForDirection(action);
-            // test if requires key
-            if(nextRoom instanceof RoomLockable) {
-                RoomLockable lockedRoom = (RoomLockable)nextRoom;
-                if(lockedRoom.isLocked()) {
-                    if(lockedRoom.causesDeath()) {
-                        System.out.println(lockedRoom.deathMessage());
-                        this.terminate();
-                    }
-                    System.out.println("This door is locked.");
-                    return;
+    private boolean isValidNextRoom(Room nextRoom){
+        boolean ret = true;
+        if(nextRoom instanceof RoomLockable) {
+            RoomLockable lockedRoom = (RoomLockable)nextRoom;
+            if(lockedRoom.isLocked()) {
+                if(lockedRoom.causesDeath()) {
+                    System.out.println(lockedRoom.deathMessage());
+                    this.terminate();
                 }
+                System.out.println("This door is locked.");
+                ret = false;
             }
-            else if(nextRoom instanceof RoomObscured) {
-                RoomObscured obscuredRoom = (RoomObscured)nextRoom;
-                if(obscuredRoom.isObscured()) {
-                    System.out.println("You can't move that way.");
-                    return;
-                }
+        }
+        else if(nextRoom instanceof RoomObscured) {
+            RoomObscured obscuredRoom = (RoomObscured)nextRoom;
+            if(obscuredRoom.isObscured()) {
+                System.out.println("You can't move that way.");
+                ret = false;
             }
+        }
 
-            move(nextRoom);
-        }
-        else {
-            System.out.println("You can't move that way.");
-        }
+        return ret;
     }
 
     /**
