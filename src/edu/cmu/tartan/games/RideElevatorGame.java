@@ -25,6 +25,12 @@ public class RideElevatorGame extends GameConfiguration {
         super.name = "Elevator";
     }
 
+
+    /**
+     *  String of The button
+     */
+    private final static String buttonStr = "button";
+
     /**
      * Configure the game
      * @param game the Game object that will manage execution
@@ -44,23 +50,23 @@ public class RideElevatorGame extends GameConfiguration {
         // configure the floors and buttons needed to reach them
 
         Room floor1 = new Room("floor1", "floor1");
-        Item b1 = Item.getInstance("button");
+        Item b1 = Item.getInstance(buttonStr);
         b1.setRelatedRoom(elevator);
         floor1.putItem(b1);
 
         Room floor2 = new Room("floor2", "floor2");
-        Item b2 = Item.getInstance("button");
+        Item b2 = Item.getInstance(buttonStr);
         b2.setRelatedRoom(elevator);
         floor2.putItem(b2);
 
         Room floor3 = new Room("floor3", "floor3");
-        Item b3 = Item.getInstance("button");
+        Item b3 = Item.getInstance(buttonStr);
         b3.setRelatedRoom(elevator);
         floor3.putItem(b3);
 
         // restricted floors cannot be reached
         Room floor4 = new Room("floor4", "floor4");
-        Item b4 = Item.getInstance("button");
+        Item b4 = Item.getInstance(buttonStr);
         b4.setRelatedRoom(elevator);
         floor4.putItem(b4);
 
