@@ -16,7 +16,6 @@ import java.util.Scanner;
 
 import java.util.List;
 import java.util.LinkedList;
-import java.util.ArrayList;
 
 /**
  * The main class for game logic. Many if not all decisions about game play are
@@ -440,7 +439,7 @@ public class Game {
 				break;
 			case ActionViewItems:
 				List<Item> items = this.player.getCollectedItems();
-				if (items.size() > 0) {
+				if (items.isEmpty()) {
 					System.out.println("You don't have any items.");
 				} else {
 					for (Item item : this.player.getCollectedItems()) {
@@ -536,7 +535,7 @@ public class Game {
 		System.out.println("You've won the '" + gameName + "' game!\n");
 		System.out.println("- Final score: " + player.getScore());
 		System.out.println("- Final inventory: ");
-		if (player.getCollectedItems().size() > 0) {
+		if (player.getCollectedItems().isEmpty()) {
 			System.out.println("You don't have any items.");
 		} else {
 			for (Item i : player.getCollectedItems()) {
@@ -582,7 +581,7 @@ public class Game {
 		System.out.println("- Current score: " + player.getScore());
 
 		System.out.println("- Current inventory: ");
-		if (player.getCollectedItems().size() > 0) {
+		if (player.getCollectedItems().isEmpty()) {
 			System.out.println("   You don't have any items.");
 		} else {
 			for (Item i : player.getCollectedItems()) {
@@ -593,7 +592,7 @@ public class Game {
 
 		System.out.println("- Rooms visited: ");
 		List<Room> rooms = player.getRoomsVisited();
-		if (rooms.size() > 0) {
+		if (rooms.isEmpty()) {
 			System.out.println("You have not been to any rooms.");
 		} else {
 			for (Room r : rooms) {

@@ -19,7 +19,7 @@ import java.util.LinkedList;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Room implements Comparable<Object> {
+public class Room implements Comparable {
 
     // Room description
     protected String description;
@@ -244,7 +244,7 @@ public class Room implements Comparable<Object> {
     }
 
     public int compareTo(Object other) {
-        if (shortDescription.compareTo(((Room) other).shortDescription()) == 0) {
+        if (shortDescription.equals(((Room) other).shortDescription())) {
             return 0;
         }
         return -1;
