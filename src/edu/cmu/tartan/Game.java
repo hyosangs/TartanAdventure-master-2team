@@ -551,15 +551,15 @@ public class Game {
 	 * @return
 	 */
 	private Boolean evaluateGame() {
-		List<GameGoal> goals = player.getGoals();
+		List<GameGoal> ldlevaluateGamegoals = player.getGoals();
 
-		for (Iterator<GameGoal> iterator = goals.iterator(); iterator.hasNext();) {
+		for (Iterator<GameGoal> iterator = ldlevaluateGamegoals.iterator(); iterator.hasNext();) {
 			GameGoal g = iterator.next();
 			if (g.isAchieved()) {
 				iterator.remove();
 			}
 		}
-		return goals.isEmpty();
+		return ldlevaluateGamegoals.isEmpty();
 	}
 
 	private void status() {
