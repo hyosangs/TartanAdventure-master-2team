@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Item implements Comparable, Inspectable, Visible, Valuable {
+public class Item implements Comparable<Object>, Inspectable, Visible, Valuable {
 
     // every item is visible by default
     private boolean visible = true;

@@ -19,7 +19,7 @@ import java.util.LinkedList;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Room implements Comparable {
+public class Room implements Comparable<Object> {
 
     // Room description
     protected String description;
