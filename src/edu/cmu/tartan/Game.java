@@ -44,6 +44,14 @@ public class Game {
 	private String gameName = "";
 	private String gameDescription = "";
 	/**
+	 * The message when Player is can't see an item.
+	 */
+	private final static String msgOfWhenDontSee ="I don't see that here.";
+	/**
+	 * The string of taken
+	 */
+	private static final String takenStr = "Taken.";
+	/**
 	 * The set of goals for a game
 	 */
 	private Vector<GameGoal> goals = new Vector<>();
@@ -153,7 +161,7 @@ public class Game {
 				Item container = null;
 				if (this.player.currentRoom().hasItem(o)) {
 					if (o instanceof Holdable) {
-						System.out.println("Taken.");
+						System.out.println(takenStr);
 
 						this.player.currentRoom().remove(o);
 						this.player.pickup(o);
@@ -163,14 +171,14 @@ public class Game {
 					}
 				} else if ((container = containerForItem(o)) != null) {
 
-					System.out.println("Taken.");
+					System.out.println(takenStr);
 					((Hostable) container).uninstall(o);
 					this.player.pickup(o);
 					this.player.score(((Holdable) o).value());
 				} else if (this.player.hasItem(o)) {
 					System.out.println("You already have that item in your inventory.");
 				} else {
-					System.out.println("I don't see that here.");
+					System.out.println(msgOfWhenDontSee);
 				}
 				break;
 			}
@@ -197,7 +205,7 @@ public class Game {
 						System.out.println("You cannot break this item.");
 					}
 				} else {
-					System.out.println("I don't see that here.");
+					System.out.println(msgOfWhenDontSee);
 				}
 				break;
 			}
@@ -210,7 +218,7 @@ public class Game {
 						System.out.println("You cannot inspect this item.");
 					}
 				} else {
-					System.out.println("I don't see that here.");
+					System.out.println(msgOfWhenDontSee);
 				}
 				break;
 			}
@@ -263,7 +271,7 @@ public class Game {
 						System.out.println("I don't know how to do that.");
 					}
 				} else {
-					System.out.println("I don't see that here.");
+					System.out.println(msgOfWhenDontSee);
 				}
 				break;
 			}
@@ -277,7 +285,7 @@ public class Game {
 						System.out.println("I don't know how to do that.");
 					}
 				} else {
-					System.out.println("I don't see that here.");
+					System.out.println(msgOfWhenDontSee);
 				}
 				break;
 
@@ -301,7 +309,7 @@ public class Game {
 						System.out.println("Nothing happens.");
 					}
 				} else {
-					System.out.println("I don't see that here.");
+					System.out.println(msgOfWhenDontSee);
 				}
 				break;
 			}
@@ -351,7 +359,7 @@ public class Game {
 						System.out.println("You cannot open this.");
 					}
 				} else {
-					System.out.println("I don't see that here.");
+					System.out.println(msgOfWhenDontSee);
 				}
 				break;
 			}
@@ -408,14 +416,14 @@ public class Game {
 				Item contents = a.directObject();
 				Item container = a.indirectObject();
 				if (!this.player.currentRoom().hasItem(container)) {
-					System.out.println("I don't see that here.");
+					System.out.println(msgOfWhenDontSee);
 				} else if (!(container instanceof Hostable)) {
 					System.out.println("You can't have an item inside that.");
 				} else {
 					if (((Hostable) container).installedItem() == contents) {
 						((Hostable) container).uninstall(contents);
 						this.player.pickup(contents);
-						System.out.println("Taken.");
+						System.out.println(takenStr);
 					} else {
 						System.out.println("That item is not inside this " + container);
 					}
