@@ -124,12 +124,18 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
                 if (item == i) {
                     continue;
                 }
-                for (String string : item.getAliases()) {
-                    for (String s : i.getAliases()) {
-                        if (string == s) {
-                            System.err.println("Warning: alias conflict between " + item + " and " + i);
-                        }
-                    }
+
+                // need to report the Error
+                checkDuplicateItemAliases(item, i);
+            }
+        }
+    }
+
+    private static void checkDuplicateItemAliases(Item item1, Item item2){
+        for (String string : item1.getAliases()) {
+            for (String s : item2.getAliases()) {
+                if (string == s) {
+                    System.err.println("Warning: alias conflict between " + item1 + " and " + item2);
                 }
             }
         }
