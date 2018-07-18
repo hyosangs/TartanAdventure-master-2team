@@ -21,6 +21,9 @@ import java.util.ArrayList;
  */
 public class RideElevatorGame extends GameConfiguration {
 
+    //String of the button
+    private final static String MSG_BUTTON = "button";
+
     public RideElevatorGame() {
         super.name = "Elevator";
     }
@@ -44,23 +47,23 @@ public class RideElevatorGame extends GameConfiguration {
         // configure the floors and buttons needed to reach them
 
         Room floor1 = new Room("floor1", "floor1");
-        Item b1 = Item.getInstance("button");
+        Item b1 = Item.getInstance(MSG_BUTTON);
         b1.setRelatedRoom(elevator);
         floor1.putItem(b1);
 
         Room floor2 = new Room("floor2", "floor2");
-        Item b2 = Item.getInstance("button");
+        Item b2 = Item.getInstance(MSG_BUTTON);
         b2.setRelatedRoom(elevator);
         floor2.putItem(b2);
 
         Room floor3 = new Room("floor3", "floor3");
-        Item b3 = Item.getInstance("button");
+        Item b3 = Item.getInstance(MSG_BUTTON);
         b3.setRelatedRoom(elevator);
         floor3.putItem(b3);
 
         // restricted floors cannot be reached
         Room floor4 = new Room("floor4", "floor4");
-        Item b4 = Item.getInstance("button");
+        Item b4 = Item.getInstance(MSG_BUTTON);
         b4.setRelatedRoom(elevator);
         floor4.putItem(b4);
 
