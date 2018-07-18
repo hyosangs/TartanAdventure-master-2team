@@ -839,10 +839,8 @@ public class Game {
 	 */
 	private Item containerForItem(Item item) {
 		for (Item i : this.player.currentRoom().items) {
-			if (i instanceof Hostable) {
-				if (item == ((Hostable) i).installedItem() && item.isVisible()) {
-					return i;
-				}
+			if (i instanceof Hostable && item == ((Hostable) i).installedItem() && item.isVisible()) {
+				return i;
 			}
 		}
 		return null;
