@@ -52,6 +52,9 @@ public class Game {
 	//The message when Player is can't see an item.
 	private final static String MSG_IDONOTSEETHATHERE = "I don't see that here.";
 
+	//String of taken
+	private final static String MSG_TAKEN = "Taken.";
+
 	/**
 	 * Create and configure a new game.
 	 */
@@ -302,7 +305,7 @@ public class Game {
 		Item container = null;
 		if(this.player.currentRoom().hasItem(o)) {
 		    if(o instanceof Holdable) {
-		        PrintMessage.PrintConsole("Taken.");
+		        PrintMessage.PrintConsole(MSG_TAKEN);
 
 		        this.player.currentRoom().remove(o);
 		        this.player.pickup(o);
@@ -314,7 +317,7 @@ public class Game {
 		}
 		else if((container = containerForItem(o)) != null) {
 
-		    PrintMessage.PrintConsole("Taken.");
+		    PrintMessage.PrintConsole(MSG_TAKEN);
 		    ((Hostable)container).uninstall(o);
 		    this.player.pickup(o);
 		    this.player.score( ((Holdable)o).value());
@@ -394,7 +397,7 @@ public class Game {
 		    if(((Hostable)container).installedItem() == contents) {
 		        ((Hostable)container).uninstall(contents);
 		        this.player.pickup(contents);
-		        PrintMessage.PrintConsole("Taken.");
+		        PrintMessage.PrintConsole(MSG_TAKEN);
 		    }
 		    else {
 		        PrintMessage.PrintConsole("That item is not inside this " + container);
