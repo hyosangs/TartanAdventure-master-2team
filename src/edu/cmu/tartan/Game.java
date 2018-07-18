@@ -865,20 +865,19 @@ public class Game {
 		StringBuilder misc = new StringBuilder("Misc. actions [");
 
 		for (Action a : Action.values()) {
-			if (a.type() == Type.TYPE_DIRECTIONAL) {
-				for (String s : a.getAliases())
+			for (String s : a.getAliases()){
+				if (a.type() == Type.TYPE_DIRECTIONAL) {
 					directions.append("'" + s + "' ");
-			} else if (a.type() == Type.TYPE_HASDIRECTOBJECT) {
-				for (String s : a.getAliases())
+				} else if (a.type() == Type.TYPE_HASDIRECTOBJECT) {
 					dirobj.append("'" + s + "' ");
-			} else if (a.type() == Type.TYPE_HASINDIRECTOBJECT) {
-				for (String s : a.getAliases())
+				} else if (a.type() == Type.TYPE_HASINDIRECTOBJECT) {
 					indirobj.append("'" + s + "' ");
-			} else if (a.type() == Type.TYPE_UNKNOWN) {
-				for (String s : a.getAliases())
+				} else if (a.type() == Type.TYPE_UNKNOWN) {
 					misc.append("'" + s + "' ");
+				}
 			}
 		}
+
 		directions.append("]");
 		dirobj.append("]");
 		indirobj.append("]");
