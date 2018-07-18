@@ -1,7 +1,9 @@
 package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.PrintMessage;
 
+import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -18,13 +20,13 @@ public class RoomElevator extends Room {
     // current floor
     private int currentFloor;
 
-    private ArrayList<String> descriptions;
+    private List<String> descriptions;
 
     // rooms for each floor
-    private ArrayList<Room> floors;
+    private List<Room> floors;
 
     // floors that the user cannot get to
-    private ArrayList<Integer> restrictedFloors;
+    private List<Integer> restrictedFloors;
 
     private Action directionOfFloors;
     // should be a single direction, that points to every floor.
@@ -36,7 +38,7 @@ public class RoomElevator extends Room {
      */
 	public RoomElevator(String description, String shortDescription) {
 		super(description, shortDescription);
-		this.restrictedFloors = new ArrayList<Integer>();
+		this.restrictedFloors = new ArrayList<>();
 	}
 
     /**
@@ -46,14 +48,14 @@ public class RoomElevator extends Room {
      * @param directionOfFloors
      * @param initial
      */
-	public void setFloors(ArrayList<String> descriptions, ArrayList<Room> floors, Action directionOfFloors, int initial) {
+	public void setFloors(List<String> descriptions, List<Room> floors, Action directionOfFloors, int initial) {
 		this.descriptions = descriptions;
 		this.floors = floors;
 		this.directionOfFloors = directionOfFloors;
 
 		setFloor(initial);
 	}
-	public void setRestrictedFloors(ArrayList<Integer> restrictedFloors) {
+	public void setRestrictedFloors(List<Integer> restrictedFloors) {
 		this.restrictedFloors = restrictedFloors;
 	}
 
@@ -63,23 +65,23 @@ public class RoomElevator extends Room {
      */
 	public void call(int index) {
 		if(this.restrictedFloors.contains(index)) {
-			System.out.println("You push the button, but nothing happens. Perhaps this floor is off-limits.");
+			PrintMessage.printConsole("You push the button, but nothing happens. Perhaps this floor is off-limits.");
 			return;
 		}
 		else if(index == currentFloor) {
-			System.out.println("The elevator is already on this floor -- the doors are open.");
+			PrintMessage.printConsole("The elevator is already on this floor -- the doors are open.");
 			return;
 		}
 		for(int i=0; i < 3; i++) {
-			System.out.println("...");
+			PrintMessage.printConsole("...");
 			try {
 				Thread.sleep(1000);
 			} catch(Exception e1) {
 				e1.printStackTrace();
 			}
 		}
-		System.out.println("Ding");
-		System.out.println("The doors open");
+		PrintMessage.printConsole("Ding");
+		PrintMessage.printConsole("The doors open");
 		setFloor(index);
 	}
 

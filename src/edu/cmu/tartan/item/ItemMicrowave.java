@@ -3,6 +3,7 @@ package edu.cmu.tartan.item;
 import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Meltable;
 import edu.cmu.tartan.properties.Startable;
+import edu.cmu.tartan.PrintMessage;
 
 /**
  * This class for a microwave, which can hold something and be started.
@@ -36,19 +37,19 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
     public Boolean start() {
 
         for (int i = 0; i < 3; i++) {
-            System.out.println("...");
+            PrintMessage.printConsole("...");
             try {
                 Thread.sleep(1000);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
         }
-        System.out.println("Beep beep beep");
+        PrintMessage.printConsole("Beep beep beep");
 
         // Only meltable things can be microwaved
         if (this.installedItem instanceof Meltable) {
             Item item = ((Meltable) this.installedItem).meltItem();
-            System.out.println("You melted the " + this.installedItem.detailDescription() + ", and it revealed a " + item.detailDescription() + "!");
+            PrintMessage.printConsole("You melted the " + this.installedItem.detailDescription() + ", and it revealed a " + item.detailDescription() + "!");
             this.installedItem = item;
             return true;
         }

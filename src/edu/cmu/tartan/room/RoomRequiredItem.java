@@ -2,6 +2,7 @@ package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.PrintMessage;
 
 import java.util.LinkedList;
 
@@ -43,14 +44,14 @@ public class RoomRequiredItem extends Room {
 		this.warningDescription = w;
 		this.warningShortDescription = ws;
 		this.requiredItem = requiredItem;
-		this.safeDirections = new LinkedList<Action>();
+		this.safeDirections = new LinkedList<>();
 		this.diesOnItemDiscard = false;
 		this.diesOnEntry = false;
 		this.deathMessage = null;
 	}
 	public void playerDidDropRequiredItem() {
 		if(this.diesOnItemDiscard) {
-			System.out.println(this.deathMessage);
+			PrintMessage.printConsole(this.deathMessage);
 			this.player.terminate();
 		}
 		else {
@@ -89,6 +90,7 @@ public class RoomRequiredItem extends Room {
 		this.safeDirections.add(direction);
 	}
 
+	@Override
 	public String toString() {
 
 		if(this.player.hasItem(this.requiredItem)) {
@@ -98,6 +100,7 @@ public class RoomRequiredItem extends Room {
 			return this.warningDescription;
 		}
 	}
+	@Override
 	public String description() {
 		if(this.player.hasItem(this.requiredItem)) {
 			String s = this.roomWasVisited ? this.shortDescription : this.description + visibleItems();

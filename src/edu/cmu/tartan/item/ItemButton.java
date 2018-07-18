@@ -1,6 +1,7 @@
 package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Pushable;
+import edu.cmu.tartan.PrintMessage;
 
 /**
  * A button can be pushed
@@ -25,7 +26,7 @@ public class ItemButton extends Item implements Pushable {
      */
     @Override
     public void push() {
-        System.out.println(this.pushMessage);
+        PrintMessage.printConsole(this.pushMessage);
     }
 
     /**

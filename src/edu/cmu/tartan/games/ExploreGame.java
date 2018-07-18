@@ -9,7 +9,8 @@ import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemCoffee;
 import edu.cmu.tartan.room.Room;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Example game to explore a series of rooms.
@@ -38,15 +39,15 @@ public class ExploreGame extends GameConfiguration {
         Room room3 = new Room("You are in the third room. You can go West to return to the Room 2.", "Room3");
 
         // player would type 'go north'
-        room1.setAdjacentRoom(Action.ActionGoNorth, room2);
-        room2.setAdjacentRoom(Action.ActionGoEast, room3);
+        room1.setAdjacentRoom(Action.ACTION_GO_NORTH, room2);
+        room2.setAdjacentRoom(Action.ACTION_GO_EAST, room3);
 
         // player would type 'drink coffee'
         ItemCoffee coffee = (ItemCoffee) Item.getInstance("coffee");
         room2.putItem(coffee);
 
         // These are the rooms the must be explored
-        Vector<String> goalItems = new Vector<>();
+        List<String> goalItems = new ArrayList<>();
         goalItems.add("room1");
         goalItems.add("room2");
         goalItems.add("room3");

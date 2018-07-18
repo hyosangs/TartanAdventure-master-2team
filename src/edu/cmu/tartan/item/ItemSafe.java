@@ -2,6 +2,7 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Openable;
+import edu.cmu.tartan.PrintMessage;
 
 import java.util.Scanner;
 
@@ -77,18 +78,17 @@ public class ItemSafe extends Item implements Hostable, Openable {
     @Override
     public Boolean open() {
         Scanner s = new Scanner(System.in);
-        System.out.println("Enter the four-digit PIN number.");
+        PrintMessage.printConsole("Enter the four-digit PIN number.");
         Integer p = Integer.parseInt(s.nextLine());
         if (p.intValue() == this.pin.intValue()) {
 
             this.installedItem.setVisible(true);
-            System.out.println("The safe door swings open.");
-            if (this.installedItem != null) {
-                System.out.println("You have revealed a '" + this.installedItem.detailDescription() + "'.");
-            }
+            PrintMessage.printConsole("The safe door swings open.");
+            PrintMessage.printConsole("You have revealed a '" + this.installedItem.detailDescription() + "'.");
+
             return true;
         } else {
-            System.out.println("Incorrect PIN.");
+            PrintMessage.printConsole("Incorrect PIN.");
         }
         return false;
     }
