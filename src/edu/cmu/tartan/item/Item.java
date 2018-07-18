@@ -96,10 +96,9 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         sharedInstances.add(new ItemDeskLight("light", "desk light", new String[]{"light"}));
         sharedInstances.add(new ItemDynamite("dynamite", "bundle of dynamite", new String[]{"dynamite", "explosive", "explosives"}));
         sharedInstances.add(new ItemButton("Button", "Elevator Button", new String[]{"button"}));
-        sharedInstances.add(new ItemButton("Floor 1 Button", "Elevator Floor 1 Button", new String[]{"1"}));
-        sharedInstances.add(new ItemButton("Floor 2 Button", "Elevator Floor 2 Button", new String[]{"2"}));
-        sharedInstances.add(new ItemButton("Floor 3 Button", "Elevator Floor 3 Button", new String[]{"3"}));
-        sharedInstances.add(new ItemButton("Floor 4 Button", "Elevator Floor 4 Button", new String[]{"4"}));
+        for(int i=1; i<=4; i++){
+            sharedInstances.add(new ItemButton("Floor "+i+" Button", "Elevator Floor "+i+" Button", new String[]{Integer.toString(i)}));
+        }
         sharedInstances.add(new ItemUnknown(MSG_UNKNOWN, MSG_UNKNOWN, new String[]{MSG_UNKNOWN}));
 
         // there can be no overlap in aliases
