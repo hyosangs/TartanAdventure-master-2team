@@ -206,9 +206,8 @@ public class Room implements Comparable {
      * @return true if the room contains the item; false otherwise
      */
     public boolean hasItem(Item item) {
-        if (item == null) return false;
-        // if the item is invisible, then fool the player
-        else if (!item.isVisible()) return false;
+        if (item == null || !item.isVisible()) return false;
+        // if the item is invisible, then fool the player1
         return this.items.contains(item);
     }
 
