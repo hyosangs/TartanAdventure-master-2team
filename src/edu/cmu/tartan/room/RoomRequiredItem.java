@@ -89,6 +89,7 @@ public class RoomRequiredItem extends Room {
 		this.safeDirections.add(direction);
 	}
 
+	@Override
 	public String toString() {
 
 		if(this.player.hasItem(this.requiredItem)) {
@@ -98,6 +99,7 @@ public class RoomRequiredItem extends Room {
 			return this.warningDescription;
 		}
 	}
+	@Override
 	public String description() {
 		if(this.player.hasItem(this.requiredItem)) {
 			String s = this.roomWasVisited ? this.shortDescription : this.description + visibleItems();
