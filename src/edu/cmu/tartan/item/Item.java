@@ -38,6 +38,11 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     private String inspectMessage;
 
     /**
+     *  String of unknown
+     */
+    private final static String MSG_UNKNOWN = "unknown";
+
+    /**
      * Create a new item
      * @param description short description
      * @param detailDescription long description
@@ -90,7 +95,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         sharedInstances.add(new ItemButton("Floor 2 Button", "Elevator Floor 2 Button", new String[]{"2"}));
         sharedInstances.add(new ItemButton("Floor 3 Button", "Elevator Floor 3 Button", new String[]{"3"}));
         sharedInstances.add(new ItemButton("Floor 4 Button", "Elevator Floor 4 Button", new String[]{"4"}));
-        sharedInstances.add(new ItemUnknown("unknown", "unknown", new String[]{"unknown"}));
+        sharedInstances.add(new ItemUnknown(MSG_UNKNOWN, MSG_UNKNOWN, new String[]{MSG_UNKNOWN}));
 
         // there can be no overlap in aliases
         checkUniqueAliases();
