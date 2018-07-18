@@ -38,7 +38,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     // items can open rooms, call elevators, etc (e.g., an ItemButton instance)
     Room relatedRoom; 
     
-    // items can also affect other items, like setting other items breakable (like a junction box);
+    // items can also affect other items, like setting other items breakable (like a junction box)
     Item relatedItem; 
 
     private String inspectMessage;
