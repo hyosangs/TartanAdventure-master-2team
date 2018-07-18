@@ -3,7 +3,8 @@ package edu.cmu.tartan.goal;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.item.Item;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A game goal based on collecting items. If a player collects a designated set of items he/she will achieve this goal.
@@ -15,7 +16,7 @@ import java.util.Vector;
  */
 public class GameCollectGoal implements GameGoal {
     private Player player = null;
-    private Vector<String> itemsList = null;
+    private List<String> itemsList = new ArrayList<>();
     private int count=0;
 
     /**
@@ -23,7 +24,7 @@ public class GameCollectGoal implements GameGoal {
      * @param items the required items
      * @param p the player
      */
-    public GameCollectGoal(Vector<String> items, Player p) {
+    public GameCollectGoal(List<String> items, Player p) {
         player = p;
         itemsList = items;
     }

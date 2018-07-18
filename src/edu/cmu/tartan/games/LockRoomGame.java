@@ -10,8 +10,8 @@ import edu.cmu.tartan.item.ItemLock;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomLockable;
 
+import java.util.List;
 import java.util.LinkedList;
-import java.util.Vector;
 
 /**
  * Demonstrate a locked room game.
@@ -43,7 +43,7 @@ public class LockRoomGame extends GameConfiguration {
 
         end.setAdjacentRoom(Action.ActionGoNortheast, mid1);
 
-        LinkedList<Item> startItems = new LinkedList<Item>();
+        List<Item> startItems = new LinkedList<>();
         Item lock = Item.getInstance("lock");
 
         // Install the lock and key to unlock the locked room. You must 'open' or 'unlock' the lock
@@ -61,7 +61,7 @@ public class LockRoomGame extends GameConfiguration {
         start.setAdjacentRoom(Action.ActionGoWest, end);
         start.putItems(startItems);
 
-        Vector<String> goals = new Vector<>();
+        List<String> goals = new LinkedList<>();
         goals.add("Fork");
         goals.add("bear");
         goals.add("interior");
