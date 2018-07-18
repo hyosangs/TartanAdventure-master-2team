@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Inspectable;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
@@ -17,7 +18,7 @@ import java.util.LinkedList;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Item implements Comparable, Inspectable, Visible, Valuable {
+public class Item implements Comparable, Inspectable, Visible, Valuable, Hostable {
 
     // every item is visible by default
     private boolean visible = true;
@@ -48,6 +49,8 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
      */
     private static final String MSG_UNKNOWN = "unknown";
 
+    private Item installedItem;
+
     /**
      * Create a new item
      * @param description short description
@@ -62,6 +65,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         this.relatedItem = null;
         this.inspectMessage = null;
         this.value = null;
+        this.installedItem = null;
     }
 
     /**
@@ -233,6 +237,41 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     @Override
     public void setValue(int value) {
         this.value = value;
+    }
+
+    /**
+     * Install an item in the pot
+     * @param item the item to install
+     */
+    @Override
+    public void install(Item item) {
+        this.installedItem = item;
+    }
+
+    /**
+     * Uninstall an item
+     * @param item the item
+     * @return true if uninstalled; false otherwise
+     */
+    @Override
+    public boolean uninstall(Item item) {
+        if (this.installedItem == null) {
+            return false;
+        } else if (this.installedItem == item) {
+            this.installedItem = null;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Fetch the item
+     * @return the item installed
+     */
+    @Override
+    public Item installedItem() {
+        return this.installedItem;
     }
 }
 

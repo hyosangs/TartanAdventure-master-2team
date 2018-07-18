@@ -14,8 +14,6 @@ import edu.cmu.tartan.room.RoomLockable;
  */
 public class ItemLock extends Item implements Hostable, Openable {
 
-    private Item installedItem;
-
     /**
      * Constructor
      * @param s description
@@ -29,48 +27,13 @@ public class ItemLock extends Item implements Hostable, Openable {
     }
 
     /**
-     * Install an item
-     * @param i the item to install
-     */
-    @Override
-    public void install(Item i) {
-        this.installedItem = i;
-    }
-
-    /**
-     * Uninstall an installed item
-     * @param i the item to uninstall
-     * @return
-     */
-    @Override
-    public boolean uninstall(Item i) {
-        if (this.installedItem == null) {
-            return false;
-        } else if (this.installedItem == i) {
-            this.installedItem = null;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Fetch the installed items
-     * @return
-     */
-    @Override
-    public Item installedItem() {
-        return this.installedItem;
-    }
-
-    /**
      * Open the lock to the locked room. Note the key must be installed in the lock to open
      * @return true if opened; false otherwise
      */
     @Override
     public Boolean open() {
         if (this.relatedRoom instanceof RoomLockable) {
-            ((RoomLockable) this.relatedRoom).unlock(this.installedItem);
+            ((RoomLockable) this.relatedRoom).unlock(super.installedItem());
             return true;
         }
         return false;
