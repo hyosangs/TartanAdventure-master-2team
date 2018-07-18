@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class RideElevatorGame extends GameConfiguration {
 
     //String of the button
-    private final static String MSG_BUTTON = "button";
+    private static final String MSG_BUTTON = "button";
 
     public RideElevatorGame() {
         super.name = "Elevator";

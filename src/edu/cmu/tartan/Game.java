@@ -50,10 +50,10 @@ public class Game {
 	private Vector<GameGoal> goals = new Vector<>();
 
 	//The message when Player is can't see an item.
-	private final static String MSG_IDONOTSEETHATHERE = "I don't see that here.";
+	private static final String MSG_IDONOTSEETHATHERE = "I don't see that here.";
 
 	//String of taken
-	private final static String MSG_TAKEN = "Taken.";
+	private static final String MSG_TAKEN = "Taken.";
 
 	/**
 	 * Create and configure a new game.

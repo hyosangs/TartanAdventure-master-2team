@@ -40,7 +40,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     /**
      *  String of unknown
      */
-    private final static String MSG_UNKNOWN = "unknown";
+    private static final String MSG_UNKNOWN = "unknown";
 
     /**
      * Create a new item
