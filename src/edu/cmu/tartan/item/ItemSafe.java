@@ -84,9 +84,8 @@ public class ItemSafe extends Item implements Hostable, Openable {
 
             this.installedItem.setVisible(true);
             PrintMessage.printConsole("The safe door swings open.");
-            if (this.installedItem != null) {
-                PrintMessage.printConsole("You have revealed a '" + this.installedItem.detailDescription() + "'.");
-            }
+            PrintMessage.printConsole("You have revealed a '" + this.installedItem.detailDescription() + "'.");
+
             return true;
         } else {
             PrintMessage.printConsole("Incorrect PIN.");
