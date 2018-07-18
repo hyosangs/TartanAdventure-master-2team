@@ -87,7 +87,6 @@ public class Game {
 		for (int i = 0; i < menu.size(); i++) {
 			sb.append((i + 1) + ":  " + menu.get(i).name + "\n");
 		}
-		//PrintMessage.PrintConsole(sb.toString());
 		PrintMessage.PrintConsole(sb.toString());
 	}
 
