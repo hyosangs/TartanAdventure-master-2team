@@ -102,8 +102,10 @@ public class Room implements Comparable {
      * @return the action
      */
     public Action getDirectionForRoom(Room room) {
-        for (Action a : this.adjacentRooms.keySet()) {
-            if (this.adjacentRooms.get(a).compareTo(room) == 0) {
+        for (HashMap.Entry<Action,Room> entry : this.adjacentRooms.entrySet()) {
+            Action a = entry.getKey();
+            Room r = entry.getValue();
+            if (r.compareTo(room) == 0) {
                 return a;
             }
         }
