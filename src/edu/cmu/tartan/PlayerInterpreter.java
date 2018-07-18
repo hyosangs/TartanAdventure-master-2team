@@ -2,6 +2,7 @@ package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.PrintMessage;
 
 import java.util.Arrays;
 
@@ -63,7 +64,7 @@ public class PlayerInterpreter {
                 break;
 
             default:
-                System.out.println("Unknown type");
+                PrintMessage.printConsole("Unknown type");
                 retVal = Action.ACTION_ERROR;
                 break;
         }
@@ -113,7 +114,7 @@ public class PlayerInterpreter {
             retVal = action;
         }
         else {
-            System.out.println("You must supply a direct object.");
+            PrintMessage.printConsole("You must supply a direct object.");
             retVal = Action.ACTION_PASS;
         }
 
@@ -147,7 +148,7 @@ public class PlayerInterpreter {
             }
         }
         else {
-            System.out.println("You must supply a direct object.");
+            PrintMessage.printConsole("You must supply a direct object.");
             retVal = Action.ACTION_ERROR;
         }
 

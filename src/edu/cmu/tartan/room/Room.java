@@ -5,6 +5,7 @@ import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
+import edu.cmu.tartan.PrintMessage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -179,7 +180,7 @@ public class Room implements Comparable {
         if (item == null) {
             return null;
         } else {
-            System.out.println("I don't see that here.");
+            PrintMessage.printConsole("I don't see that here.");
         }
         return Item.getInstance("unknown");
     }

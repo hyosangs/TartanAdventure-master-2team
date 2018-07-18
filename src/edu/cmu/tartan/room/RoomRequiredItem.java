@@ -2,6 +2,7 @@ package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.PrintMessage;
 
 import java.util.LinkedList;
 
@@ -50,7 +51,7 @@ public class RoomRequiredItem extends Room {
 	}
 	public void playerDidDropRequiredItem() {
 		if(this.diesOnItemDiscard) {
-			System.out.println(this.deathMessage);
+			PrintMessage.printConsole(this.deathMessage);
 			this.player.terminate();
 		}
 		else {

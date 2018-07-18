@@ -1,6 +1,7 @@
 package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.PrintMessage;
 
 /**
  * The class for a locked room. A key is required to open this type of room
@@ -84,12 +85,12 @@ public class RoomLockable extends Room {
 	public boolean unlock(Item key) {
 		if(this.key.compareTo(key) == 0) {
 			this.locked = false;
-			System.out.println(this.unlockMessage);
+			PrintMessage.printConsole(this.unlockMessage);
 			return true;
 		}
 		else { 
 			if(!causesDeath()) {
-				System.out.println("This key doesn't seem to fit");
+				PrintMessage.printConsole("This key doesn't seem to fit");
 			}
 			return false;
 		}

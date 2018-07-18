@@ -1,6 +1,7 @@
 package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.PrintMessage;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -64,23 +65,23 @@ public class RoomElevator extends Room {
      */
 	public void call(int index) {
 		if(this.restrictedFloors.contains(index)) {
-			System.out.println("You push the button, but nothing happens. Perhaps this floor is off-limits.");
+			PrintMessage.printConsole("You push the button, but nothing happens. Perhaps this floor is off-limits.");
 			return;
 		}
 		else if(index == currentFloor) {
-			System.out.println("The elevator is already on this floor -- the doors are open.");
+			PrintMessage.printConsole("The elevator is already on this floor -- the doors are open.");
 			return;
 		}
 		for(int i=0; i < 3; i++) {
-			System.out.println("...");
+			PrintMessage.printConsole("...");
 			try {
 				Thread.sleep(1000);
 			} catch(Exception e1) {
 				e1.printStackTrace();
 			}
 		}
-		System.out.println("Ding");
-		System.out.println("The doors open");
+		PrintMessage.printConsole("Ding");
+		PrintMessage.printConsole("The doors open");
 		setFloor(index);
 	}
 

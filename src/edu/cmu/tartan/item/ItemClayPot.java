@@ -3,6 +3,7 @@ package edu.cmu.tartan.item;
 import edu.cmu.tartan.properties.Destroyable;
 import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Hostable;
+import edu.cmu.tartan.PrintMessage;
 
 /**
  * A clay pot can be destroyed, held, and host other objects
@@ -45,7 +46,7 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
      */
     @Override
     public void destroy() {
-        System.out.println(destroyMessage);
+        PrintMessage.printConsole(destroyMessage);
     }
 
     /**

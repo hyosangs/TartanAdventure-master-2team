@@ -4,6 +4,7 @@ import edu.cmu.tartan.properties.Inspectable;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.PrintMessage;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -144,7 +145,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         for (String string : item1.getAliases()) {
             for (String s : item2.getAliases()) {
                 if (string == s) {
-                    System.err.println("Warning: alias conflict between " + item1 + " and " + item2);
+                    PrintMessage.printSevereLog("Warning: alias conflict between " + item1 + " and " + item2);
                 }
             }
         }
@@ -214,9 +215,9 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     // Inspectable
     public Boolean inspect() {
         if (this.inspectMessage != null) {
-            System.out.println(this.inspectMessage);
+            PrintMessage.printConsole(this.inspectMessage);
         } else {
-            System.out.println("It appears to be a " + this + ".");
+            PrintMessage.printConsole("It appears to be a " + this + ".");
         }
         return true;
     }

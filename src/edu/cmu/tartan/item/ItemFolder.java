@@ -1,6 +1,7 @@
 package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Openable;
+import edu.cmu.tartan.PrintMessage;
 
 /**
  * This class for a folder, which can be opened.
@@ -33,7 +34,7 @@ public class ItemFolder extends Item implements Openable {
     @Override
     public Boolean open() {
 
-        System.out.println(this.openMessage);
+        PrintMessage.printConsole(this.openMessage);
         return true;
     }
 

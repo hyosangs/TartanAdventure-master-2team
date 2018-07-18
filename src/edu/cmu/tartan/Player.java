@@ -8,6 +8,7 @@ import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Luminous;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.*;
+import edu.cmu.tartan.PrintMessage;
 
 import java.util.HashMap;
 
@@ -108,7 +109,7 @@ public class Player {
 
         Item dropped = drop(item);
         if (dropped == null) {
-            System.out.println("You don't have this item to drop");
+            PrintMessage.printConsole("You don't have this item to drop");
             return false;
         }
         this.currentRoom.putItem(dropped);
@@ -181,26 +182,26 @@ public class Player {
             int delay = this.currentRoom.transitionDelay();
             if(message != null) {
                 sleepFor(delay);
-                System.out.println(message);
+                PrintMessage.printConsole(message);
             }
         }
         if(nextRoom instanceof RoomRequiredItem) {
             RoomRequiredItem r = (RoomRequiredItem)nextRoom;
             if(r.diesOnEntry()) {
-                System.out.println(r.loseMessage());
+                PrintMessage.printConsole(r.loseMessage());
                 this.terminate();
             }
         }
 
         this.currentRoom = nextRoom;
         saveRoom(currentRoom);
-        System.out.println(this.currentRoom.description());
+        PrintMessage.printConsole(this.currentRoom.description());
     }
 
     private boolean sleepFor(int delay){
         if(delay != 0) {
             for(int i=0; i < 3; i++) {
-                System.out.println("...");
+                PrintMessage.printConsole("...");
                 try{
                     Thread.sleep(delay);
                 }
@@ -248,7 +249,7 @@ public class Player {
             move(nextRoom);
         }
         else {
-            System.out.println("You can't move that way.");
+            PrintMessage.printConsole("You can't move that way.");
         }
     }
 
@@ -257,14 +258,14 @@ public class Player {
             RoomRequiredItem room = (RoomRequiredItem)this.currentRoom;
 
             if(room.shouldLoseForAction(action)) {
-                System.out.println(room.loseMessage());
+                PrintMessage.printConsole(room.loseMessage());
                 this.terminate();
             }
         }
         else if(this.currentRoom instanceof RoomDark) {
             RoomDark room = (RoomDark)this.currentRoom;
             if(room.isDark() && !this.hasLuminousItem()) {
-                System.out.println(room.deathMessage());
+                PrintMessage.printConsole(room.deathMessage());
                 this.terminate();
             }
         }
@@ -276,17 +277,17 @@ public class Player {
             RoomLockable lockedRoom = (RoomLockable)nextRoom;
             if(lockedRoom.isLocked()) {
                 if(lockedRoom.causesDeath()) {
-                    System.out.println(lockedRoom.deathMessage());
+                    PrintMessage.printConsole(lockedRoom.deathMessage());
                     this.terminate();
                 }
-                System.out.println("This door is locked.");
+                PrintMessage.printConsole("This door is locked.");
                 ret = false;
             }
         }
         else if(nextRoom instanceof RoomObscured) {
             RoomObscured obscuredRoom = (RoomObscured)nextRoom;
             if(obscuredRoom.isObscured()) {
-                System.out.println("You can't move that way.");
+                PrintMessage.printConsole("You can't move that way.");
                 ret = false;
             }
         }
@@ -314,7 +315,7 @@ public class Player {
      * Print information about the room
      */
     public void lookAround() {
-        System.out.println(this.currentRoom.toString());
+        PrintMessage.printConsole(this.currentRoom.toString());
     }
 
     /**
@@ -332,7 +333,7 @@ public class Player {
      * @param s the newly scored points.
      */
     public void score(int s) {
-        System.out.println("You scored " + s + " points.");
+        PrintMessage.printConsole("You scored " + s + " points.");
         score += s;
     }
 
@@ -340,7 +341,7 @@ public class Player {
      * Terminate this player.
      */
     public void terminate() {
-        System.out.println("You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
+        PrintMessage.printConsole("You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
         System.exit(0);
     }
 
