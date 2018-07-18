@@ -14,7 +14,9 @@ import edu.cmu.tartan.room.RoomRequiredItem;
 import edu.cmu.tartan.PrintMessage;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.Vector;
+
+import java.util.List;
+import java.util.LinkedList;
 
 /**
  * The main class for game logic. Many if not all decisions about game play are
@@ -47,7 +49,7 @@ public class Game {
 	/**
 	 * The set of goals for a game
 	 */
-	private Vector<GameGoal> goals = new Vector<>();
+	private List<GameGoal> goals = new LinkedList<>();
 
 	//The message when Player is can't see an item.
 	private static final String MSG_IDONOTSEETHATHERE = "I don't see that here.";
@@ -79,11 +81,11 @@ public class Game {
 	 * @param menu
 	 *            The game menu
 	 */
-	private void printMenu(Vector<GameConfiguration> menu) {
+	private void printMenu(List<GameConfiguration> menu) {
 
 		StringBuilder sb = new StringBuilder("Choose a game from the options to below or type 'help' for help. \n");
 		for (int i = 0; i < menu.size(); i++) {
-			sb.append((i + 1) + ":  " + menu.elementAt(i).name + "\n");
+			sb.append((i + 1) + ":  " + menu.get(i).name + "\n");
 		}
 		//PrintMessage.PrintConsole(sb.toString());
 		PrintMessage.PrintConsole(sb.toString());
@@ -94,7 +96,7 @@ public class Game {
 	 */
 	private void configureGame() {
 
-		Vector<GameConfiguration> menu = new Vector<GameConfiguration>();
+		List<GameConfiguration> menu = new LinkedList<>();
 
 		// These are the currently supported games.
 		menu.add(new CollectGame());
@@ -122,7 +124,7 @@ public class Game {
 				continue;
 			}
 			try {
-				GameConfiguration gameConfig = menu.elementAt(choice);
+				GameConfiguration gameConfig = menu.get(choice);
 				gameName = gameConfig.name;
 				gameConfig.configure(this);
 				break;
@@ -348,8 +350,8 @@ public class Game {
 	 * Execute ActionViewItems of ActionLists
 	 */
 	private void executeActionViewItems() {
-		Vector<Item> items = this.player.getCollectedItems();
-		if (items.size() == 0) {
+		List<Item> items = this.player.getCollectedItems();
+		if (items.isEmpty()) {
 		    PrintMessage.PrintConsole("You don't have any items.");
 		}
 		else {
@@ -654,7 +656,7 @@ public class Game {
 		Item item = a.directObject();
 		if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
 		    if(item instanceof Inspectable) {
-		        ((Inspectable)item).inspect();
+		        (item).inspect();
 		    }
 		    else {
 		        PrintMessage.PrintConsole("You cannot inspect this item.");
@@ -754,7 +756,7 @@ public class Game {
 		PrintMessage.PrintConsole("You've won the '" + gameName + "' game!\n");
 		PrintMessage.PrintConsole("- Final score: " + player.getScore());
 		PrintMessage.PrintConsole("- Final inventory: ");
-		if (player.getCollectedItems().size() > 0) {
+		if (player.getCollectedItems().isEmpty()) {
 			PrintMessage.PrintConsole("You don't have any items.");
 		} else {
 			for (Item i : player.getCollectedItems()) {
@@ -770,15 +772,15 @@ public class Game {
 	 * @return
 	 */
 	private Boolean evaluateGame() {
-		Vector<GameGoal> goals = player.getGoals();
+		List<GameGoal> ldlevaluateGamegoals = player.getGoals();
 
-		for (Iterator<GameGoal> iterator = goals.iterator(); iterator.hasNext();) {
+		for (Iterator<GameGoal> iterator = ldlevaluateGamegoals.iterator(); iterator.hasNext();) {
 			GameGoal g = iterator.next();
 			if (g.isAchieved()) {
 				iterator.remove();
 			}
 		}
-		return goals.isEmpty();
+		return ldlevaluateGamegoals.isEmpty();
 	}
 
 	private void status() {
@@ -786,8 +788,8 @@ public class Game {
 		PrintMessage.PrintConsole("- There are " + goals.size() + " goals to achieve:");
 
 		for (int i = 0; i < goals.size(); i++) {
-			PrintMessage.PrintConsole("  * " + (i + 1) + ": " + goals.elementAt(i).describe() + ", status: "
-					+ goals.elementAt(i).getStatus());
+			PrintMessage.PrintConsole("  * " + (i + 1) + ": " + goals.get(i).describe() + ", status: "
+					+ goals.get(i).getStatus());
 		}
 		PrintMessage.PrintConsole("\n");
 		PrintMessage.PrintConsole("- Current room:  " + player.currentRoom() + "\n");
@@ -800,7 +802,7 @@ public class Game {
 		PrintMessage.PrintConsole("- Current score: " + player.getScore());
 
 		PrintMessage.PrintConsole("- Current inventory: ");
-		if (player.getCollectedItems().size() > 0) {
+		if (player.getCollectedItems().isEmpty()) {
 			PrintMessage.PrintConsole("   You don't have any items.");
 		} else {
 			for (Item i : player.getCollectedItems()) {
@@ -810,8 +812,8 @@ public class Game {
 		PrintMessage.PrintConsole("\n");
 
 		PrintMessage.PrintConsole("- Rooms visited: ");
-		Vector<Room> rooms = player.getRoomsVisited();
-		if (rooms.size() > 0) {
+		List<Room> rooms = player.getRoomsVisited();
+		if (rooms.isEmpty()) {
 			PrintMessage.PrintConsole("You have not been to any rooms.");
 		} else {
 			for (Room r : rooms) {

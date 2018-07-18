@@ -9,8 +9,8 @@ import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomLockable;
 
+import java.util.List;
 import java.util.LinkedList;
-import java.util.Vector;
 
 /**
  * A collection game is one where a player must collect certain items to win.
@@ -43,7 +43,7 @@ public class CollectGame extends GameConfiguration {
 
         end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);
 
-        LinkedList<Item> startItems = new LinkedList<Item>();
+        List<Item> startItems = new LinkedList<>();
         startItems.add(Item.getInstance("brick"));
         startItems.add(Item.getInstance("key"));
         startItems.add(Item.getInstance("lock"));
@@ -56,7 +56,7 @@ public class CollectGame extends GameConfiguration {
         start.putItems(startItems);
 
         // Now we configure the goal based on picking up items
-        Vector<String> goalItems = new Vector<>();
+        List<String> goalItems = new LinkedList<>();
         goalItems.add("brick");
         goalItems.add("key");
         goalItems.add("gold");
