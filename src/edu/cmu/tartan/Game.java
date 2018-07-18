@@ -49,6 +49,9 @@ public class Game {
 	 */
 	private Vector<GameGoal> goals = new Vector<>();
 
+	//The message when Player is can't see an item.
+	private final static String MSG_IDONOTSEETHATHERE = "I don't see that here.";
+
 	/**
 	 * Create and configure a new game.
 	 */
@@ -320,7 +323,7 @@ public class Game {
 		    PrintMessage.PrintConsole("You already have that item in your inventory.");
 		}
 		else {
-		    PrintMessage.PrintConsole("I don't see that here.");
+		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 	
@@ -382,7 +385,7 @@ public class Game {
 		Item contents = a.directObject();
 		Item container = a.indirectObject();
 		if(!this.player.currentRoom().hasItem(container)) {
-		    PrintMessage.PrintConsole("I don't see that here.");
+		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
 		}
 		else if(!(container instanceof Hostable)) {
 		    PrintMessage.PrintConsole("You can't have an item inside that.");
@@ -474,7 +477,7 @@ public class Game {
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole("I don't see that here.");
+		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
@@ -545,7 +548,7 @@ public class Game {
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole("I don't see that here.");
+		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
@@ -565,7 +568,7 @@ public class Game {
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole("I don't see that here.");
+		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
@@ -587,7 +590,7 @@ public class Game {
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole("I don't see that here.");
+		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
@@ -655,7 +658,7 @@ public class Game {
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole("I don't see that here.");
+		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
@@ -688,7 +691,7 @@ public class Game {
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole("I don't see that here.");
+		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
