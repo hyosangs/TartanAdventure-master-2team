@@ -8,12 +8,9 @@ import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Luminous;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.*;
-import edu.cmu.tartan.PrintMessage;
 
 import java.util.HashMap;
-
-import java.util.List;
-import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * The player for a game.
@@ -33,7 +30,7 @@ public class Player {
     /**
      * The list of rooms that this player has visited.
      */
-    private List<Room> roomsVisited = new LinkedList<>();
+    private Vector<Room> roomsVisited = new Vector<>();
 
     /**
      * The points that this player can possibly score.
@@ -43,12 +40,12 @@ public class Player {
     /**
      * The inventory of items this player has.
      */
-    private List<Item> items = new LinkedList<>();
+    private Vector<Item> items = new Vector<>();
 
     /**
      * This player's goals
      */
-    private List<GameGoal> goals = new LinkedList<>();
+    private Vector<GameGoal> goals = new Vector<>();
 
     /**
      * The current room this player is in.
@@ -61,7 +58,7 @@ public class Player {
      * @param currentRoom the current room
      */
     public Player(Room currentRoom) {
-        this(currentRoom, new LinkedList<Item>());
+        this(currentRoom, new Vector<Item>());
     }
 
     /**
@@ -69,7 +66,7 @@ public class Player {
      * @param currentRoom the current room
      * @param items the player's items
      */
-    public Player(Room currentRoom, List<Item> items) {
+    public Player(Room currentRoom, Vector<Item> items) {
         this.items = items;
         this.score = 0;
         this.currentRoom = currentRoom;
@@ -109,7 +106,7 @@ public class Player {
 
         Item dropped = drop(item);
         if (dropped == null) {
-            PrintMessage.printConsole("You don't have this item to drop");
+            System.out.println("You don't have this item to drop");
             return false;
         }
         this.currentRoom.putItem(dropped);
@@ -157,7 +154,7 @@ public class Player {
      * Get the current set of items.
      * @return the items.
      */
-    public List<Item> getCollectedItems() {
+    public Vector<Item> getCollectedItems() {
         return this.items;
     }
 
@@ -181,37 +178,31 @@ public class Player {
             String message = messages.get(directionOfTravel);
             int delay = this.currentRoom.transitionDelay();
             if(message != null) {
-                sleepFor(delay);
-                PrintMessage.printConsole(message);
+                if(delay != 0) {
+                    for(int i=0; i < 3; i++) {
+                        System.out.println("...");
+                        try{
+                            Thread.sleep(delay);
+                        }
+                        catch(Exception e1) {
+                            // pass
+                        }
+                    }
+                }
+                System.out.println(message);
             }
         }
         if(nextRoom instanceof RoomRequiredItem) {
             RoomRequiredItem r = (RoomRequiredItem)nextRoom;
             if(r.diesOnEntry()) {
-                PrintMessage.printConsole(r.loseMessage());
+                System.out.println(r.loseMessage());
                 this.terminate();
             }
         }
 
         this.currentRoom = nextRoom;
         saveRoom(currentRoom);
-        PrintMessage.printConsole(this.currentRoom.description());
-    }
-
-    private boolean sleepFor(int delay){
-        if(delay != 0) {
-            for(int i=0; i < 3; i++) {
-                PrintMessage.printConsole("...");
-                try{
-                    Thread.sleep(delay);
-                }
-                catch(Exception e1) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        System.out.println(this.currentRoom.description());
     }
 
     /**
@@ -227,7 +218,7 @@ public class Player {
      * Get the list of rooms visited.
      * @return The list of visited rooms.
      */
-    public List<Room> getRoomsVisited() {
+    public Vector<Room> getRoomsVisited() {
         return roomsVisited;
     }
 
@@ -237,62 +228,49 @@ public class Player {
      */
     public void move(Action action) {
 
-        checkTerminate(action);
-
-        if(this.currentRoom.canMoveToRoomInDirection(action)) {
-            Room nextRoom = this.currentRoom.getRoomForDirection(action);
-
-            if(!isValidNextRoom(nextRoom)){
-                return;
-            }
-
-            move(nextRoom);
-        }
-        else {
-            PrintMessage.printConsole("You can't move that way.");
-        }
-    }
-
-    private void checkTerminate(Action action){
         if(this.currentRoom instanceof RoomRequiredItem) {
             RoomRequiredItem room = (RoomRequiredItem)this.currentRoom;
 
             if(room.shouldLoseForAction(action)) {
-                PrintMessage.printConsole(room.loseMessage());
+                System.out.println(room.loseMessage());
                 this.terminate();
             }
         }
         else if(this.currentRoom instanceof RoomDark) {
             RoomDark room = (RoomDark)this.currentRoom;
             if(room.isDark() && !this.hasLuminousItem()) {
-                PrintMessage.printConsole(room.deathMessage());
+                System.out.println(room.deathMessage());
                 this.terminate();
             }
         }
-    }
 
-    private boolean isValidNextRoom(Room nextRoom){
-        boolean ret = true;
-        if(nextRoom instanceof RoomLockable) {
-            RoomLockable lockedRoom = (RoomLockable)nextRoom;
-            if(lockedRoom.isLocked()) {
-                if(lockedRoom.causesDeath()) {
-                    PrintMessage.printConsole(lockedRoom.deathMessage());
-                    this.terminate();
+        if(this.currentRoom.canMoveToRoomInDirection(action)) {
+            Room nextRoom = this.currentRoom.getRoomForDirection(action);
+            // test if requires key
+            if(nextRoom instanceof RoomLockable) {
+                RoomLockable lockedRoom = (RoomLockable)nextRoom;
+                if(lockedRoom.isLocked()) {
+                    if(lockedRoom.causesDeath()) {
+                        System.out.println(lockedRoom.deathMessage());
+                        this.terminate();
+                    }
+                    System.out.println("This door is locked.");
+                    return;
                 }
-                PrintMessage.printConsole("This door is locked.");
-                ret = false;
             }
-        }
-        else if(nextRoom instanceof RoomObscured) {
-            RoomObscured obscuredRoom = (RoomObscured)nextRoom;
-            if(obscuredRoom.isObscured()) {
-                PrintMessage.printConsole("You can't move that way.");
-                ret = false;
+            else if(nextRoom instanceof RoomObscured) {
+                RoomObscured obscuredRoom = (RoomObscured)nextRoom;
+                if(obscuredRoom.isObscured()) {
+                    System.out.println("You can't move that way.");
+                    return;
+                }
             }
-        }
 
-        return ret;
+            move(nextRoom);
+        }
+        else {
+            System.out.println("You can't move that way.");
+        }
     }
 
     /**
@@ -315,7 +293,7 @@ public class Player {
      * Print information about the room
      */
     public void lookAround() {
-        PrintMessage.printConsole(this.currentRoom.toString());
+        System.out.println(this.currentRoom.toString());
     }
 
     /**
@@ -324,8 +302,8 @@ public class Player {
      * @see Valuable
      */
     public void score(Valuable valuableObject) {
-        int localScore = valuableObject.value();
-        score(localScore);
+        int score = valuableObject.value();
+        score(score);
     }
 
     /**
@@ -333,7 +311,7 @@ public class Player {
      * @param s the newly scored points.
      */
     public void score(int s) {
-        PrintMessage.printConsole("You scored " + s + " points.");
+        System.out.println("You scored " + s + " points.");
         score += s;
     }
 
@@ -341,7 +319,7 @@ public class Player {
      * Terminate this player.
      */
     public void terminate() {
-        PrintMessage.printConsole("You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
+        System.out.println("You have scored " + this.score + " out of  " + possiblePoints + " possible points.");
         System.exit(0);
     }
 
@@ -365,7 +343,7 @@ public class Player {
      * Fetch the goals for this Player.
      * @return the list of this Player's goals.
      */
-    public List<GameGoal> getGoals() {
+    public Vector<GameGoal> getGoals() {
         return goals;
     }
 }

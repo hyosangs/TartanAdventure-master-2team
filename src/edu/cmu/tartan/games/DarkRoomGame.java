@@ -9,8 +9,8 @@ import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomDark;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * A dark room game shows how to traverse a dark room
@@ -40,7 +40,7 @@ public class DarkRoomGame extends GameConfiguration {
         Room room1 = new Room("You are in the first room. There seems to be a room to the North.", "Room1");
         // player would type 'go north'
 
-        List<Item> items = new LinkedList<>();
+        LinkedList<Item> items = new LinkedList<>();
         String classroomDescription = "You are in a classroom.";
         String classroomShortDescription = "Classroom";
         String classroomDarkDescription = "It is dark. Perhaps you can find a way to see...";
@@ -57,10 +57,10 @@ public class DarkRoomGame extends GameConfiguration {
         room1.putItems(items);
         classroom.setDeathMessage("As walk in the dark room, you trip on a mysterious object. You fall toward the floor, and hit your head against a large rock.");
 
-        room1.setAdjacentRoom(Action.ACTION_GO_NORTH, classroom);
+        room1.setAdjacentRoom(Action.ActionGoNorth, classroom);
 
         Player player = new Player(room1);
-        List<String> goalItems = new LinkedList<>();
+        Vector<String> goalItems = new Vector<>();
         goalItems.add("room1");
         goalItems.add("Classroom");
 

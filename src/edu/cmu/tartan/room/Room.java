@@ -5,10 +5,8 @@ import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
-import edu.cmu.tartan.PrintMessage;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.LinkedList;
 
 /**
@@ -37,7 +35,7 @@ public class Room implements Comparable {
     protected boolean roomWasVisited;
 
     // items in the room
-    public List<Item> items;
+    public LinkedList<Item> items;
 
     // the player within the room
     public Player player;
@@ -59,7 +57,7 @@ public class Room implements Comparable {
         this.roomWasVisited = false;
         this.description = description;
         this.shortDescription = shortDescription;
-        this.items = new LinkedList<>();
+        this.items = new LinkedList<Item>();
         this.adjacentRooms = new HashMap<Action, Room>();
         this.transitionMessages = new HashMap<Action, String>();
         this.transitionDelay = 0;
@@ -102,14 +100,12 @@ public class Room implements Comparable {
      * @return the action
      */
     public Action getDirectionForRoom(Room room) {
-        for (HashMap.Entry<Action,Room> entry : this.adjacentRooms.entrySet()) {
-            Action a = entry.getKey();
-            Room r = entry.getValue();
-            if (r.compareTo(room) == 0) {
+        for (Action a : this.adjacentRooms.keySet()) {
+            if (this.adjacentRooms.get(a).compareTo(room) == 0) {
                 return a;
             }
         }
-        return Action.ACTION_UNKNOWN;
+        return Action.ActionUnknown;
     }
 
     /**
@@ -172,7 +168,7 @@ public class Room implements Comparable {
      * Put a list of items in a room
      * @param items the items
      */
-    public void putItems(List<Item> items) {
+    public void putItems(LinkedList<Item> items) {
         for (Item i : items) {
             this.items.add(i);
         }
@@ -182,7 +178,7 @@ public class Room implements Comparable {
         if (item == null) {
             return null;
         } else {
-            PrintMessage.printConsole("I don't see that here.");
+            System.out.println("I don't see that here.");
         }
         return Item.getInstance("unknown");
     }
@@ -193,9 +189,11 @@ public class Room implements Comparable {
      * @return the removed item
      */
     public Item remove(Item item) {
-        if (this.items.contains(item) && item instanceof Valuable) {
-            this.items.remove(item);
-            return item;
+        if (this.items.contains(item)) {
+            if (item instanceof Valuable) {
+                this.items.remove(item);
+                return item;
+            }
         }
         return null;
     }
@@ -206,8 +204,9 @@ public class Room implements Comparable {
      * @return true if the room contains the item; false otherwise
      */
     public boolean hasItem(Item item) {
-        if (item == null || !item.isVisible()) return false;
-        // if the item is invisible, then fool the player1
+        if (item == null) return false;
+        // if the item is invisible, then fool the player
+        else if (!item.isVisible()) return false;
         return this.items.contains(item);
     }
 
@@ -244,7 +243,7 @@ public class Room implements Comparable {
     }
 
     public int compareTo(Object other) {
-        if (shortDescription.equals(((Room) other).shortDescription())) {
+        if (shortDescription.compareTo(((Room) other).shortDescription()) == 0) {
             return 0;
         }
         return -1;

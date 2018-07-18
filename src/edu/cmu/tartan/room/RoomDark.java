@@ -64,7 +64,6 @@ public class RoomDark extends Room {
 		this.deathMessage = s;
 	}
 
-	@Override
 	public String toString() {
 
 		if(this.isDark) {
@@ -79,7 +78,6 @@ public class RoomDark extends Room {
 			return super.toString();
 		}
 	}
-	@Override
 	public String description() {
 		if (this.isDark) {
 			if (this.player.hasLuminousItem()) {

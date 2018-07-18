@@ -1,7 +1,6 @@
 package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Hostable;
-import edu.cmu.tartan.PrintMessage;
 
 /**
  * This class for a keycard reader, which can hold a keycard.
@@ -37,7 +36,7 @@ public class ItemKeycardReader extends Item implements Hostable {
         this.installedItem = item;
 
         for (int i = 0; i < 3; i++) {
-            PrintMessage.printConsole("...");
+            System.out.println("...");
             try {
                 Thread.sleep(1000);
             } catch (Exception e1) {
@@ -45,7 +44,7 @@ public class ItemKeycardReader extends Item implements Hostable {
             }
         }
         if (this.installMessage != null) {
-            PrintMessage.printConsole(this.installMessage);
+            System.out.println(this.installMessage);
         }
         this.relatedItem.setVisible(true);
     }

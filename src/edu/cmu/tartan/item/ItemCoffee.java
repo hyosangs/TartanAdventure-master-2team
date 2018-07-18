@@ -2,7 +2,6 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Edible;
 import edu.cmu.tartan.properties.Valuable;
-import edu.cmu.tartan.PrintMessage;
 
 /**
  * This class for coffee cup, which can be eaten.
@@ -28,7 +27,7 @@ public class ItemCoffee extends Item implements Edible, Valuable {
 
     @Override
     public void eat() {
-        PrintMessage.printConsole("You grimace at the taste of black coffee, and put down the mug.");
+        System.out.println("You grimace at the taste of black coffee, and put down the mug.");
     }
 
 }

@@ -9,8 +9,8 @@ import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomLockable;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * A collection game is one where a player must collect certain items to win.
@@ -41,22 +41,22 @@ public class CollectGame extends GameConfiguration {
         Room mid2 = new Room("Ferocious bear", "bear");
         Room end = new RoomLockable("You are inside of a building", "Building interior", true, Item.getInstance("key"));
 
-        end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);
+        end.setAdjacentRoom(Action.ActionGoNortheast, mid1);
 
-        List<Item> startItems = new LinkedList<>();
+        LinkedList<Item> startItems = new LinkedList<Item>();
         startItems.add(Item.getInstance("brick"));
         startItems.add(Item.getInstance("key"));
         startItems.add(Item.getInstance("lock"));
         startItems.add(Item.getInstance("gold"));
 
         Room start = new Room("There is a tree, with a building to the West. There is a lock on the door.", "Tree" );
-        start.setAdjacentRoom(Action.ACTION_GO_NORTH, mid1);
-        start.setAdjacentRoom(Action.ACTION_GO_EAST, mid2);
-        start.setAdjacentRoom(Action.ACTION_GO_WEST, end);
+        start.setAdjacentRoom(Action.ActionGoNorth, mid1);
+        start.setAdjacentRoom(Action.ActionGoEast, mid2);
+        start.setAdjacentRoom(Action.ActionGoWest, end);
         start.putItems(startItems);
 
         // Now we configure the goal based on picking up items
-        List<String> goalItems = new LinkedList<>();
+        Vector<String> goalItems = new Vector<>();
         goalItems.add("brick");
         goalItems.add("key");
         goalItems.add("gold");

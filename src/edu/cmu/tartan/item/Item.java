@@ -4,9 +4,7 @@ import edu.cmu.tartan.properties.Inspectable;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 import edu.cmu.tartan.room.Room;
-import edu.cmu.tartan.PrintMessage;
 
-import java.util.List;
 import java.util.LinkedList;
 
 /**
@@ -33,20 +31,11 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
      * Items can have a list of unique aliases
      */
     private String[] aliases;
-    private static List<Item> sharedInstances;
-    
-    // items can open rooms, call elevators, etc (e.g., an ItemButton instance)
-    Room relatedRoom; 
-    
-    // items can also affect other items, like setting other items breakable (like a junction box)
-    Item relatedItem; 
+    private static LinkedList<Item> sharedInstances;
 
+    Room relatedRoom; // items can open rooms, call elevators, etc (e.g., an ItemButton instance)
+    Item relatedItem; // items can also affect other items, like setting other items breakable (like a junction box);
     private String inspectMessage;
-
-    /**
-     *  String of unknown
-     */
-    private static final String MSG_UNKNOWN = "unknown";
 
     /**
      * Create a new item
@@ -69,7 +58,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
      */
     private static void initSharedInstances() {
 
-        sharedInstances = new LinkedList<>();
+        sharedInstances = new LinkedList<Item>();
         sharedInstances.add(new ItemShovel("shovel", "metal shovel", new String[]{"shovel"}));
         sharedInstances.add(new ItemBrick("brick", "clay brick", new String[]{"brick"}));
         sharedInstances.add(new ItemFood("food", "food", new String[]{"food"}));
@@ -85,6 +74,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         sharedInstances.add(new ItemFridge("fridge", "white refrigerator", new String[]{"fridge", "refrigerator"}));
         sharedInstances.add(new ItemFlashlight("flashlight", "battery operated flashlight", new String[]{"flashlight"}));
         sharedInstances.add(new ItemTorch("torch", "metal torch", new String[]{"torch", "candle"}));
+//        sharedInstances.add(new ItemWatch("watch", "smart watch", new String[]{"watch"}));
         sharedInstances.add(new ItemMagicBox("pit", "bottomless pit", new String[]{"pit", "hole"}));
         sharedInstances.add(new ItemVendingMachine("machine", "vending machine with assorted candies and treats", new String[]{"machine", "vendor"}));
         sharedInstances.add(new ItemSafe("safe", "bullet-proof safe", new String[]{"safe"}));
@@ -100,7 +90,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         sharedInstances.add(new ItemButton("Floor 2 Button", "Elevator Floor 2 Button", new String[]{"2"}));
         sharedInstances.add(new ItemButton("Floor 3 Button", "Elevator Floor 3 Button", new String[]{"3"}));
         sharedInstances.add(new ItemButton("Floor 4 Button", "Elevator Floor 4 Button", new String[]{"4"}));
-        sharedInstances.add(new ItemUnknown(MSG_UNKNOWN, MSG_UNKNOWN, new String[]{MSG_UNKNOWN}));
+        sharedInstances.add(new ItemUnknown("unknown", "unknown", new String[]{"unknown"}));
 
         // there can be no overlap in aliases
         checkUniqueAliases();
@@ -134,18 +124,12 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
                 if (item == i) {
                     continue;
                 }
-
-                // need to report the Error
-                checkDuplicateItemAliases(item, i);
-            }
-        }
-    }
-
-    private static void checkDuplicateItemAliases(Item item1, Item item2){
-        for (String string : item1.getAliases()) {
-            for (String s : item2.getAliases()) {
-                if (string == s) {
-                    PrintMessage.printSevereLog("Warning: alias conflict between " + item1 + " and " + item2);
+                for (String string : item.getAliases()) {
+                    for (String s : i.getAliases()) {
+                        if (string == s) {
+                            System.err.println("Warning: alias conflict between " + item + " and " + i);
+                        }
+                    }
                 }
             }
         }
@@ -215,9 +199,9 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     // Inspectable
     public Boolean inspect() {
         if (this.inspectMessage != null) {
-            PrintMessage.printConsole(this.inspectMessage);
+            System.out.println(this.inspectMessage);
         } else {
-            PrintMessage.printConsole("It appears to be a " + this + ".");
+            System.out.println("It appears to be a " + this + ".");
         }
         return true;
     }

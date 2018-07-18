@@ -2,7 +2,6 @@ package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.PrintMessage;
 
 import java.util.Arrays;
 
@@ -19,7 +18,7 @@ public class PlayerInterpreter {
     public Action interpretString(String string) {
 
         if(string.equals("")) {
-            return Action.ACTION_PASS;
+            return Action.ActionPass;
         }
         return action(string.toLowerCase().split(" "));
     }
@@ -30,129 +29,97 @@ public class PlayerInterpreter {
      * @return
      * @throws ArrayIndexOutOfBoundsException
      */
-    private Action action(String[] string){
+    private Action action(String[] string) throws ArrayIndexOutOfBoundsException {
+
         if(string == null || string.length == 0) {
-            return Action.ACTION_PASS;
+            return Action.ActionPass;
         }
-
-        Action retVal = null;
-        String[] command = getCommendString(string);
-        Action action = getActionFromString(command);
-        if(action == null){
-            return Action.ACTION_ERROR;
-        }
-
-        switch(action.type()){
-            case TYPE_DIRECTIONAL:
-                retVal = action;
-                break;
-
-            case TYPE_HASDIRECTOBJECT:
-                retVal = getActionHasDirectObject(action, command);
-                break;
-
-            case TYPE_HASINDIRECTOBJECT:
-                retVal = getActionHasIndirectObject(action, command);
-                break;
-
-            case TYPE_HASNOOBJECT:
-                retVal = action;
-                break;
-
-            case TYPE_UNKNOWN:
-                retVal = Action.ACTION_ERROR;
-                break;
-
-            default:
-                PrintMessage.printConsole("Unknown type");
-                retVal = Action.ACTION_ERROR;
-                break;
-        }
-
-        return retVal;
-    }
-
-    private String[] getCommendString(String[] string){
-        String[] command = null;
         if(string[0].compareTo("go") == 0 || string[0].compareTo("travel") == 0 || string[0].compareTo("move") == 0){
-            command = Arrays.copyOfRange(string, 1, string.length);
+            String[] command = Arrays.copyOfRange(string, 1, string.length);
+            return action(command);
         }
-        else{
-            command = string;
-        }
+        else {
+            // input could be northeast, put cpu in vax, throw shovel, examine bin
 
-        return command;
-    }
-
-    private Action getActionFromString(String[] string){
-        String s = string[0];
-        Action action = null;
-
-        for( Action a : Action.values()) {
-            for(String alias : a.getAliases()) {
-                if(s.compareTo(alias) == 0) {
-                    action = a;
-                    break;
+            String s = string[0];
+            Action action = null;
+            out:{
+                for( Action a : Action.values()) {
+                    for(String alias : a.getAliases()) {
+                        if(s.compareTo(alias) == 0) {
+                            action = a;
+                            break out;
+                        }
+                    }
                 }
             }
-        }
-
-        return action;
-    }
-
-    private Action getActionHasDirectObject(Action action, String[] string){
-        if(action == null || string == null) {
-            return Action.ACTION_ERROR;
-        }
-
-        Action retVal=null;
-        if(string.length > 1) {
-            String d = string[1];
-            Item item = Item.getInstance(d);
-            // item is the direct object of the action
-            action.setDirectObject(item);
-            retVal = action;
-        }
-        else {
-            PrintMessage.printConsole("You must supply a direct object.");
-            retVal = Action.ACTION_PASS;
-        }
-
-        return retVal;
-    }
-
-    private Action getActionHasIndirectObject(Action action, String[] string){
-        // test if it has indirect object
-        // "Take Diamond from Microwave"
-        if(action == null || string == null) {
-            return Action.ACTION_ERROR;
-        }
-
-        Action retVal=null;
-        ///////////////////////
-        // origin : string.length > 0 --> change : sting.length > 1
-        if(string.length > 3) {
-            String d = string[1];
-            Item item = Item.getInstance(d);
-            // item is the direct object of the action
-            action.setDirectObject(item);
-            String in = string[2];
-            if(in.equals("in") || in.equals("from")) {
-                String io = string[3];
-                Item indob = Item.getInstance(io);
-                action.setIndirectObject(indob);
-                retVal = action;
+            if(action == null) {
+                return Action.ActionError;
             }
-            else {
-                retVal = Action.ACTION_PASS;
+            switch(action.type()) {
+                case TYPE_DIRECTIONAL:
+                    return action;
+                case TYPE_HASDIRECTOBJECT:
+                    if(string.length > 1) {
+
+                        String d = string[1];
+                        Item item = Item.getInstance(d);
+                        // item is the direct object of the action
+                        action.setDirectObject(item);
+                        return action;
+                    }
+                    else {
+                        System.out.println("You must supply a direct object.");
+                        return Action.ActionPass;
+                    }
+                case TYPE_HASINDIRECTOBJECT:
+
+                    // test if it has indirect object
+                    // "Take Diamond from Microwave"
+
+                    if(string.length > 0) {
+
+                        String d = string[1];
+                        Item item = Item.getInstance(d);
+                        // item is the direct object of the action
+                        action.setDirectObject(item);
+
+                        if(string.length > 2) {
+                            String in = string[2];
+                            if(in.equals("in") || in.equals("from")) {
+
+                                if(string.length > 3) {
+                                    String io = string[3];
+                                    Item indob = Item.getInstance(io);
+                                    action.setIndirectObject(indob);
+                                    return action;
+                                }
+                                else {
+                                    System.out.println("You must supply an indirect object.");
+                                    return Action.ActionError;
+                                }
+                            }
+                            else {
+                                return Action.ActionPass;
+                            }
+                        }
+
+                    }
+                    else {
+                        System.out.println("You must supply a direct object.");
+                        return Action.ActionError;
+                    }
+                    break;
+                case TYPE_HASNOOBJECT:
+                    return action;
+                case TYPE_UNKNOWN:
+                    return Action.ActionError;
+                default:
+                    System.out.println("Unknown type");
+                    break;
             }
         }
-        else {
-            PrintMessage.printConsole("You must supply a direct object.");
-            retVal = Action.ACTION_ERROR;
-        }
 
-        return retVal;
+        return Action.ActionPass;
     }
-
 }

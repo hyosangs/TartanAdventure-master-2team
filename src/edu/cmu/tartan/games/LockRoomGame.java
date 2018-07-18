@@ -10,8 +10,8 @@ import edu.cmu.tartan.item.ItemLock;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomLockable;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * Demonstrate a locked room game.
@@ -41,9 +41,9 @@ public class LockRoomGame extends GameConfiguration {
         Room end = new RoomLockable("You are inside of a building", "interior",
                 true, key);
 
-        end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);
+        end.setAdjacentRoom(Action.ActionGoNortheast, mid1);
 
-        List<Item> startItems = new LinkedList<>();
+        LinkedList<Item> startItems = new LinkedList<Item>();
         Item lock = Item.getInstance("lock");
 
         // Install the lock and key to unlock the locked room. You must 'open' or 'unlock' the lock
@@ -56,12 +56,12 @@ public class LockRoomGame extends GameConfiguration {
         startItems.add(lock);
 
         Room start = new Room("There is a tree, with a building to the West. There is a lock on the door.", "Tree" );
-        start.setAdjacentRoom(Action.ACTION_GO_NORTH, mid1);
-        start.setAdjacentRoom(Action.ACTION_GO_EAST, mid2);
-        start.setAdjacentRoom(Action.ACTION_GO_WEST, end);
+        start.setAdjacentRoom(Action.ActionGoNorth, mid1);
+        start.setAdjacentRoom(Action.ActionGoEast, mid2);
+        start.setAdjacentRoom(Action.ActionGoWest, end);
         start.putItems(startItems);
 
-        List<String> goals = new LinkedList<>();
+        Vector<String> goals = new Vector<>();
         goals.add("Fork");
         goals.add("bear");
         goals.add("interior");

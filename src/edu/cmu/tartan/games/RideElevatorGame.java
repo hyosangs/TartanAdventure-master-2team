@@ -21,9 +21,6 @@ import java.util.ArrayList;
  */
 public class RideElevatorGame extends GameConfiguration {
 
-    //String of the button
-    private static final String MSG_BUTTON = "button";
-
     public RideElevatorGame() {
         super.name = "Elevator";
     }
@@ -47,41 +44,41 @@ public class RideElevatorGame extends GameConfiguration {
         // configure the floors and buttons needed to reach them
 
         Room floor1 = new Room("floor1", "floor1");
-        Item b1 = Item.getInstance(MSG_BUTTON);
+        Item b1 = Item.getInstance("button");
         b1.setRelatedRoom(elevator);
         floor1.putItem(b1);
 
         Room floor2 = new Room("floor2", "floor2");
-        Item b2 = Item.getInstance(MSG_BUTTON);
+        Item b2 = Item.getInstance("button");
         b2.setRelatedRoom(elevator);
         floor2.putItem(b2);
 
         Room floor3 = new Room("floor3", "floor3");
-        Item b3 = Item.getInstance(MSG_BUTTON);
+        Item b3 = Item.getInstance("button");
         b3.setRelatedRoom(elevator);
         floor3.putItem(b3);
 
         // restricted floors cannot be reached
         Room floor4 = new Room("floor4", "floor4");
-        Item b4 = Item.getInstance(MSG_BUTTON);
+        Item b4 = Item.getInstance("button");
         b4.setRelatedRoom(elevator);
         floor4.putItem(b4);
 
-        ArrayList<Room> list = new ArrayList<>();
+        ArrayList<Room> list = new ArrayList<Room>();
         list.add(floor1);
         list.add(floor2);
         list.add(floor3);
         list.add(floor4);
 
-        ArrayList<String> descriptions = new ArrayList<>();
+        ArrayList<String> descriptions = new ArrayList<String>();
         descriptions.add("Elevator -- floor 1.");
         descriptions.add("Elevator -- floor 2");
         descriptions.add("Elevator -- floor 3");
         descriptions.add("Elevator -- floor 4");
 
 
-        elevator.setFloors(descriptions, list, Action.ACTION_GO_EAST, 1);
-        ArrayList<Integer> restrictedFloors = new ArrayList<>();
+        elevator.setFloors(descriptions, list, Action.ActionGoEast, 1);
+        ArrayList<Integer> restrictedFloors = new ArrayList<Integer>();
         restrictedFloors.add(2);
         elevator.setRestrictedFloors(restrictedFloors);
 
