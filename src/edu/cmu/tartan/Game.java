@@ -87,7 +87,7 @@ public class Game {
 		for (int i = 0; i < menu.size(); i++) {
 			sb.append((i + 1) + ":  " + menu.get(i).name + "\n");
 		}
-		PrintMessage.PrintConsole(sb.toString());
+		PrintMessage.printConsole(sb.toString());
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class Game {
 		int choice = 0;
 		while (true) {
 			printMenu(menu);
-			System.out.print("> ");
+			PrintMessage.printChar("> ");
 			String input = this.scanner.nextLine();
 			try {
 				if (input.equalsIgnoreCase("help")) {
@@ -119,7 +119,7 @@ public class Game {
 				}
 				choice = Integer.parseInt(input) - 1;
 			} catch (Exception e) {
-				PrintMessage.PrintSevereLog("Invalid selection.");
+				PrintMessage.printSevereLog("Invalid selection.");
 				continue;
 			}
 			try {
@@ -128,7 +128,7 @@ public class Game {
 				gameConfig.configure(this);
 				break;
 			} catch (InvalidGameException ige) {
-				PrintMessage.PrintSevereLog("Game improperly configured, please try again.");
+				PrintMessage.printSevereLog("Game improperly configured, please try again.");
 			}
 		}
 		// Once the game has been configured, it is time to play!
@@ -169,7 +169,7 @@ public class Game {
                 executeTypeUnknown(a);
                 break;
             default:
-                PrintMessage.PrintConsole("I don't understand that");
+                PrintMessage.printConsole("I don't understand that");
                 break;
         }
     }
@@ -306,28 +306,28 @@ public class Game {
 		Item container = null;
 		if(this.player.currentRoom().hasItem(o)) {
 		    if(o instanceof Holdable) {
-		        PrintMessage.PrintConsole(MSG_TAKEN);
+		        PrintMessage.printConsole(MSG_TAKEN);
 
 		        this.player.currentRoom().remove(o);
 		        this.player.pickup(o);
 		        this.player.score( ((Holdable)o).value());
 		    }
 		    else {
-		        PrintMessage.PrintConsole("You cannot pick up this item.");
+		        PrintMessage.printConsole("You cannot pick up this item.");
 		    }
 		}
 		else if((container = containerForItem(o)) != null) {
 
-		    PrintMessage.PrintConsole(MSG_TAKEN);
+		    PrintMessage.printConsole(MSG_TAKEN);
 		    ((Hostable)container).uninstall(o);
 		    this.player.pickup(o);
 		    this.player.score( ((Holdable)o).value());
 		}
 		else if(this.player.hasItem(o)) {
-		    PrintMessage.PrintConsole("You already have that item in your inventory.");
+		    PrintMessage.printConsole("You already have that item in your inventory.");
 		}
 		else {
-		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
+		    PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 	
@@ -335,7 +335,7 @@ public class Game {
 	 * Execute ActionError of ActionLists
 	 */
 	private void executeActionError() {
-		PrintMessage.PrintConsole("I don't understand that.");
+		PrintMessage.printConsole("I don't understand that.");
 	}
 
 	/**
@@ -351,11 +351,11 @@ public class Game {
 	private void executeActionViewItems() {
 		List<Item> items = this.player.getCollectedItems();
 		if (items.isEmpty()) {
-		    PrintMessage.PrintConsole("You don't have any items.");
+		    PrintMessage.printConsole("You don't have any items.");
 		}
 		else {
 		    for(Item item : this.player.getCollectedItems()) {
-		        PrintMessage.PrintConsole("You have a " + item.description() + ".");
+		        PrintMessage.printConsole("You have a " + item.description() + ".");
 		    }
 		}
 	}
@@ -389,19 +389,19 @@ public class Game {
 		Item contents = a.directObject();
 		Item container = a.indirectObject();
 		if(!this.player.currentRoom().hasItem(container)) {
-		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
+		    PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
 		}
 		else if(!(container instanceof Hostable)) {
-		    PrintMessage.PrintConsole("You can't have an item inside that.");
+		    PrintMessage.printConsole("You can't have an item inside that.");
 		}
 		else {
 		    if(((Hostable)container).installedItem() == contents) {
 		        ((Hostable)container).uninstall(contents);
 		        this.player.pickup(contents);
-		        PrintMessage.PrintConsole(MSG_TAKEN);
+		        PrintMessage.printConsole(MSG_TAKEN);
 		    }
 		    else {
-		        PrintMessage.PrintConsole("That item is not inside this " + container);
+		        PrintMessage.printConsole("That item is not inside this " + container);
 		    }
 		}
 	}
@@ -414,22 +414,22 @@ public class Game {
 		Item itemToPut = a.directObject();
 		Item itemToBePutInto = a.indirectObject();
 		if(!this.player.hasItem(itemToPut)) {
-		    PrintMessage.PrintConsole("You don't have that object in your inventory.");
+		    PrintMessage.printConsole("You don't have that object in your inventory.");
 		}
 		else if(itemToBePutInto == null) {
-		    PrintMessage.PrintConsole("You must supply an indirect object.");
+		    PrintMessage.printConsole("You must supply an indirect object.");
 		}
 		else if(!this.player.currentRoom().hasItem(itemToBePutInto)) {
-		    PrintMessage.PrintConsole("That object doesn't exist in this room.");
+		    PrintMessage.printConsole("That object doesn't exist in this room.");
 		}
 		else if(itemToBePutInto instanceof ItemMagicBox && !(itemToPut instanceof Valuable)) {
-		    PrintMessage.PrintConsole("This item has no value--putting it in this " + itemToBePutInto + " will not score you any points.");
+		    PrintMessage.printConsole("This item has no value--putting it in this " + itemToBePutInto + " will not score you any points.");
 		}
 		else if(!(itemToBePutInto instanceof Hostable) || !(itemToPut instanceof Installable)) {
-		    PrintMessage.PrintConsole("You cannot put a " + itemToPut + " into this " + itemToBePutInto);
+		    PrintMessage.printConsole("You cannot put a " + itemToPut + " into this " + itemToBePutInto);
 		}
 		else {
-		    PrintMessage.PrintConsole("Done.");
+		    PrintMessage.printConsole("Done.");
 		    this.player.drop(itemToPut);
 		    this.player.putItemInItem(itemToPut, itemToBePutInto);
 		}
@@ -449,15 +449,15 @@ public class Game {
 		            this.player.score(explode.value());
 		        }
 		        else {
-		            PrintMessage.PrintConsole("There isn't anything to blow up here.");
+		            PrintMessage.printConsole("There isn't anything to blow up here.");
 		        }
 		    }
 		    else {
-		        PrintMessage.PrintConsole("That item is not an explosive.");
+		        PrintMessage.printConsole("That item is not an explosive.");
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole("You do not have that item in your inventory.");
+		    PrintMessage.printConsole("You do not have that item in your inventory.");
 		}
 	}
 
@@ -477,11 +477,11 @@ public class Game {
 		        }
 		    }
 		    else {
-		        PrintMessage.PrintConsole("You cannot open this.");
+		        PrintMessage.printConsole("You cannot open this.");
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
+		    PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
@@ -502,11 +502,11 @@ public class Game {
 		    }
 		    else {
 		        if(item instanceof Holdable) {
-		            PrintMessage.PrintConsole("As you  shove the " + a.directObject() + " down your throat, you begin to choke.");
+		            PrintMessage.printConsole("As you  shove the " + a.directObject() + " down your throat, you begin to choke.");
 		            executeActionDie();
 		        }
 		        else {
-		            PrintMessage.PrintConsole("That cannot be consumed.");
+		            PrintMessage.printConsole("That cannot be consumed.");
 		        }
 		    }
 		}
@@ -522,7 +522,7 @@ public class Game {
 		    RoomExcavatable curr = (RoomExcavatable) this.player.currentRoom();
 		    curr.dig();
 		} else {
-		    PrintMessage.PrintConsole("You are not allowed to dig here");
+		    PrintMessage.printConsole("You are not allowed to dig here");
 		}
 	}
 
@@ -548,11 +548,11 @@ public class Game {
 		        }
 		    }
 		    else {
-		        PrintMessage.PrintConsole("Nothing happens.");
+		        PrintMessage.printConsole("Nothing happens.");
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
+		    PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
@@ -564,15 +564,15 @@ public class Game {
 		Item item = a.directObject();
 		if(this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
 		    if(item instanceof Startable) {
-		        PrintMessage.PrintConsole("Done.");
+		        PrintMessage.printConsole("Done.");
 		        ((Startable)item).start();
 		    }
 		    else {
-		        PrintMessage.PrintConsole("I don't know how to do that.");
+		        PrintMessage.printConsole("I don't know how to do that.");
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
+		    PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
@@ -590,11 +590,11 @@ public class Game {
 		        }
 		    }
 		    else {
-		        PrintMessage.PrintConsole("I don't know how to do that.");
+		        PrintMessage.printConsole("I don't know how to do that.");
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
+		    PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
@@ -606,17 +606,17 @@ public class Game {
 		Item item = a.directObject();
 		if(this.player.hasItem(item)) {
 		    if(item instanceof Chuckable) {
-		        PrintMessage.PrintConsole("Thrown.");
+		        PrintMessage.printConsole("Thrown.");
 		        ((Chuckable)item).chuck();
 		        this.player.drop(item);
 		        this.player.currentRoom().putItem(item);
 		    }
 		    else {
-		        PrintMessage.PrintConsole("You cannot throw this item.");
+		        PrintMessage.printConsole("You cannot throw this item.");
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole("You don't have that item to throw.");
+		    PrintMessage.printConsole("You don't have that item to throw.");
 		}
 	}
 
@@ -628,18 +628,18 @@ public class Game {
 		Item item = a.directObject();
 		if(this.player.hasItem(item)) {
 		    if(item instanceof Holdable) {
-		        PrintMessage.PrintConsole("Dropped.");
+		        PrintMessage.printConsole("Dropped.");
 		        this.player.drop(item);
-		        PrintMessage.PrintConsole("You Dropped '" +item.description() + "' costing you "
+		        PrintMessage.printConsole("You Dropped '" +item.description() + "' costing you "
 		                + item.value() + " points.");
 		        this.player.currentRoom().putItem(item);
 		    }
 		    else {
-		        PrintMessage.PrintConsole("You cannot drop this item.");
+		        PrintMessage.printConsole("You cannot drop this item.");
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole("You don't have that item to drop.");
+		    PrintMessage.printConsole("You don't have that item to drop.");
 		}
 		if(this.player.currentRoom() instanceof RoomRequiredItem) {
 		    RoomRequiredItem r = (RoomRequiredItem)this.player.currentRoom();
@@ -658,11 +658,11 @@ public class Game {
 		        (item).inspect();
 		    }
 		    else {
-		        PrintMessage.PrintConsole("You cannot inspect this item.");
+		        PrintMessage.printConsole("You cannot inspect this item.");
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
+		    PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
@@ -674,7 +674,7 @@ public class Game {
 		Item item = a.directObject();
 		if (this.player.currentRoom().hasItem(item) || this.player.hasItem(item)) {
 		    if (item instanceof Destroyable) {
-		        PrintMessage.PrintConsole("Smashed.");
+		        PrintMessage.printConsole("Smashed.");
 		        ((Destroyable)item).destroy();
 		        item.setDescription("broken " + item.toString());
 		        item.setDetailDescription("broken " + item.detailDescription());
@@ -691,11 +691,11 @@ public class Game {
 		        }
 		    }
 		    else {
-		        PrintMessage.PrintConsole("You cannot break this item.");
+		        PrintMessage.printConsole("You cannot break this item.");
 		    }
 		}
 		else {
-		    PrintMessage.PrintConsole(MSG_IDONOTSEETHATHERE);
+		    PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
 		}
 	}
 
@@ -712,13 +712,13 @@ public class Game {
 		try {
 			String input = null;
 			while (true) {
-				System.out.print("> ");
+				PrintMessage.printChar("> ");
 
 				input = this.scanner.nextLine();
 
 				if (input.compareTo("quit") == 0) {
 					for (GameGoal g : goals) {
-						PrintMessage.PrintConsole(g.getStatus());
+						PrintMessage.printConsole(g.getStatus());
 					}
 					break;
 				} else if (input.compareTo("look") == 0) {
@@ -737,12 +737,12 @@ public class Game {
 				}
 			}
 		} catch (Exception e) {
-			PrintMessage.PrintSevereLog("I don't understand that \n\nException: \n" + e);
+			PrintMessage.printSevereLog("I don't understand that \n\nException: \n" + e);
 			e.printStackTrace();
 			start();
 		}
 
-		PrintMessage.PrintConsole("Game Over");
+		PrintMessage.printConsole("Game Over");
 	}
 
 	/**
@@ -750,19 +750,19 @@ public class Game {
 	 */
 	private void winGame() {
 
-		PrintMessage.PrintConsole("Congrats!");
+		PrintMessage.printConsole("Congrats!");
 
-		PrintMessage.PrintConsole("You've won the '" + gameName + "' game!\n");
-		PrintMessage.PrintConsole("- Final score: " + player.getScore());
-		PrintMessage.PrintConsole("- Final inventory: ");
+		PrintMessage.printConsole("You've won the '" + gameName + "' game!\n");
+		PrintMessage.printConsole("- Final score: " + player.getScore());
+		PrintMessage.printConsole("- Final inventory: ");
 		if (player.getCollectedItems().isEmpty()) {
-			PrintMessage.PrintConsole("You don't have any items.");
+			PrintMessage.printConsole("You don't have any items.");
 		} else {
 			for (Item i : player.getCollectedItems()) {
-				PrintMessage.PrintConsole(i.toString() + " ");
+				PrintMessage.printConsole(i.toString() + " ");
 			}
 		}
-		PrintMessage.PrintConsole("\n");
+		PrintMessage.printConsole("\n");
 	}
 
 	/**
@@ -783,40 +783,40 @@ public class Game {
 	}
 
 	private void status() {
-		PrintMessage.PrintConsole("The current game is '" + gameName + "': " + gameDescription + "\n");
-		PrintMessage.PrintConsole("- There are " + goals.size() + " goals to achieve:");
+		PrintMessage.printConsole("The current game is '" + gameName + "': " + gameDescription + "\n");
+		PrintMessage.printConsole("- There are " + goals.size() + " goals to achieve:");
 
 		for (int i = 0; i < goals.size(); i++) {
-			PrintMessage.PrintConsole("  * " + (i + 1) + ": " + goals.get(i).describe() + ", status: "
+			PrintMessage.printConsole("  * " + (i + 1) + ": " + goals.get(i).describe() + ", status: "
 					+ goals.get(i).getStatus());
 		}
-		PrintMessage.PrintConsole("\n");
-		PrintMessage.PrintConsole("- Current room:  " + player.currentRoom() + "\n");
-		PrintMessage.PrintConsole("- Items in current room: ");
+		PrintMessage.printConsole("\n");
+		PrintMessage.printConsole("- Current room:  " + player.currentRoom() + "\n");
+		PrintMessage.printConsole("- Items in current room: ");
 		for (Item i : player.currentRoom().items) {
-			PrintMessage.PrintConsole("   * " + i.toString() + " ");
+			PrintMessage.printConsole("   * " + i.toString() + " ");
 		}
-		PrintMessage.PrintConsole("\n");
+		PrintMessage.printConsole("\n");
 
-		PrintMessage.PrintConsole("- Current score: " + player.getScore());
+		PrintMessage.printConsole("- Current score: " + player.getScore());
 
-		PrintMessage.PrintConsole("- Current inventory: ");
+		PrintMessage.printConsole("- Current inventory: ");
 		if (player.getCollectedItems().isEmpty()) {
-			PrintMessage.PrintConsole("   You don't have any items.");
+			PrintMessage.printConsole("   You don't have any items.");
 		} else {
 			for (Item i : player.getCollectedItems()) {
-				PrintMessage.PrintConsole("   * " + i.toString() + " ");
+				PrintMessage.printConsole("   * " + i.toString() + " ");
 			}
 		}
-		PrintMessage.PrintConsole("\n");
+		PrintMessage.printConsole("\n");
 
-		PrintMessage.PrintConsole("- Rooms visited: ");
+		PrintMessage.printConsole("- Rooms visited: ");
 		List<Room> rooms = player.getRoomsVisited();
 		if (rooms.isEmpty()) {
-			PrintMessage.PrintConsole("You have not been to any rooms.");
+			PrintMessage.printConsole("You have not been to any rooms.");
 		} else {
 			for (Room r : rooms) {
-				PrintMessage.PrintConsole("  * " + r.description() + " ");
+				PrintMessage.printConsole("  * " + r.description() + " ");
 			}
 		}
 	}
@@ -854,12 +854,12 @@ public class Game {
 	private void help() {
 
 		// Credit to emacs Dunnet by Ron Schnell
-		PrintMessage.PrintConsole("Welcome to TartanAdventure RPG Help."
+		PrintMessage.printConsole("Welcome to TartanAdventure RPG Help."
 				+ "Here is some useful information (read carefully because there are one\n"
 				+ "or more clues in here):\n");
 
-		PrintMessage.PrintConsole("- To view your current items: type \"inventory\"\n");
-		PrintMessage.PrintConsole("- You have a number of actions available:\n");
+		PrintMessage.printConsole("- To view your current items: type \"inventory\"\n");
+		PrintMessage.printConsole("- You have a number of actions available:\n");
 
 		StringBuilder directions = new StringBuilder("Direction: go [");
 		StringBuilder dirobj = new StringBuilder("Manipulate object directly: [");
@@ -886,13 +886,13 @@ public class Game {
 		indirobj.append("]");
 		misc.append("]");
 
-		PrintMessage.PrintConsole("- " + directions.toString() + "\n");
-		PrintMessage.PrintConsole("- " + dirobj.toString() + "\n");
-		PrintMessage.PrintConsole("- " + indirobj.toString() + "\n");
-		PrintMessage.PrintConsole("- " + misc.toString() + "\n");
-		PrintMessage.PrintConsole("- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
-		PrintMessage.PrintConsole("- You can quit by typing \"quit\"\n");
-		PrintMessage.PrintConsole("- Good luck!\n");
+		PrintMessage.printConsole("- " + directions.toString() + "\n");
+		PrintMessage.printConsole("- " + dirobj.toString() + "\n");
+		PrintMessage.printConsole("- " + indirobj.toString() + "\n");
+		PrintMessage.printConsole("- " + misc.toString() + "\n");
+		PrintMessage.printConsole("- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
+		PrintMessage.printConsole("- You can quit by typing \"quit\"\n");
+		PrintMessage.printConsole("- Good luck!\n");
 
 	}
 
@@ -921,9 +921,9 @@ public class Game {
 	 */
 	public void showIntro() {
 
-		PrintMessage.PrintConsole("Welcome to Tartan Adventure (1.0), by Tartan Inc..");
-		PrintMessage.PrintConsole("Game: " + gameDescription);
-		PrintMessage.PrintConsole("To get help type 'help' ... let's begin\n");
+		PrintMessage.printConsole("Welcome to Tartan Adventure (1.0), by Tartan Inc..");
+		PrintMessage.printConsole("Game: " + gameDescription);
+		PrintMessage.printConsole("To get help type 'help' ... let's begin\n");
 	}
 
 	/**
