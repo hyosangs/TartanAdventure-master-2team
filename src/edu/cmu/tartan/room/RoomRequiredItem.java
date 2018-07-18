@@ -43,7 +43,7 @@ public class RoomRequiredItem extends Room {
 		this.warningDescription = w;
 		this.warningShortDescription = ws;
 		this.requiredItem = requiredItem;
-		this.safeDirections = new LinkedList<Action>();
+		this.safeDirections = new LinkedList<>();
 		this.diesOnItemDiscard = false;
 		this.diesOnEntry = false;
 		this.deathMessage = null;

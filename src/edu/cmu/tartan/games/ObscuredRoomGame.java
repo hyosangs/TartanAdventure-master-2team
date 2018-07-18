@@ -9,7 +9,8 @@ import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomObscured;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A game demonstrating a hidden (obscured) room.
@@ -52,7 +53,7 @@ public class ObscuredRoomGame extends GameConfiguration {
 		fridge.setRelatedRoom(passage);
 
         Player player = new Player(room1);
-        Vector<String> goalItems = new Vector<>();
+        List<String> goalItems = new ArrayList<>();
         goalItems.add("passage");
         goalItems.add("room1");
 
