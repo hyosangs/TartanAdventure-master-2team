@@ -182,40 +182,40 @@ public class Game {
 	private void executeTypeHasDirectObject(Action a) {
 		switch(a) {
 
-		    case ActionPickUp:
+		    case ACTION_PICK_UP:
 		        executeActionPickup(a);
 		        break;
-		    case ActionDestroy:
+		    case ACTION_DESTROY:
 		        executeActionDestroy(a);
 		        break;
-		    case ActionInspect:
+		    case ACTION_INSPECT:
 		        executeActionInspect(a);
 		        break;
-		    case ActionDrop:
+		    case ACTION_DROP:
 		        executeActionDrop(a);
 		        break;
-		    case ActionThrow:
+		    case ACTION_THROW:
 		        executeActionThrow(a);
 		        break;
-		    case ActionShake:
+		    case ACTION_SHAKE:
 		        executeActionShake(a);
 		        break;
-		    case ActionEnable:
+		    case ACTION_ENABLE:
 		        executeActionEnable(a);
 		        break;
-		    case ActionPush:
+		    case ACTION_PUSH:
 		        executeActionPush(a);
 		        break;
-		    case ActionDig:
+		    case ACTION_DIG:
 		        executeActionDig(a);
 		        break;
-		    case ActionEat:
+		    case ACTION_EAT:
 		        executeActionEat(a);
 		        break;
-		    case ActionOpen:
+		    case ACTION_OPEN:
 		        executeActionOpen(a);
 		        break;
-		    case ActionExplode:
+		    case ACTION_EXPLODE:
 		        executeActionExplode(a);
 		        break;
 			default:
@@ -230,10 +230,10 @@ public class Game {
 	 */
 	private void executeTypeHasIndirectObject(Action a) {
 		switch(a) {
-		    case ActionPut:
+		    case ACTION_PUT:
 		    	executionActionPut(a);
 		        break;
-		    case ActionTake:
+		    case ACTION_TAKE:
 		    	executionActionTask(a);
 		        break;
 		default:
@@ -247,22 +247,22 @@ public class Game {
 	 */
 	private void executeTypeHasObject(Action a) {
 		switch(a) {
-		    case ActionLook:
+		    case ACTION_LOOK:
 		    	executeActionLook();
 		        break;
-		    case ActionClimb:
+		    case ACTION_CLIMB:
 		    	executeActionClimb();
 		        break;
-		    case ActionJump:
+		    case ACTION_JUMP:
 		    	executeActionJump();
 		        break;
-		    case ActionViewItems:
+		    case ACTION_VIEW_ITMES:
 		    	executeActionViewItems();
 		        break;
-		    case ActionDie:
+		    case ACTION_DIE:
 		    	executeActionDie();
 		        break;
-		    case ActionHelp:
+		    case ACTION_HELP:
 		        help();
 		        break;
 		default:
@@ -276,13 +276,13 @@ public class Game {
 	 */
 	private void executeTypeUnknown(Action a) {
 		switch(a) {
-		    case ActionPass:
+		    case ACTION_PASS:
 		        // intentionally blank
 		        break;
-		    case ActionError:
+		    case ACTION_ERROR:
 		        executeActionError();
 		        break;
-		    case ActionUnknown:
+		    case ACTION_UNKNOWN:
 		        executeActionError();
 		        break;
 			default:
@@ -357,14 +357,14 @@ public class Game {
 	 * Execute ActionError of ActionLists
 	 */
 	private void executeActionJump() {
-		player.move(Action.ActionGoDown);
+		player.move(Action.ACTION_GO_DOWN);
 	}
 
 	/**
 	 * Execute ActionClimb of ActionLists
 	 */
 	private void executeActionClimb() {
-		player.move(Action.ActionGoUp);
+		player.move(Action.ACTION_GO_UP);
 	}
 
 	/**

@@ -105,7 +105,7 @@ public class Room implements Comparable {
                 return a;
             }
         }
-        return Action.ActionUnknown;
+        return Action.ACTION_UNKNOWN;
     }
 
     /**

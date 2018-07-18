@@ -18,7 +18,7 @@ public class PlayerInterpreter {
     public Action interpretString(String string) {
 
         if(string.equals("")) {
-            return Action.ActionPass;
+            return Action.ACTION_PASS;
         }
         return action(string.toLowerCase().split(" "));
     }
@@ -31,14 +31,14 @@ public class PlayerInterpreter {
      */
     private Action action(String[] string){
         if(string == null || string.length == 0) {
-            return Action.ActionPass;
+            return Action.ACTION_PASS;
         }
 
         Action retVal = null;
         String[] command = getCommendString(string);
         Action action = getActionFromString(command);
         if(action == null){
-            return Action.ActionError;
+            return Action.ACTION_ERROR;
         }
 
         switch(action.type()){
@@ -59,12 +59,12 @@ public class PlayerInterpreter {
                 break;
 
             case TYPE_UNKNOWN:
-                retVal = Action.ActionError;
+                retVal = Action.ACTION_ERROR;
                 break;
 
             default:
                 System.out.println("Unknown type");
-                retVal = Action.ActionError;
+                retVal = Action.ACTION_ERROR;
                 break;
         }
 
@@ -101,7 +101,7 @@ public class PlayerInterpreter {
 
     private Action getActionHasDirectObject(Action action, String[] string){
         if(action == null || string == null) {
-            return Action.ActionError;
+            return Action.ACTION_ERROR;
         }
 
         Action retVal=null;
@@ -114,7 +114,7 @@ public class PlayerInterpreter {
         }
         else {
             System.out.println("You must supply a direct object.");
-            retVal = Action.ActionPass;
+            retVal = Action.ACTION_PASS;
         }
 
         return retVal;
@@ -124,7 +124,7 @@ public class PlayerInterpreter {
         // test if it has indirect object
         // "Take Diamond from Microwave"
         if(action == null || string == null) {
-            return Action.ActionError;
+            return Action.ACTION_ERROR;
         }
 
         Action retVal=null;
@@ -143,12 +143,12 @@ public class PlayerInterpreter {
                 retVal = action;
             }
             else {
-                retVal = Action.ActionPass;
+                retVal = Action.ACTION_PASS;
             }
         }
         else {
             System.out.println("You must supply a direct object.");
-            retVal = Action.ActionError;
+            retVal = Action.ACTION_ERROR;
         }
 
         return retVal;
