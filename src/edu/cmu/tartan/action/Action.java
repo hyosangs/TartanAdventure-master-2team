@@ -170,7 +170,7 @@ public enum Action {
     /**
      * Execute ActionError of ActionLists
      */
-    public void actionError(Player player) {
+    public void actionError() {
         PrintMessage.printConsole("I don't understand that.");
     }
 

@@ -282,16 +282,15 @@ public class Game {
 		        // intentionally blank
 		        break;
 		    case ACTION_ERROR:
-		        a.actionError(player);
+		        a.actionError();
 		        break;
 		    case ACTION_UNKNOWN:
-		        a.actionError(player);
+		        a.actionError();
 		        break;
 			default:
 				break;
 		}
 	}
-
 
 	/**
 	 * Start the Game.
@@ -422,22 +421,6 @@ public class Game {
 	 */
 	public Player getPlayer() {
 		return player;
-	}
-
-	/**
-	 * Determine if item in room
-	 * 
-	 * @param item
-	 *            the item to check
-	 * @return not null if the time is hosted in the room
-	 */
-	private Item containerForItem(Item item) {
-		for (Item i : this.player.currentRoom().items) {
-			if (i instanceof Hostable && item == ((Hostable) i).installedItem() && item.isVisible()) {
-				return i;
-			}
-		}
-		return null;
 	}
 
 	/**
