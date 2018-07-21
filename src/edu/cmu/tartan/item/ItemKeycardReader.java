@@ -85,5 +85,13 @@ public class ItemKeycardReader extends Item implements Hostable {
         this.installMessage = s;
     }
 
+    /**
+     * Get the install Message
+     * @return installMessage
+     */
+    public String installMessage() {
+        return installMessage;
+    }
+
 
 }
