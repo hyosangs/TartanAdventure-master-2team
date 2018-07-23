@@ -16,15 +16,12 @@ import java.util.Scanner;
  */
 public class ItemSafe extends Item implements Hostable, Openable {
 
-    // Items installed in this safe
-    private Item installedItem = null;
 
     // The safe's pin, which controls entry
     private Integer pin = null;
 
     public ItemSafe(String d, String sd, String[] a) {
         super(d, sd, a);
-        this.installedItem = null;
         this.pin = null;
         setValue(750);
     }
@@ -38,40 +35,6 @@ public class ItemSafe extends Item implements Hostable, Openable {
     }
 
     /**
-     * Install an item in the safe.
-     * @param i the item to install
-     */
-    @Override
-    public void install(Item i) {
-        this.installedItem = i;
-    }
-
-    /**
-     * Unstall the installed item
-     * @param i the specific item to uninstall
-     * @return true if successful; false otherwise
-     */
-    @Override
-    public boolean uninstall(Item i) {
-        if (this.installedItem == null) {
-            return false;
-        } else if (this.installedItem == i) {
-            this.installedItem = null;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Fetch the installed item
-     * @return the installed item
-     */
-    public Item installedItem() {
-        return this.installedItem;
-    }
-
-    /**
      * Open the safe using the pin
      * @return true if the safe is successfully opened; false otherwise
      */
@@ -82,9 +45,9 @@ public class ItemSafe extends Item implements Hostable, Openable {
         Integer p = Integer.parseInt(s.nextLine());
         if (p.intValue() == this.pin.intValue()) {
 
-            this.installedItem.setVisible(true);
+            super.installedItem().setVisible(true);
             PrintMessage.printConsole("The safe door swings open.");
-            PrintMessage.printConsole("You have revealed a '" + this.installedItem.detailDescription() + "'.");
+            PrintMessage.printConsole("You have revealed a '" + super.installedItem().detailDescription() + "'.");
 
             return true;
         } else {

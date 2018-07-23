@@ -17,7 +17,6 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
 
 
     private String destroyMessage;
-    private Item installedItem;
     private boolean disappears;
 
     /**
@@ -28,7 +27,6 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
      */
     public ItemClayPot(String s, String sd, String[] a) {
         super(s, sd, a);
-        this.installedItem = null;
         setValue(3);
     }
 
@@ -65,40 +63,5 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
     @Override
     public boolean disappears() {
         return this.disappears;
-    }
-
-    /**
-     * Install an item in the pot
-     * @param i the item to install
-     */
-    @Override
-    public void install(Item i) {
-        this.installedItem = i;
-    }
-
-    /**
-     * Uninstall an item
-     * @param i the item
-     * @return true if uninstalled; false otherwise
-     */
-    @Override
-    public boolean uninstall(Item i) {
-        if (this.installedItem == null) {
-            return false;
-        } else if (this.installedItem == i) {
-            this.installedItem = null;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Fetch the item in the pot
-     * @return the item installed in the pot
-     */
-    @Override
-    public Item installedItem() {
-        return this.installedItem;
     }
 }

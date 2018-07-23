@@ -42,4 +42,12 @@ public class ItemFridge extends Item implements Pushable {
             this.wasPushed = true;
         }
     }
+
+    /**
+     * wasPushed getter
+     * @return wasPushed
+     */
+    public boolean wasPushed() {
+        return wasPushed;
+    }
 }
