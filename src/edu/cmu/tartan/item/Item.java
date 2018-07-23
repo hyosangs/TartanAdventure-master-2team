@@ -1,5 +1,6 @@
 package edu.cmu.tartan.item;
 
+import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Inspectable;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
@@ -17,7 +18,7 @@ import java.util.LinkedList;
  * Versions:
  * 1.0 March 2018 - initial version
  */
-public class Item implements Comparable, Inspectable, Visible, Valuable {
+public class Item implements Comparable, Inspectable, Visible, Valuable, Hostable {
 
     // every item is visible by default
     private boolean visible = true;
@@ -48,6 +49,8 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
      */
     private static final String MSG_UNKNOWN = "unknown";
 
+    private Item installedItem;
+
     /**
      * Create a new item
      * @param description short description
@@ -62,6 +65,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         this.relatedItem = null;
         this.inspectMessage = null;
         this.value = null;
+        this.installedItem = null;
     }
 
     /**
@@ -96,10 +100,9 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
         sharedInstances.add(new ItemDeskLight("light", "desk light", new String[]{"light"}));
         sharedInstances.add(new ItemDynamite("dynamite", "bundle of dynamite", new String[]{"dynamite", "explosive", "explosives"}));
         sharedInstances.add(new ItemButton("Button", "Elevator Button", new String[]{"button"}));
-        sharedInstances.add(new ItemButton("Floor 1 Button", "Elevator Floor 1 Button", new String[]{"1"}));
-        sharedInstances.add(new ItemButton("Floor 2 Button", "Elevator Floor 2 Button", new String[]{"2"}));
-        sharedInstances.add(new ItemButton("Floor 3 Button", "Elevator Floor 3 Button", new String[]{"3"}));
-        sharedInstances.add(new ItemButton("Floor 4 Button", "Elevator Floor 4 Button", new String[]{"4"}));
+        for(int i=1; i<=4; i++){
+            sharedInstances.add(new ItemButton("Floor "+i+" Button", "Elevator Floor "+i+" Button", new String[]{Integer.toString(i)}));
+        }
         sharedInstances.add(new ItemUnknown(MSG_UNKNOWN, MSG_UNKNOWN, new String[]{MSG_UNKNOWN}));
 
         // there can be no overlap in aliases
@@ -234,6 +237,41 @@ public class Item implements Comparable, Inspectable, Visible, Valuable {
     @Override
     public void setValue(int value) {
         this.value = value;
+    }
+
+    /**
+     * Install an item in the pot
+     * @param item the item to install
+     */
+    @Override
+    public void install(Item item) {
+        this.installedItem = item;
+    }
+
+    /**
+     * Uninstall an item
+     * @param item the item
+     * @return true if uninstalled; false otherwise
+     */
+    @Override
+    public boolean uninstall(Item item) {
+        if (this.installedItem == null) {
+            return false;
+        } else if (this.installedItem == item) {
+            this.installedItem = null;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Fetch the item
+     * @return the item installed
+     */
+    @Override
+    public Item installedItem() {
+        return this.installedItem;
     }
 }
 

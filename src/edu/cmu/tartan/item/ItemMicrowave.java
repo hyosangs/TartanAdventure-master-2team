@@ -15,7 +15,6 @@ import edu.cmu.tartan.PrintMessage;
  */
 public class ItemMicrowave extends Item implements Hostable, Startable {
 
-    private Item installedItem;
 
     /**
      * Constructor
@@ -25,7 +24,6 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
      */
     public ItemMicrowave(String s, String sd, String[] a) {
         super(s, sd, a);
-        this.installedItem = null;
         setValue(5);
     }
 
@@ -47,35 +45,12 @@ public class ItemMicrowave extends Item implements Hostable, Startable {
         PrintMessage.printConsole("Beep beep beep");
 
         // Only meltable things can be microwaved
-        if (this.installedItem instanceof Meltable) {
-            Item item = ((Meltable) this.installedItem).meltItem();
-            PrintMessage.printConsole("You melted the " + this.installedItem.detailDescription() + ", and it revealed a " + item.detailDescription() + "!");
-            this.installedItem = item;
+        if (super.installedItem() instanceof Meltable) {
+            Item item = ((Meltable) super.installedItem()).meltItem();
+            PrintMessage.printConsole("You melted the " + super.installedItem().detailDescription() + ", and it revealed a " + item.detailDescription() + "!");
+            super.install(item);
             return true;
         }
         return false;
-    }
-
-    /**
-     * Install an item in the microwave
-     * @param i the item to install
-     */
-    public void install(Item i) {
-        this.installedItem = i;
-    }
-
-    public boolean uninstall(Item i) {
-        if (this.installedItem == null) {
-            return false;
-        } else if (this.installedItem == i) {
-            this.installedItem = null;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public Item installedItem() {
-        return this.installedItem;
     }
 }

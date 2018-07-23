@@ -1,6 +1,15 @@
 package edu.cmu.tartan.action;
 
+import edu.cmu.tartan.Player;
+import edu.cmu.tartan.PrintMessage;
 import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.item.ItemMagicBox;
+import edu.cmu.tartan.properties.*;
+import edu.cmu.tartan.room.RoomElevator;
+import edu.cmu.tartan.room.RoomExcavatable;
+import edu.cmu.tartan.room.RoomRequiredItem;
+
+import java.util.List;
 
 /**
  * This enumeration of actions available to a game.
@@ -116,6 +125,449 @@ public enum Action {
             return null;
         }
     }
+
+    //The message when Player is can't see an item.
+    private static final String MSG_IDONOTSEETHATHERE = "I don't see that here.";
+
+    //String of taken
+    private static final String MSG_TAKEN = "Taken.";
+
+    /**
+     * Execute ActionPickup of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionPickup(Action a, Player player) {
+        Item o = a.directObject();
+        Item container = null;
+        if(player.currentRoom().hasItem(o)) {
+            if(o instanceof Holdable) {
+                PrintMessage.printConsole(MSG_TAKEN);
+
+                player.currentRoom().remove(o);
+                player.pickup(o);
+                player.score( ((Holdable)o).value());
+            }
+            else {
+                PrintMessage.printConsole("You cannot pick up this item.");
+            }
+        }
+        else if((container = containerForItem(o, player)) != null) {
+
+            PrintMessage.printConsole(MSG_TAKEN);
+            ((Hostable)container).uninstall(o);
+            player.pickup(o);
+            player.score( ((Holdable)o).value());
+        }
+        else if(player.hasItem(o)) {
+            PrintMessage.printConsole("You already have that item in your inventory.");
+        }
+        else {
+            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
+        }
+    }
+
+    /**
+     * Execute ActionError of ActionLists
+     */
+    public void actionError() {
+        PrintMessage.printConsole("I don't understand that.");
+    }
+
+    /**
+     * Execute ActionDie of ActionLists
+     */
+    public void actionDie(Player player) {
+        player.terminate();
+    }
+
+    /**
+     * Execute ActionViewItems of ActionLists
+     * @param player
+     */
+    public void actionViewItems(Player player) {
+        List<Item> items = player.getCollectedItems();
+        if (items.isEmpty()) {
+            PrintMessage.printConsole("You don't have any items.");
+        }
+        else {
+            for(Item item : player.getCollectedItems()) {
+                PrintMessage.printConsole("You have a " + item.description() + ".");
+            }
+        }
+    }
+
+    /**
+     * Execute ActionError of ActionLists
+     * @param player
+     */
+    public void actionJump(Player player) {
+        player.move(Action.ACTION_GO_DOWN);
+    }
+
+    /**
+     * Execute ActionClimb of ActionLists
+     * @param player
+     */
+    public void actionClimb(Player player) {
+        player.move(Action.ACTION_GO_UP);
+    }
+
+    /**
+     * Execute ActionLook of ActionLists
+     * @param player
+     */
+    public void actionLook(Player player) {
+        player.lookAround();
+    }
+
+    /**
+     * Execute ActionTask of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionTask(Action a, Player player) {
+        Item contents = a.directObject();
+        Item container = a.indirectObject();
+        if(!player.currentRoom().hasItem(container)) {
+            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
+        }
+        else if(!(container instanceof Hostable)) {
+            PrintMessage.printConsole("You can't have an item inside that.");
+        }
+        else {
+            if(((Hostable)container).installedItem() == contents) {
+                ((Hostable)container).uninstall(contents);
+                player.pickup(contents);
+                PrintMessage.printConsole(MSG_TAKEN);
+            }
+            else {
+                PrintMessage.printConsole("That item is not inside this " + container);
+            }
+        }
+    }
+
+    /**
+     * Execute ActionPut of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionPut(Action a, Player player) {
+        Item itemToPut = a.directObject();
+        Item itemToBePutInto = a.indirectObject();
+        if(!player.hasItem(itemToPut)) {
+            PrintMessage.printConsole("You don't have that object in your inventory.");
+        }
+        else if(itemToBePutInto == null) {
+            PrintMessage.printConsole("You must supply an indirect object.");
+        }
+        else if(!player.currentRoom().hasItem(itemToBePutInto)) {
+            PrintMessage.printConsole("That object doesn't exist in this room.");
+        }
+        else if(itemToBePutInto instanceof ItemMagicBox && !(itemToPut instanceof Valuable)) {
+            PrintMessage.printConsole("This item has no value--putting it in this " + itemToBePutInto + " will not score you any points.");
+        }
+        else if(!(itemToBePutInto instanceof Hostable) || !(itemToPut instanceof Installable)) {
+            PrintMessage.printConsole("You cannot put a " + itemToPut + " into this " + itemToBePutInto);
+        }
+        else {
+            PrintMessage.printConsole("Done.");
+            player.drop(itemToPut);
+            player.putItemInItem(itemToPut, itemToBePutInto);
+        }
+    }
+
+    /**
+     * Execute ActionExplode of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionExplode(Action a, Player player) {
+        Item dynamite = a.directObject();
+        if(player.currentRoom().hasItem(dynamite)) {
+            if(dynamite instanceof Explodable) {
+                if(player.currentRoom().isAdjacentToRoom(dynamite.relatedRoom())) {
+                    Explodable explode = (Explodable)dynamite;
+                    explode.explode();
+                    player.score(explode.value());
+                }
+                else {
+                    PrintMessage.printConsole("There isn't anything to blow up here.");
+                }
+            }
+            else {
+                PrintMessage.printConsole("That item is not an explosive.");
+            }
+        }
+        else {
+            PrintMessage.printConsole("You do not have that item in your inventory.");
+        }
+    }
+
+    /**
+     * Execute ActionOpen of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionOpen(Action a, Player player) {
+        Item item = a.directObject();
+        if(player.hasItem(item) || player.currentRoom().hasItem(item)) {
+            if(item instanceof Openable) {
+                Openable o = ((Openable)item);
+                // if you can open the item , you score!
+                if (o.open() == true) {
+                    player.score(item.value());
+                    player.currentRoom().remove(item);
+                }
+            }
+            else {
+                PrintMessage.printConsole("You cannot open this.");
+            }
+        }
+        else {
+            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
+        }
+    }
+
+    /**
+     * Execute ActionEat of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionEat(Action a, Player player) {
+        Item item = a.directObject();
+        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
+            if(item instanceof Edible) {
+                // eating something gives scores
+                Edible e = (Edible)item;
+                e.eat();
+                player.score(item.value());
+                // Once we eat it, then it's gone
+                player.currentRoom().remove(item);
+            }
+            else {
+                if(item instanceof Holdable) {
+                    PrintMessage.printConsole("As you  shove the " + a.directObject() + " down your throat, you begin to choke.");
+                    actionDie(player);
+                }
+                else {
+                    PrintMessage.printConsole("That cannot be consumed.");
+                }
+            }
+        }
+    }
+
+    /**
+     * Execute ActionDig of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionDig(Action a, Player player) {
+        Item item = a.directObject();
+        if (player.currentRoom() instanceof RoomExcavatable && item.description() == "Shovel") {
+            RoomExcavatable curr = (RoomExcavatable) player.currentRoom();
+            curr.dig();
+        } else {
+            PrintMessage.printConsole("You are not allowed to dig here");
+        }
+    }
+
+    /**
+     * Execute ActionPush of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionPush(Action a, Player player) {
+        Item item = a.directObject();
+        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
+            if(item instanceof Pushable) {
+
+                // Pushing the button is worth points
+                Pushable p = (Pushable) item;
+                p.push();
+                player.score(item.value());
+
+                if(item.relatedRoom() instanceof RoomElevator) { // player is next to an elevator
+                    ((RoomElevator)item.relatedRoom()).call(player.currentRoom());
+                }
+                else if(player.currentRoom() instanceof RoomElevator) { // player is in an elevator
+                    ((RoomElevator)player.currentRoom()).call(Integer.parseInt(item.getAliases()[0])-1);
+                }
+            }
+            else {
+                PrintMessage.printConsole("Nothing happens.");
+            }
+        }
+        else {
+            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
+        }
+    }
+
+    /**
+     * Execute ActionEnable of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionEnable(Action a, Player player) {
+        Item item = a.directObject();
+        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
+            if(item instanceof Startable) {
+                PrintMessage.printConsole("Done.");
+                ((Startable)item).start();
+            }
+            else {
+                PrintMessage.printConsole("I don't know how to do that.");
+            }
+        }
+        else {
+            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
+        }
+    }
+
+    /**
+     * Execute ActionShake of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionShake(Action a, Player player) {
+        Item item = a.directObject();
+        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
+            if(item instanceof Shakeable) {
+                ((Shakeable)item).shake();
+                if(((Shakeable)item).accident()) {
+                    actionDie(player);
+                }
+            }
+            else {
+                PrintMessage.printConsole("I don't know how to do that.");
+            }
+        }
+        else {
+            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
+        }
+    }
+
+    /**
+     * Execute ActionThrow of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionThrow(Action a, Player player) {
+        Item item = a.directObject();
+        if(player.hasItem(item)) {
+            if(item instanceof Chuckable) {
+                PrintMessage.printConsole("Thrown.");
+                ((Chuckable)item).chuck();
+                player.drop(item);
+                player.currentRoom().putItem(item);
+            }
+            else {
+                PrintMessage.printConsole("You cannot throw this item.");
+            }
+        }
+        else {
+            PrintMessage.printConsole("You don't have that item to throw.");
+        }
+    }
+
+    /**
+     * Execute ActionDrop of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionDrop(Action a, Player player) {
+        Item item = a.directObject();
+        if(player.hasItem(item)) {
+            if(item instanceof Holdable) {
+                PrintMessage.printConsole("Dropped.");
+                player.drop(item);
+                PrintMessage.printConsole("You Dropped '" +item.description() + "' costing you "
+                        + item.value() + " points.");
+                player.currentRoom().putItem(item);
+            }
+            else {
+                PrintMessage.printConsole("You cannot drop this item.");
+            }
+        }
+        else {
+            PrintMessage.printConsole("You don't have that item to drop.");
+        }
+        if(player.currentRoom() instanceof RoomRequiredItem) {
+            RoomRequiredItem r = (RoomRequiredItem)player.currentRoom();
+            r.playerDidDropRequiredItem();
+        }
+    }
+
+    /**
+     * Execute ActionInspect of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionInspect(Action a, Player player) {
+        Item item = a.directObject();
+        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {
+            if(item instanceof Inspectable) {
+                (item).inspect();
+            }
+            else {
+                PrintMessage.printConsole("You cannot inspect this item.");
+            }
+        }
+        else {
+            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
+        }
+    }
+
+    /**
+     * Execute ActionDestroy of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionDestroy(Action a, Player player) {
+        Item item = a.directObject();
+        if (player.currentRoom().hasItem(item) || player.hasItem(item)) {
+            if (item instanceof Destroyable) {
+                PrintMessage.printConsole("Smashed.");
+                ((Destroyable)item).destroy();
+                item.setDescription("broken " + item.toString());
+                item.setDetailDescription("broken " + item.detailDescription());
+                if (((Destroyable)item).disappears()) {
+                    player.drop(item);
+                    player.currentRoom().remove(item);
+                    // Get points!
+                    player.score(item.value());
+                }
+
+                if(item instanceof Hostable) {
+                    player.currentRoom().putItem(((Hostable)item).installedItem());
+                    ((Hostable)item).uninstall(((Hostable)item).installedItem());
+                }
+            }
+            else {
+                PrintMessage.printConsole("You cannot break this item.");
+            }
+        }
+        else {
+            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);
+        }
+    }
+
+    /**
+     * Determine if item in room
+     *
+     * @param item
+     *            the item to check
+     * @return not null if the time is hosted in the room
+     */
+    private Item containerForItem(Item item, Player player) {
+        for (Item i : player.currentRoom().items) {
+            if (i instanceof Hostable && item == ((Hostable) i).installedItem() && item.isVisible()) {
+                return i;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Fields to describe actions

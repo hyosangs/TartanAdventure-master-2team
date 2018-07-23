@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AbstractAnnotatedMethodFilter.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">JaCoCo</a> &gt; <a href="../index.html" class="el_bundle">org.jacoco.core</a> &gt; <a href="index.source.html" class="el_package">org.jacoco.core.internal.analysis.filter</a> &gt; <span class="el_source">AbstractAnnotatedMethodFilter.java</span></div><h1>AbstractAnnotatedMethodFilter.java</h1><pre class="source lang-java linenums">/*******************************************************************************
+ * Copyright (c) 2009, 2018 Mountainminds GmbH &amp; Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Marc R. Hoffmann - initial API and implementation
+ *
+ *******************************************************************************/
+package org.jacoco.core.internal.analysis.filter;
+
+import java.util.List;
+
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.MethodNode;
+
+/**
+ * Filters annotated methods.
+ */
+abstract class AbstractAnnotatedMethodFilter implements IFilter {
+	private final String descType;
+
+	/**
+	 * Configures a new filter instance.
+	 * 
+	 * @param annotationType
+	 *            VM type of the annotation
+	 */
+<span class="fc" id="L31">	protected AbstractAnnotatedMethodFilter(final String annotationType) {</span>
+<span class="fc" id="L32">		this.descType = &quot;L&quot; + annotationType + &quot;;&quot;;</span>
+<span class="fc" id="L33">	}</span>
+
+	public void filter(final String className, final String superClassName,
+			final MethodNode methodNode, final IFilterOutput output) {
+<span class="fc bfc" id="L37" title="All 2 branches covered.">		if (hasAnnotation(methodNode)) {</span>
+<span class="fc" id="L38">			output.ignore(methodNode.instructions.getFirst(),</span>
+					methodNode.instructions.getLast());
+		}
+<span class="fc" id="L41">	}</span>
+
+	private boolean hasAnnotation(final MethodNode methodNode) {
+<span class="fc" id="L44">		final List&lt;AnnotationNode&gt; annotations = getAnnotations(methodNode);</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">		if (annotations != null) {</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">			for (final AnnotationNode annotation : annotations) {</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">				if (descType.equals(annotation.desc)) {</span>
+<span class="fc" id="L48">					return true;</span>
+				}
+			}
+		}
+<span class="fc" id="L52">		return false;</span>
+	}
+
+	/**
+	 * Retrieves the annotations to search from a method. Depending on the
+	 * retention of the annotation this is either
+	 * &lt;code&gt;visibleAnnotations&lt;/code&gt; or &lt;code&gt;invisibleAnnotations&lt;/code&gt;.
+	 * 
+	 * @param methodNode
+	 *            method to retrieve annotations from
+	 * @return list of annotations
+	 */
+	abstract List&lt;AnnotationNode&gt; getAnnotations(final MethodNode methodNode);
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span>Code Coverage Report for JaCoCo 0.8.1</div></body></html>
