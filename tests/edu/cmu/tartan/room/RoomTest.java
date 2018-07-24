@@ -5,6 +5,7 @@ import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -259,6 +260,57 @@ public class RoomTest {
         room.setAdjacentRoom(Action.ACTION_GO_EAST,adjacentRoom);
 
         assertEquals(null,room.getRoomForDirection(Action.ACTION_GO_WEST));
+    }
+
+    @Test
+    public void setAdjacentRoomThenGetDirectionForRoom(){
+        Room room = new Room();
+        Room adjacentRoom = new Room();
+
+        room.setAdjacentRoom(Action.ACTION_GO_WEST,adjacentRoom);
+
+        assertEquals(Action.ACTION_GO_WEST, room.getDirectionForRoom(adjacentRoom));
+    }
+
+    /**
+     * To do
+     * #361 - [Unit test] getDirectionForRoom input is null then NPE
+     */
+    @Test
+    public void setAdjacentRoomThenGetDirectionForRoomNullCase(){
+        Room room = new Room();
+        Room adjacentRoom = new Room();
+
+        room.setAdjacentRoom(Action.ACTION_GO_WEST,adjacentRoom);
+
+        assertEquals(Action.ACTION_GO_WEST, room.getDirectionForRoom(null));
+    }
+
+    @Test
+    public void setAdjacentRoomThenGetDirectionForRoomBadCase(){
+        Room room = new Room();
+        Room adjacentRoom = new Room();
+        Room other = new Room("other","other");
+
+        room.setAdjacentRoom(Action.ACTION_GO_WEST,adjacentRoom);
+
+        assertEquals(Action.ACTION_UNKNOWN, room.getDirectionForRoom(other));
+    }
+
+    @Test
+    public void setTransitionMessageThenCheckTransitionMessages(){
+        Room room = new Room();
+        room.setAdjacentRoomTransitionMessage("test",Action.ACTION_GO_EAST);
+
+        assertEquals(new HashMap<Action, String>(){{put(Action.ACTION_GO_EAST,"test");}},room.transitionMessages());
+    }
+
+    @Test
+    public void setTransitionMessageThenCheckTransitionMessagesBadCase(){
+        Room room = new Room();
+        room.setAdjacentRoomTransitionMessage("test",Action.ACTION_GO_EAST);
+
+        assertNotEquals(new HashMap<Action, String>(){{put(Action.ACTION_GO_WEST,"test bad case");}},room.transitionMessages());
     }
 
 

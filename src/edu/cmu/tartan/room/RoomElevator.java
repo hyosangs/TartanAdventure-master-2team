@@ -104,4 +104,24 @@ public class RoomElevator extends Room {
 		int index = this.floors.indexOf(floor);
 		call(index);
 	}
+
+	/**
+	 * List<String> descriptions getter method
+	 * @return List<String> descriptions
+	 */
+
+	public List<String> descriptions() {
+		return descriptions;
+	}
+
+	/**
+	 * currentFloor getter method
+	 * @return currentFloor
+	 */
+	public int currentFloor() {
+		return currentFloor;
+	}
+
+
+
 }
