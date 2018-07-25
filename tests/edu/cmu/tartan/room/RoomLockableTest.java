@@ -1,8 +1,11 @@
 package edu.cmu.tartan.room;
 
-import edu.cmu.tartan.PrintMessage;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemKey;
+import edu.cmu.tartan.util.IPrintOut;
+import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -46,14 +49,16 @@ public class RoomLockableTest {
 
     @Test
     public void setUnlockMessageThenUnlockThenCheckUnlockMessage(){
+        IScannerIn scannerIn = mock(ScannerIn.class);
+        IPrintOut printOut = mock(PrintOut.class);
+
         ItemKey key = (ItemKey) Item.getInstance("key");
-        RoomLockable roomLockable = new RoomLockable("test","test",true,key);
+        RoomLockable roomLockable = new RoomLockable("test","test",true,key, scannerIn, printOut);
         roomLockable.setUnlockMessage("unlock test message");
-        PrintMessage logger = mock(PrintMessage.class);
 
         roomLockable.unlock(key);
 
-        verify(logger,times(1)).printConsole("unlock test message");
+        verify(printOut,times(1)).console("unlock test message");
     }
 
     @Test
@@ -66,14 +71,16 @@ public class RoomLockableTest {
 
     @Test
     public void unlockOtherItemTest(){
+        IScannerIn scannerIn = mock(ScannerIn.class);
+        IPrintOut printOut = mock(PrintOut.class);
+
         ItemKey key = (ItemKey) Item.getInstance("key");
-        RoomLockable roomLockable = new RoomLockable("test","test",true,key);
+        RoomLockable roomLockable = new RoomLockable("test","test",true,key, scannerIn, printOut);
         Item other = new Item("test","test",new String[]{"test"});
-        PrintMessage logger = mock(PrintMessage.class);
 
         roomLockable.unlock(other);
 
-        verify(logger,times(1)).printConsole("This key doesn't seem to fit");
+        verify(printOut,times(1)).console("This key doesn't seem to fit");
     }
 
     @Test
@@ -102,6 +109,17 @@ public class RoomLockableTest {
         roomLockable.unlock(other);
 
         assertTrue(roomLockable.isLocked());
+    }
+
+    @Test
+    public void unlockOtherItemAndCauseDetahTrueTest(){
+        ItemKey key = (ItemKey) Item.getInstance("key");
+        RoomLockable roomLockable = new RoomLockable("test","test",true,key);
+        Item other = new Item("test","test",new String[]{"test"});
+        roomLockable.setCausesDeath(true,"test");
+
+        assertFalse(roomLockable.unlock(other));
+
     }
 
 }

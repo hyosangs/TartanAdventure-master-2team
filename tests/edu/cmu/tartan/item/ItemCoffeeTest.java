@@ -1,7 +1,10 @@
 package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.PrintMessage;
-import org.junit.Ignore;
+import edu.cmu.tartan.util.IPrintOut;
+import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,15 +17,15 @@ public class ItemCoffeeTest {
         assertEquals(1,coffee.value());
     }
 
-    @Ignore
     @Test
     public void eatCaffeeThenCheckLogger(){
+        IScannerIn scannerIn = mock(ScannerIn.class);
+        IPrintOut printOut = mock(PrintOut.class);
 
-        PrintMessage logger = mock(PrintMessage.class);
-        ItemCoffee coffee = new ItemCoffee("test", "test", new String[]{"test"});
+        ItemCoffee coffee = new ItemCoffee("test", "test", new String[]{"test"}, scannerIn, printOut);
         coffee.eat();
 
-        verify(logger,times(1)).printConsole("You grimace at the taste of black coffee, and put down the mug.");
+        verify(printOut,times(1)).console("You grimace at the taste of black coffee, and put down the mug.");
 
     }
 

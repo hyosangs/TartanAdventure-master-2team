@@ -5,7 +5,10 @@ import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
-import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.util.IPrintOut;
+import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,11 +45,17 @@ public class Room implements Comparable {
     // the player within the room
     public Player player;
 
+    protected IScannerIn scannerIn;
+    protected IPrintOut printOut;
+
     /**
      * Create a new room
      */
     public Room() {
         this("You are in a room", "Room");
+
+        this.scannerIn = new ScannerIn();
+        this.printOut = new PrintOut();
     }
 
     /**
@@ -63,6 +72,30 @@ public class Room implements Comparable {
         this.adjacentRooms = new HashMap<Action, Room>();
         this.transitionMessages = new HashMap<Action, String>();
         this.transitionDelay = 0;
+
+        this.scannerIn = new ScannerIn();
+        this.printOut = new PrintOut();
+    }
+
+    /**
+     * Create a room with default descriptions
+     * @param description the room description
+     * @param shortDescription the short room description
+     * @param scannerIn the scanner
+     * @param printOut the out console
+     */
+    public Room(String description, String shortDescription, IScannerIn scannerIn, IPrintOut printOut) {
+
+        this.roomWasVisited = false;
+        this.description = description;
+        this.shortDescription = shortDescription;
+        this.items = new LinkedList<>();
+        this.adjacentRooms = new HashMap<Action, Room>();
+        this.transitionMessages = new HashMap<Action, String>();
+        this.transitionDelay = 0;
+
+        this.scannerIn = scannerIn;
+        this.printOut = printOut;
     }
 
     /**
@@ -182,7 +215,7 @@ public class Room implements Comparable {
         if (item == null) {
             return null;
         } else {
-            PrintMessage.printConsole("I don't see that here.");
+            printOut.console("I don't see that here.");
         }
         return Item.getInstance("unknown");
     }

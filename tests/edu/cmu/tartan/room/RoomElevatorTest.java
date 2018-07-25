@@ -1,7 +1,10 @@
 package edu.cmu.tartan.room;
 
-import edu.cmu.tartan.PrintMessage;
 import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.util.IPrintOut;
+import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -96,7 +99,10 @@ public class RoomElevatorTest {
 
     @Test
     public void setFloorAndRestrictedFloorThenCheckCallRestrictedMessage(){
-        RoomElevator roomElevator = new RoomElevator("d","dd");
+        IScannerIn scannerIn = mock(ScannerIn.class);
+        IPrintOut printOut = mock(PrintOut.class);
+
+        RoomElevator roomElevator = new RoomElevator("d","dd", scannerIn, printOut);
         Room room1 = new Room();
         Room room2 = new Room();
         Room room3 = new Room();
@@ -118,16 +124,18 @@ public class RoomElevatorTest {
         roomElevator.setRestrictedFloors(restrictedFloor);
 
         roomElevator.setFloors(description,floors,Action.ACTION_GO_EAST,1);
-        PrintMessage logger = mock(PrintMessage.class);
 
         roomElevator.call(room1);
 
-        verify(logger,times(1)).printConsole("You push the button, but nothing happens. Perhaps this floor is off-limits.");
+        verify(printOut,times(1)).console("You push the button, but nothing happens. Perhaps this floor is off-limits.");
     }
 
     @Test
     public void setFloorAndRestrictedFloorThenCheckCallSameFloorMessage(){
-        RoomElevator roomElevator = new RoomElevator("d","dd");
+        IScannerIn scannerIn = mock(ScannerIn.class);
+        IPrintOut printOut = mock(PrintOut.class);
+
+        RoomElevator roomElevator = new RoomElevator("d","dd", scannerIn, printOut);
         Room room1 = new Room();
         Room room2 = new Room();
         Room room3 = new Room();
@@ -149,16 +157,18 @@ public class RoomElevatorTest {
         roomElevator.setRestrictedFloors(restrictedFloor);
 
         roomElevator.setFloors(description,floors,Action.ACTION_GO_EAST,1);
-        PrintMessage logger = mock(PrintMessage.class);
 
         roomElevator.call(room2);
 
-        verify(logger,times(1)).printConsole("The elevator is already on this floor -- the doors are open.");
+        verify(printOut,times(1)).console("The elevator is already on this floor -- the doors are open.");
     }
 
     @Test
     public void setFloorAndRestrictedFloorThenCheckCallMessage(){
-        RoomElevator roomElevator = new RoomElevator("d","dd");
+        IScannerIn scannerIn = mock(ScannerIn.class);
+        IPrintOut printOut = mock(PrintOut.class);
+
+        RoomElevator roomElevator = new RoomElevator("d","dd", scannerIn, printOut);
         Room room1 = new Room();
         Room room2 = new Room();
         Room room3 = new Room();
@@ -180,10 +190,9 @@ public class RoomElevatorTest {
         roomElevator.setRestrictedFloors(restrictedFloor);
 
         roomElevator.setFloors(description,floors,Action.ACTION_GO_EAST,1);
-        PrintMessage logger = mock(PrintMessage.class);
 
         roomElevator.call(room3);
 
-        verify(logger,times(3)).printConsole("...");
+        verify(printOut,times(1)).console("The doors open");
     }
 }

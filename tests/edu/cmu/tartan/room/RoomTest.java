@@ -3,6 +3,10 @@ package edu.cmu.tartan.room;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.util.IPrintOut;
+import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -10,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 public class RoomTest {
 
@@ -87,6 +92,7 @@ public class RoomTest {
     }
 
     //unuse takeItem(Item item) method
+    //ToDo
     @Test
     public void takeItemTest(){
         Room room = new Room();
@@ -311,6 +317,33 @@ public class RoomTest {
         room.setAdjacentRoomTransitionMessage("test",Action.ACTION_GO_EAST);
 
         assertNotEquals(new HashMap<Action, String>(){{put(Action.ACTION_GO_WEST,"test bad case");}},room.transitionMessages());
+    }
+
+    @Test
+    public void nullHasItemTest(){
+        Room room = new Room();
+
+        assertFalse(room.hasItem(null));
+    }
+
+    @Test
+    public void inVisibleHasItemTest(){
+        Room room = new Room();
+        Item item = new Item("test","test",new String[]{"test"});
+        item.setVisible(false);
+
+        assertFalse(room.hasItem(item));
+    }
+
+    @Test
+    public void IOInterfaceConstructorTest(){
+        IScannerIn scannerIn = mock(ScannerIn.class);
+        IPrintOut printOut = mock(PrintOut.class);
+
+        Room room = new Room("d","dd",scannerIn,printOut);
+
+        assertNotEquals(null,room.scannerIn);
+        assertNotEquals(null,room.printOut);
     }
 
 

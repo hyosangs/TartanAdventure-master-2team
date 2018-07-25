@@ -2,9 +2,8 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Openable;
-import edu.cmu.tartan.PrintMessage;
-
-import java.util.Scanner;
+import edu.cmu.tartan.util.IPrintOut;
+import edu.cmu.tartan.util.IScannerIn;
 
 /**
  * This class for a safe, which can hold something and be opened.
@@ -26,6 +25,14 @@ public class ItemSafe extends Item implements Hostable, Openable {
         setValue(750);
     }
 
+    public ItemSafe(String d, String sd, String[] a, IScannerIn scannerIn, IPrintOut printOut) {
+        super(d, sd, a);
+        this.pin = null;
+        setValue(750);
+        super.printOut = printOut;
+        super.scannerIn = scannerIn;
+    }
+
     /**
      * Set the safe PIN
      * @param pin the pin
@@ -40,18 +47,17 @@ public class ItemSafe extends Item implements Hostable, Openable {
      */
     @Override
     public Boolean open() {
-        Scanner s = new Scanner(System.in);
-        PrintMessage.printConsole("Enter the four-digit PIN number.");
-        Integer p = Integer.parseInt(s.nextLine());
+        super.printOut.console("Enter the four-digit PIN number.");
+        Integer p = Integer.parseInt(super.scannerIn.nextLine());
         if (p.intValue() == this.pin.intValue()) {
 
             super.installedItem().setVisible(true);
-            PrintMessage.printConsole("The safe door swings open.");
-            PrintMessage.printConsole("You have revealed a '" + super.installedItem().detailDescription() + "'.");
+            super.printOut.console("The safe door swings open.");
+            super.printOut.console("You have revealed a '" + super.installedItem().detailDescription() + "'.");
 
             return true;
         } else {
-            PrintMessage.printConsole("Incorrect PIN.");
+            super.printOut.console("Incorrect PIN.");
         }
         return false;
     }

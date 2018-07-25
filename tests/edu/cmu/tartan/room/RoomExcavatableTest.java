@@ -61,4 +61,16 @@ public class RoomExcavatableTest {
         assertFalse(roomExcavatable.hasItem(item1)&&roomExcavatable.hasItem(item2)&&roomExcavatable.hasItem(item3));
     }
 
+    @Test
+    public void setRevealableItemsNullTest(){
+        RoomExcavatable roomExcavatable = new RoomExcavatable("description","shortDescription","digMessage");
+        roomExcavatable.setRevealableItems(null);
+
+        Player player = new Player(roomExcavatable);
+
+        roomExcavatable.dig();
+
+        assertEquals(new LinkedList<>(),roomExcavatable.items);
+    }
+
 }

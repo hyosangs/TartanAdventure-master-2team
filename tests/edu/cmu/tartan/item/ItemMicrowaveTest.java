@@ -1,6 +1,5 @@
 package edu.cmu.tartan.item;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -28,7 +27,6 @@ public class ItemMicrowaveTest {
      * When meltable Item that it does't have installed item start
      * It's has Null point Exception
      */
-    @Ignore
     @Test
     public void meltableItemAndNotInstalledStartThenNullPointExcept(){
         ItemMicrowave microwave = new ItemMicrowave("test", "test", new String[]{"test"});

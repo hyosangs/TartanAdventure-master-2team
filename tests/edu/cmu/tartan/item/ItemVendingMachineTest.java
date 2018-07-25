@@ -45,6 +45,7 @@ public class ItemVendingMachineTest {
         vendingMachine.shake();
         vendingMachine.shake();
         vendingMachine.shake();
+        vendingMachine.shake();
 
         assertTrue(vendingMachine.accident());
     }
