@@ -83,10 +83,6 @@ public class Player {
         this.printOutInterface = new PrintOut();
     }
 
-    public void setPrintOutInterface(PrintOutInterface printOutInterface){
-        this.printOutInterface = printOutInterface;
-    }
-
     /**
      * Drop an item
      * @param item the item to drop.
@@ -363,5 +359,10 @@ public class Player {
      */
     public List<GameGoal> getGoals() {
         return goals;
+    }
+
+
+    public void setPrintOutInterface(PrintOutInterface printOutInterface){
+        this.printOutInterface = printOutInterface;
     }
 }
