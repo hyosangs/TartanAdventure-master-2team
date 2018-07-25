@@ -31,9 +31,9 @@ public class PlayerInterpreter {
      * @throws ArrayIndexOutOfBoundsException
      */
     private Action action(String[] string){
-        if(string == null || string.length == 0) {
-            return Action.ACTION_PASS;
-        }
+//        if(string == null || string.length == 0) {
+//            return Action.ACTION_PASS;
+//        }
 
         Action retVal = null;
         String[] command = getCommendString(string);
@@ -101,11 +101,8 @@ public class PlayerInterpreter {
     }
 
     private Action getActionHasDirectObject(Action action, String[] string){
-        if(action == null || string == null) {
-            return Action.ACTION_ERROR;
-        }
-
         Action retVal=null;
+
         if(string.length > 1) {
             String d = string[1];
             Item item = Item.getInstance(d);
@@ -124,11 +121,8 @@ public class PlayerInterpreter {
     private Action getActionHasIndirectObject(Action action, String[] string){
         // test if it has indirect object
         // "Take Diamond from Microwave"
-        if(action == null || string == null) {
-            return Action.ACTION_ERROR;
-        }
-
         Action retVal=null;
+
         ///////////////////////
         // origin : string.length > 0 --> change : sting.length > 1
         if(string.length > 3) {
