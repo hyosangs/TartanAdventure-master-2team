@@ -5,8 +5,8 @@ import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 import edu.cmu.tartan.util.PrintOut;
 import edu.cmu.tartan.util.ScannerIn;
 
@@ -45,8 +45,8 @@ public class Room implements Comparable {
     // the player within the room
     public Player player;
 
-    protected IScannerIn scannerIn;
-    protected IPrintOut printOut;
+    protected ScannerInInterface scannerIn;
+    protected PrintOutInterface printOut;
 
     /**
      * Create a new room
@@ -84,7 +84,7 @@ public class Room implements Comparable {
      * @param scannerIn the scanner
      * @param printOut the out console
      */
-    public Room(String description, String shortDescription, IScannerIn scannerIn, IPrintOut printOut) {
+    public Room(String description, String shortDescription, ScannerInInterface scannerIn, PrintOutInterface printOut) {
 
         this.roomWasVisited = false;
         this.description = description;

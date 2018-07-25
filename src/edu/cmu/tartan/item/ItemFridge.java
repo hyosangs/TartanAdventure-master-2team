@@ -2,8 +2,8 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Pushable;
 import edu.cmu.tartan.room.RoomObscured;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 
 /**
  * This class for a fridge, which can be pushed.
@@ -30,7 +30,7 @@ public class ItemFridge extends Item implements Pushable {
         setValue(1);
     }
 
-    public ItemFridge(String s, String sd, String[] a, IScannerIn scannerIn, IPrintOut printOut) {
+    public ItemFridge(String s, String sd, String[] a, ScannerInInterface scannerIn, PrintOutInterface printOut) {
         super(s, sd, a);
         this.wasPushed = false;
         setValue(1);

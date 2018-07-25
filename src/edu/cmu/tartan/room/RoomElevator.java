@@ -1,8 +1,8 @@
 package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.action.Action;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class RoomElevator extends Room {
 		this.restrictedFloors = new ArrayList<>();
 	}
 
-	public RoomElevator(String description, String shortDescription, IScannerIn scannerIn, IPrintOut printOut) {
+	public RoomElevator(String description, String shortDescription, ScannerInInterface scannerIn, PrintOutInterface printOut) {
 		super(description, shortDescription);
 		this.restrictedFloors = new ArrayList<>();
 

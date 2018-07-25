@@ -2,8 +2,8 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.properties.Openable;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 
 /**
  * This class for a safe, which can hold something and be opened.
@@ -25,7 +25,7 @@ public class ItemSafe extends Item implements Hostable, Openable {
         setValue(750);
     }
 
-    public ItemSafe(String d, String sd, String[] a, IScannerIn scannerIn, IPrintOut printOut) {
+    public ItemSafe(String d, String sd, String[] a, ScannerInInterface scannerIn, PrintOutInterface printOut) {
         super(d, sd, a);
         this.pin = null;
         setValue(750);

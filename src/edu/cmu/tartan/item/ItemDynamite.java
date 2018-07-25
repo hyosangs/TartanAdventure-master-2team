@@ -3,8 +3,8 @@ package edu.cmu.tartan.item;
 import edu.cmu.tartan.properties.Explodable;
 import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.room.RoomObscured;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.ScannerInInterface;
+import edu.cmu.tartan.util.PrintOutInterface;
 
 /**
  * This class for dynamite, which can be held and explode.
@@ -30,7 +30,7 @@ public class ItemDynamite extends Item implements Explodable, Holdable {
         setValue(25);
     }
 
-    public ItemDynamite(String s, String sd, String[] a, IScannerIn scannerIn, IPrintOut printOut) {
+    public ItemDynamite(String s, String sd, String[] a, ScannerInInterface scannerIn, PrintOutInterface printOut) {
         super(s, sd, a);
         this.exploded = false;
         setValue(25);

@@ -1,8 +1,8 @@
 package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.action.Action;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 import edu.cmu.tartan.util.PrintOut;
 import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
@@ -99,8 +99,8 @@ public class RoomElevatorTest {
 
     @Test
     public void setFloorAndRestrictedFloorThenCheckCallRestrictedMessage(){
-        IScannerIn scannerIn = mock(ScannerIn.class);
-        IPrintOut printOut = mock(PrintOut.class);
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
 
         RoomElevator roomElevator = new RoomElevator("d","dd", scannerIn, printOut);
         Room room1 = new Room();
@@ -132,8 +132,8 @@ public class RoomElevatorTest {
 
     @Test
     public void setFloorAndRestrictedFloorThenCheckCallSameFloorMessage(){
-        IScannerIn scannerIn = mock(ScannerIn.class);
-        IPrintOut printOut = mock(PrintOut.class);
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
 
         RoomElevator roomElevator = new RoomElevator("d","dd", scannerIn, printOut);
         Room room1 = new Room();
@@ -165,8 +165,8 @@ public class RoomElevatorTest {
 
     @Test
     public void setFloorAndRestrictedFloorThenCheckCallMessage(){
-        IScannerIn scannerIn = mock(ScannerIn.class);
-        IPrintOut printOut = mock(PrintOut.class);
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
 
         RoomElevator roomElevator = new RoomElevator("d","dd", scannerIn, printOut);
         Room room1 = new Room();

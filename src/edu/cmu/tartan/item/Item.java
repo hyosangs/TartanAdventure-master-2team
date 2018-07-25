@@ -6,8 +6,8 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.PrintMessage;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 import edu.cmu.tartan.util.PrintOut;
 import edu.cmu.tartan.util.ScannerIn;
 
@@ -27,8 +27,8 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Hostabl
     // every item is visible by default
     private boolean visible = true;
     private Integer value = null;
-    protected IScannerIn scannerIn;
-    protected IPrintOut printOut;
+    protected ScannerInInterface scannerIn;
+    protected PrintOutInterface printOut;
 
     /**
      * Items are referenced by descriptions
@@ -76,7 +76,7 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Hostabl
         this.printOut = new PrintOut();
     }
 
-    public Item(String description, String detailDescription, String[] a,IScannerIn iScannerIn , IPrintOut iPrintOut) {
+    public Item(String description, String detailDescription, String[] a,ScannerInInterface iScannerIn , PrintOutInterface iPrintOut) {
         this.description = description;
         this.detailDescription = detailDescription;
         this.aliases = a;

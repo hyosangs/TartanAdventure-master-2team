@@ -2,8 +2,8 @@ package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.item.ItemKey;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 import edu.cmu.tartan.util.PrintOut;
 import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
@@ -49,8 +49,8 @@ public class RoomLockableTest {
 
     @Test
     public void setUnlockMessageThenUnlockThenCheckUnlockMessage(){
-        IScannerIn scannerIn = mock(ScannerIn.class);
-        IPrintOut printOut = mock(PrintOut.class);
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
 
         ItemKey key = (ItemKey) Item.getInstance("key");
         RoomLockable roomLockable = new RoomLockable("test","test",true,key, scannerIn, printOut);
@@ -71,8 +71,8 @@ public class RoomLockableTest {
 
     @Test
     public void unlockOtherItemTest(){
-        IScannerIn scannerIn = mock(ScannerIn.class);
-        IPrintOut printOut = mock(PrintOut.class);
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
 
         ItemKey key = (ItemKey) Item.getInstance("key");
         RoomLockable roomLockable = new RoomLockable("test","test",true,key, scannerIn, printOut);

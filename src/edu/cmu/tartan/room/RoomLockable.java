@@ -1,8 +1,8 @@
 package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 
 /**
  * The class for a locked room. A key is required to open this type of room
@@ -37,7 +37,7 @@ public class RoomLockable extends Room {
 		this.unlockMessage = "Room unlocked.";
 	}
 
-	public RoomLockable(String description, String shortDescription, boolean locked, Item key, IScannerIn scannerIn, IPrintOut printOut) {
+	public RoomLockable(String description, String shortDescription, boolean locked, Item key, ScannerInInterface scannerIn, PrintOutInterface printOut) {
 		super(description, shortDescription);
 
 		this.locked = locked;

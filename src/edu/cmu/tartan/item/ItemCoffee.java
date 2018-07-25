@@ -2,8 +2,8 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Edible;
 import edu.cmu.tartan.properties.Valuable;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 
 /**
  * This class for coffee cup, which can be eaten.
@@ -27,7 +27,7 @@ public class ItemCoffee extends Item implements Edible, Valuable {
         setValue(1);
     }
 
-    public ItemCoffee(String s, String sd, String[] a, IScannerIn scannerIn, IPrintOut printOut) {
+    public ItemCoffee(String s, String sd, String[] a, ScannerInInterface scannerIn, PrintOutInterface printOut) {
 
         super(s, sd, a);
         setValue(1);

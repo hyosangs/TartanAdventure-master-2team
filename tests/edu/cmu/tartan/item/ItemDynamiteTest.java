@@ -2,8 +2,8 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomObscured;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 import edu.cmu.tartan.util.PrintOut;
 import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
@@ -43,8 +43,8 @@ public class ItemDynamiteTest {
 
     @Test
     public void explodeTwiceThenCheckLog(){
-        IScannerIn scannerIn = mock(ScannerIn.class);
-        IPrintOut printOut = mock(PrintOut.class);
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
 
         ItemDynamite dynamite = new ItemDynamite("test", "test", new String[]{"test"}, scannerIn , printOut);
         RoomObscured roomObscured = new RoomObscured("test","test",null);
@@ -58,8 +58,8 @@ public class ItemDynamiteTest {
 
     @Test
     public void setExplodeMessageThenExplodeThenCheckExploedMessage(){
-        IScannerIn scannerIn = mock(ScannerIn.class);
-        IPrintOut printOut = mock(PrintOut.class);
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
 
         ItemDynamite dynamite = new ItemDynamite("test", "test", new String[]{"test"}, scannerIn, printOut);
         RoomObscured roomObscured = new RoomObscured("test","test",null);
@@ -73,8 +73,8 @@ public class ItemDynamiteTest {
 
     @Test
     public void setExplodeMessageNotObscuredRoomThenExplodeThenCheckExploedMessage(){
-        IScannerIn scannerIn = mock(ScannerIn.class);
-        IPrintOut printOut = mock(PrintOut.class);
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
 
         ItemDynamite dynamite = new ItemDynamite("test", "test", new String[]{"test"}, scannerIn, printOut);
         Room room = new Room();

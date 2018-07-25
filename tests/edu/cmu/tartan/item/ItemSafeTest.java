@@ -1,7 +1,7 @@
 package edu.cmu.tartan.item;
 
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 import edu.cmu.tartan.util.PrintOut;
 import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Ignore;
@@ -21,8 +21,8 @@ public class ItemSafeTest {
 
     @Test
     public void InstalledItemIsNullOpenTest(){
-        IScannerIn iScannerIn = mock(ScannerIn.class);
-        IPrintOut iPrintOut = mock(PrintOut.class);
+        ScannerInInterface iScannerIn = mock(ScannerIn.class);
+        PrintOutInterface iPrintOut = mock(PrintOut.class);
 
         ItemSafe safe = new ItemSafe("test", "test", new String[]{"test"},iScannerIn,iPrintOut);
         String pin = "1234";
@@ -34,8 +34,8 @@ public class ItemSafeTest {
 
     @Test
     public void OpenTest(){
-        IScannerIn iScannerIn = mock(ScannerIn.class);
-        IPrintOut iPrintOut = mock(PrintOut.class);
+        ScannerInInterface iScannerIn = mock(ScannerIn.class);
+        PrintOutInterface iPrintOut = mock(PrintOut.class);
 
         ItemSafe safe = new ItemSafe("test", "test", new String[]{"test"},iScannerIn,iPrintOut);
         String pin = "1234";
@@ -50,8 +50,8 @@ public class ItemSafeTest {
 
     @Test
     public void OpenFailTest(){
-        IScannerIn iScannerIn = mock(ScannerIn.class);
-        IPrintOut iPrintOut = mock(PrintOut.class);
+        ScannerInInterface iScannerIn = mock(ScannerIn.class);
+        PrintOutInterface iPrintOut = mock(PrintOut.class);
 
         ItemSafe safe = new ItemSafe("test", "test", new String[]{"test"},iScannerIn,iPrintOut);
         String pin = "1234";

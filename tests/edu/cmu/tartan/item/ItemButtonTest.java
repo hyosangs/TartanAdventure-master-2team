@@ -1,7 +1,7 @@
 package edu.cmu.tartan.item;
 
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 import edu.cmu.tartan.util.PrintOut;
 import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
@@ -20,8 +20,8 @@ public class ItemButtonTest {
 
     @Test
     public void setPushMessageThenCheckPushMessage(){
-        IPrintOut printOut = mock(PrintOut.class);
-        IScannerIn scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
 
         ItemButton itemButton = new ItemButton("Test","Test",new String[]{"test"}, scannerIn, printOut);
 

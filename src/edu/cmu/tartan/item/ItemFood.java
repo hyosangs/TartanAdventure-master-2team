@@ -3,8 +3,8 @@ package edu.cmu.tartan.item;
 import edu.cmu.tartan.properties.Edible;
 import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Meltable;
-import edu.cmu.tartan.util.IPrintOut;
-import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 
 /**
  * This class for food, which can be held and eaten.
@@ -30,7 +30,7 @@ public class ItemFood extends Item implements Edible, Holdable, Meltable {
         setValue(3);
     }
 
-    public ItemFood(String s, String sd, String[] a, IScannerIn scannerIn, IPrintOut printOut) {
+    public ItemFood(String s, String sd, String[] a, ScannerInInterface scannerIn, PrintOutInterface printOut) {
 
         super(s, sd, a);
         setValue(3);
