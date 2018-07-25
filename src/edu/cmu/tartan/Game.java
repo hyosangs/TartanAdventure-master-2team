@@ -12,10 +12,7 @@ import edu.cmu.tartan.room.RoomElevator;
 import edu.cmu.tartan.room.RoomExcavatable;
 import edu.cmu.tartan.room.RoomRequiredItem;
 import edu.cmu.tartan.PrintMessage;
-import edu.cmu.tartan.util.PrintOut;
-import edu.cmu.tartan.util.PrintOutInterface;
-import edu.cmu.tartan.util.ScannerIn;
-import edu.cmu.tartan.util.ScannerInInterface;
+import edu.cmu.tartan.util.*;
 
 import java.util.Iterator;
 import java.util.Scanner;
@@ -66,7 +63,7 @@ public class Game {
 	public Game() {
 
 		// Parse room from file
-		this.scanner = new Scanner(System.in);
+		//this.scanner = new Scanner(System.in);
 		this.scannerInInterface = new ScannerIn();
 		this.printOutInterface = new PrintOut();
 
@@ -94,6 +91,7 @@ public class Game {
         List<GameConfiguration> menu = new LinkedList<>();
 
         // These are the currently supported games.
+		printOutInterface.console("[Game Configuration]");
         menu.add(new CollectGame());
         menu.add(new PointsGame());
         menu.add(new ExploreGame());
@@ -102,7 +100,6 @@ public class Game {
         menu.add(new RideElevatorGame());
         menu.add(new ObscuredRoomGame());
         menu.add(new DemoGame());
-        printOutInterface.console("configureGame");
 
         int choice = 0;
         while (true) {
@@ -117,12 +114,14 @@ public class Game {
                 choice = Integer.parseInt(input) - 1;
             } catch (Exception e) {
                 PrintMessage.printSevereLog("Invalid selection.");
+				printOutInterface.console("Invalid input.");
                 continue;
             }
             try {
                 GameConfiguration gameConfig = menu.get(choice);
                 gameName = gameConfig.name;
                 gameConfig.configure(this);
+                player.setPrintOutInterface(this.printOutInterface);
                 break;
             } catch (InvalidGameException ige) {
                 PrintMessage.printSevereLog("Game improperly configured, please try again.");
@@ -154,11 +153,12 @@ public class Game {
                     for (GameGoal g : goals) {
                         PrintMessage.printConsole(g.getStatus());
                     }
-                    printOutInterface.console("quit");
+                    printOutInterface.console("[Quit]");
                     break;
                 } else if (input.compareTo("look") == 0) {
-                    this.player.lookAround();
-                    printOutInterface.console("look");
+                    printOutInterface.console("[Look at below]");
+                    Sleep.mSec(10);
+					this.player.lookAround();
                 } else if (input.compareTo("help") == 0) {
                     help();
                 } else if (input.compareTo("status") == 0) {
@@ -216,7 +216,8 @@ public class Game {
      * Show the game introduction
      */
     public void showIntro() {
-        printOutInterface.console("showIntro");
+        printOutInterface.console("[Show Intro]");
+        Sleep.mSec(10);
         PrintMessage.printConsole("Welcome to Tartan Adventure (1.0), by Tartan Inc..");
         PrintMessage.printConsole("Game: " + gameDescription);
         PrintMessage.printConsole("To get help type 'help' ... let's begin\n");
@@ -320,7 +321,6 @@ public class Game {
 	 * @param a
 	 */
 	private void executeTypeDirectonal(Action a) {
-        printOutInterface.console("[ACTION_DIRECTIONAL]");
 		player.move(a);
 	}
 	
@@ -445,7 +445,7 @@ public class Game {
 	 * Display the win game message
 	 */
 	private void winGame() {
-
+		printOutInterface.console("[Win Game]\n");
 		PrintMessage.printConsole("Congrats!");
 
 		PrintMessage.printConsole("You've won the '" + gameName + "' game!\n");
@@ -479,7 +479,8 @@ public class Game {
 	}
 
 	private void status() {
-        printOutInterface.console("status");
+        printOutInterface.console("[Status of Game]");
+        Sleep.mSec(10);
 		PrintMessage.printConsole("The current game is '" + gameName + "': " + gameDescription + "\n");
 		PrintMessage.printConsole("- There are " + goals.size() + " goals to achieve:");
 
@@ -525,7 +526,8 @@ public class Game {
 	private void help() {
 
 		// Credit to emacs Dunnet by Ron Schnell
-        printOutInterface.console("help");
+        printOutInterface.console("[Help Description]");
+        Sleep.mSec(10);
 		PrintMessage.printConsole("Welcome to TartanAdventure RPG Help."
 				+ "Here is some useful information (read carefully because there are one\n"
 				+ "or more clues in here):\n");

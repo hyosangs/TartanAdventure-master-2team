@@ -9,6 +9,9 @@ import edu.cmu.tartan.properties.Luminous;
 import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.room.*;
 import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.Sleep;
 
 import java.util.HashMap;
 
@@ -55,6 +58,9 @@ public class Player {
      */
     private Room currentRoom = null;
 
+
+    private PrintOutInterface printOutInterface;
+
     /**
      * Player constructor
      *
@@ -74,6 +80,11 @@ public class Player {
         this.score = 0;
         this.currentRoom = currentRoom;
         this.currentRoom.player = this;
+        this.printOutInterface = new PrintOut();
+    }
+
+    public void setPrintOutInterface(PrintOutInterface printOutInterface){
+        this.printOutInterface = printOutInterface;
     }
 
     /**
@@ -181,7 +192,7 @@ public class Player {
             String message = messages.get(directionOfTravel);
             int delay = this.currentRoom.transitionDelay();
             if(message != null) {
-                sleepFor(delay);
+                Sleep.mSecProgress(delay);
                 PrintMessage.printConsole(message);
             }
         }
@@ -196,22 +207,7 @@ public class Player {
         this.currentRoom = nextRoom;
         saveRoom(currentRoom);
         PrintMessage.printConsole(this.currentRoom.description());
-    }
-
-    private boolean sleepFor(int delay){
-        if(delay != 0) {
-            for(int i=0; i < 3; i++) {
-                PrintMessage.printConsole("...");
-                try{
-                    Thread.sleep(delay);
-                }
-                catch(Exception e1) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        printOutInterface.console(this.currentRoom.description());
     }
 
     /**

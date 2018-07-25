@@ -1,10 +1,20 @@
 package edu.cmu.tartan;
 
+import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.goal.DemoGoal;
+import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.room.RoomLockable;
+import edu.cmu.tartan.room.RoomRequiredItem;
+import edu.cmu.tartan.util.PrintOut;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class PlayerTest {
 
@@ -24,13 +34,12 @@ public class PlayerTest {
     @Test
     public void dropItemTrueTest() {
         // given
-        boolean ret=false;
         Room room = new Room();
         Player player = new Player(room);
 
         // when
         player.pickup(Item.getInstance("brick"));
-        ret = player.dropItem(Item.getInstance("brick"));
+        boolean ret = player.dropItem(Item.getInstance("brick"));
 
         // then
         assertTrue(ret);
@@ -39,12 +48,11 @@ public class PlayerTest {
     @Test
     public void dropItemFalseTest() {
         // given
-        boolean ret=false;
         Room room = new Room();
         Player player = new Player(room);
 
         // when
-        ret = player.dropItem(Item.getInstance("brick"));
+        boolean ret = player.dropItem(Item.getInstance("brick"));
 
         // then
         assertFalse(ret);
@@ -53,13 +61,12 @@ public class PlayerTest {
     @Test
     public void hasItemTest() {
         // given
-        boolean ret=false;
         Room room = new Room();
         Player player = new Player(room);
 
         // when
         player.pickup(Item.getInstance("brick"));
-        ret = player.hasItem(Item.getInstance("brick"));
+        boolean ret = player.hasItem(Item.getInstance("brick"));
 
         // then
         assertTrue(ret);
@@ -68,59 +75,185 @@ public class PlayerTest {
     @Test
     public void hasItemNullTest() {
         // given
-        boolean ret=false;
         Room room = new Room();
         Player player = new Player(room);
 
         // when
-        ret = player.hasItem(null);
+        boolean ret = player.hasItem(null);
 
         // then
         assertFalse(ret);
     }
 
     @Test
-    public void hasLuminousItem() {
+    public void hasLuminousItemTest() {
+        // given
+        Room room = new Room();
+        Player player = new Player(room);
+
+        // when
+        player.pickup(Item.getInstance("light"));
+        boolean ret = player.hasLuminousItem();
+
+        assertTrue(ret);
     }
 
     @Test
-    public void getCollectedItems() {
+    public void getCollectedItemsTest() {
+        // given
+        Room room = new Room();
+        Player player = new Player(room);
+
+        // when
+        player.pickup(Item.getInstance("light"));
+        List<Item> itemList = player.getCollectedItems();
+
+        // then
+        assertTrue(itemList.contains(Item.getInstance("light")));
     }
 
     @Test
-    public void putItemInItem() {
+    public void putItemInItemTest() {
+        // given
+        Room room = new Room();
+        Player player = new Player(room);
+        Item itemDir = Item.getInstance("reader");
+        Item itemIndir = Item.getInstance("keycard");
+
+        // when
+        player.putItemInItem(itemDir, itemIndir);
+
+        // then
+        assertEquals(itemDir, itemIndir.installedItem());
     }
 
     @Test
-    public void move() {
+    public void moveTest() {
+        // given
+        Room startRoom = new Room("First Room, exist room to the East", "Room1");
+        Room nextRoom = new Room("Second Room", "Room2");
+        startRoom.setAdjacentRoom(Action.ACTION_GO_EAST, nextRoom);
+        Player player = new Player(startRoom);
+        PrintOut printOut = new PrintOut();
+        player.setPrintOutInterface(printOut);
+
+        // when
+        player.move(nextRoom);
+
+        // then
+        assertEquals("Room2", player.currentRoom().shortDescription());
     }
 
     @Test
-    public void getRoomsVisited() {
+    public void moveTransitMessegeTest() {
+        // given
+        Room startRoom = new Room("First Room, exist room to the East", "Room1");
+        Room nextRoom = new Room("Second Room", "Room2");
+        nextRoom.setAdjacentRoomTransitionMessage("setAdjacentRoomTransitionMessage",Action.ACTION_GO_EAST);
+        startRoom.setAdjacentRoom(Action.ACTION_GO_EAST, nextRoom);
+        Player player = new Player(startRoom);
+        PrintOut printOut = new PrintOut();
+        player.setPrintOutInterface(printOut);
+
+        // when
+        player.move(nextRoom);
+
+        // then
+        assertEquals("Room2", player.currentRoom().shortDescription());
+
     }
 
     @Test
-    public void move1() {
+    public void moveActionTest(){
+        // given
+        Item key = Item.getInstance("key");
+        Room startRoom = new RoomLockable("You are in the locked room. There is a fridge here", "locked",
+                true, key);
+        Item food = Item.getInstance("food");
+        RoomRequiredItem nextRoom = new RoomRequiredItem("You are in the room that required food", "Required",
+                "food", "Warning you need food", food);
+        startRoom.setAdjacentRoom(Action.ACTION_GO_EAST, nextRoom);
+        Player player = new Player(startRoom);
+        PrintOut printOut = new PrintOut();
+        player.setPrintOutInterface(printOut);
+
+        // when
+        player.move(Action.ACTION_GO_EAST);
+
+        // then
+        assertEquals("Required", player.currentRoom().shortDescription());
     }
 
     @Test
-    public void currentRoom() {
+    public void getRoomsVisitedTest() {
+        // given
+        Room startRoom = new Room("First Room, exist room to the East", "Room1");
+        Room nextRoom = new Room("Second Room", "Room2");
+
+        nextRoom.setAdjacentRoomTransitionMessage("setAdjacentRoomTransitionMessage",Action.ACTION_GO_EAST);
+        startRoom.setAdjacentRoom(Action.ACTION_GO_EAST, nextRoom);
+        Player player = new Player(startRoom);
+        PrintOut printOut = new PrintOut();
+        player.setPrintOutInterface(printOut);
+
+        // when
+        player.move(nextRoom);
+        List<Room> roomsVisited = player.getRoomsVisited();
+
+        // then
+        assertTrue(roomsVisited.contains(nextRoom));
     }
 
     @Test
-    public void addGoal() {
+    public void currentRoomTest() {
+        // given
+        Room room = new Room();
+
+        // when
+        Player player = new Player(room);
+
+        // then
+        assertEquals(room, player.currentRoom());
     }
 
     @Test
-    public void lookAround() {
+    public void addGoalTest() {
+        // given
+        Room room = new Room();
+        Player player = new Player(room);
+        GameGoal gameGoal = new DemoGoal();
+
+        // when
+        player.addGoal(gameGoal);
+        List<GameGoal> goals = player.getGoals();
+
+        // then
+        assertTrue(goals.contains(gameGoal));
+    }
+
+    @Test
+    public void lookAroundTest() {
+        // given
+        Room room = new Room();
+        Player player = mock(Player.class);
+
+        player.lookAround();
+
+        verify(player).lookAround();
     }
 
     @Test
     public void score() {
-    }
+        // given
+        Room room = new Room();
+        Player player = new Player(room);
+        Item item = Item.getInstance("torch");
 
-    @Test
-    public void score1() {
+        // when
+        player.score(item);
+
+        // then
+        assertEquals(10, player.getScore());
     }
 
     @Test
@@ -129,13 +262,15 @@ public class PlayerTest {
 
     @Test
     public void addPossiblePoints() {
+        // given
+        Room room = new Room();
+        Player player = new Player(room);
+
+        // when
+        player.addPossiblePoints(10);
+
+        // then
+        assertEquals(10, player.getPossiblePoints());
     }
 
-    @Test
-    public void getPossiblePoints() {
-    }
-
-    @Test
-    public void getGoals() {
-    }
 }

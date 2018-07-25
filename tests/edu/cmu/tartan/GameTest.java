@@ -24,11 +24,26 @@ public class GameTest {
         Game game = new Game(scannerInInterface, printOutInterface);
 
         // when
-        when(scannerInInterface.nextLine()).thenReturn("8");    //8.Demo ¼ÂÆÃ
+        when(scannerInInterface.nextLine()).thenReturn("8");    //8.Demo ï¿½ï¿½ï¿½ï¿½
         game.configureGame();
 
         // Then
-        verify(printOutInterface).console("configureGame");
+        verify(printOutInterface).console("[Game Configuration]");
+    }
+
+    @Test
+    public void configureGameNullTest() {
+        // given
+        ScannerInInterface scannerInInterface= mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface= mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn(null).thenReturn("8");    //8.Demo ï¿½ï¿½ï¿½ï¿½
+        game.configureGame();
+
+        // Then
+        verify(printOutInterface).console("Invalid input.");
     }
 
 
@@ -46,7 +61,7 @@ public class GameTest {
         game.start();
 
         // then
-        verify(printOutInterface).console("quit");
+        verify(printOutInterface).console("[Quit]");
     }
 
     @Test
@@ -63,7 +78,7 @@ public class GameTest {
         game.start();
 
         //then
-        verify(printOutInterface).console("look");
+        verify(printOutInterface).console("[Look at below]");
     }
 
     @Test
@@ -80,7 +95,7 @@ public class GameTest {
         game.start();
 
         // then
-        verify(printOutInterface).console("help");
+        verify(printOutInterface).console("[Help Description]");
     }
 
     @Test
@@ -97,7 +112,7 @@ public class GameTest {
         game.start();
 
         // then
-        verify(printOutInterface).console("status");
+        verify(printOutInterface).console("[Status of Game]");
     }
 
     @Test
@@ -114,7 +129,25 @@ public class GameTest {
         game.start();
 
         // then
-        verify(printOutInterface).console("[ACTION_DIRECTIONAL]");
+        verify(printOutInterface).console(game.getPlayer().currentRoom().description());
+    }
+
+    @Test
+    public void startWinTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("2");
+        game.configureGame();
+        game.getPlayer().score(1000);
+        when(scannerInInterface.nextLine()).thenReturn("go E").thenReturn("quit");
+        game.start();
+
+        // then
+        verify(printOutInterface).console("[Win Game]\n");
     }
 
     @Test
@@ -153,7 +186,7 @@ public class GameTest {
         game.showIntro();
 
         // then
-        verify(printOutInterface).console("showIntro");
+        verify(printOutInterface).console("[Show Intro]");
     }
 
     @Test
