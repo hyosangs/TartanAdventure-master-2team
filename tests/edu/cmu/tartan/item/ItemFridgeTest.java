@@ -1,8 +1,10 @@
 package edu.cmu.tartan.item;
 
-import edu.cmu.tartan.PrintMessage;
 import edu.cmu.tartan.room.RoomObscured;
-import org.junit.Ignore;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -31,17 +33,38 @@ public class ItemFridgeTest {
         assertTrue(fridge.wasPushed());
     }
 
-    @Ignore
     @Test
     public void pushFridgeThenCheckLog(){
-        ItemFridge fridge = new ItemFridge("test", "test", new String[]{"test"});
+        PrintOutInterface printOut = mock(PrintOut.class);
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+
+        ItemFridge fridge = new ItemFridge("test", "test", new String[]{"test"}, scannerIn, printOut);
         RoomObscured roomObscured = new RoomObscured("test","test",null);
         fridge.setRelatedRoom(roomObscured);
-        PrintMessage logger = mock(PrintMessage.class);
 
         fridge.push();
 
-        verify(logger,times(1)).printConsole(roomObscured.unobscureMessage());
+        verify(printOut,times(1)).console(roomObscured.unobscureMessage());
+    }
+
+    @Test
+    public void pushFridgeThenChecRoomObscured(){
+        ItemFridge fridge = new ItemFridge("test", "test", new String[]{"test"});
+        RoomObscured roomObscured = new RoomObscured("test","test",null);
+        fridge.setRelatedRoom(roomObscured);
+
+        fridge.push();
+
+        assertFalse(roomObscured.isObscured());
+    }
+
+    @Test
+    public void twicePushTest(){
+        ItemFridge fridge = new ItemFridge("test", "test", new String[]{"test"});
+        fridge.push();
+        fridge.push();
+
+        assertTrue(fridge.wasPushed());
     }
 
 

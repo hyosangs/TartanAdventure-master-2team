@@ -3,7 +3,8 @@ package edu.cmu.tartan.item;
 import edu.cmu.tartan.properties.Destroyable;
 import edu.cmu.tartan.properties.Holdable;
 import edu.cmu.tartan.properties.Hostable;
-import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 
 /**
  * A clay pot can be destroyed, held, and host other objects
@@ -30,6 +31,14 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
         setValue(3);
     }
 
+    public ItemClayPot(String s, String sd, String[] a, ScannerInInterface scannerIn, PrintOutInterface printOut) {
+        super(s, sd, a);
+        setValue(3);
+
+        super.printOut = printOut;
+        super.scannerIn = scannerIn;
+    }
+
     /**
      * Message to display when breaking the pot
      * @param s the message
@@ -44,7 +53,7 @@ public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable
      */
     @Override
     public void destroy() {
-        PrintMessage.printConsole(destroyMessage);
+        super.printOut.console(destroyMessage);
     }
 
     /**

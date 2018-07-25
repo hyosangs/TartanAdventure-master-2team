@@ -1,7 +1,6 @@
 package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.room.RoomLockable;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -29,7 +28,6 @@ public class ItemLockTest {
     }
 
     //Locked room can open by other key.
-    @Ignore
     @Test
     public void lockedRoomOpenbyOtherKeyThenCheckReturn(){
         ItemLock lock = new ItemLock("test", "test", new String[]{"test"});

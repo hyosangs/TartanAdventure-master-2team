@@ -1,13 +1,17 @@
 package edu.cmu.tartan.action;
 
-
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.PlayerInterpreter;
-import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.item.*;
+import edu.cmu.tartan.properties.Hostable;
 import edu.cmu.tartan.room.Room;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class ActionTest {
 
@@ -143,17 +147,21 @@ public class ActionTest {
 
     @Test
     public void actionError() {
-        Action action = Action.ACTION_ERROR;
+        // Print console
+
 
     }
 
     @Test
     public void actionDie() {
+        // Print console
 
     }
 
     @Test
     public void actionViewItems() {
+        // Print console
+
     }
 
     @Test
@@ -194,6 +202,24 @@ public class ActionTest {
 
     @Test
     public void actionTask() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_TAKE;
+
+        ItemKeycard card = (ItemKeycard)Item.getInstance("card");
+        action.setDirectObject(card);
+        room.player.currentRoom().putItem(card);
+
+        ItemKeycardReader reader = (ItemKeycardReader)Item.getInstance("reader");
+        action.setIndirectObject(reader);
+        room.player.currentRoom().putItem(reader);
+
+        //reader.install(keycard);
+
+        action.actionTask(playerInterpreter.interpretString("take card to reader"), room.player);
+
+        assertFalse(room.player.hasItem(card));
     }
 
     @Test
@@ -207,10 +233,34 @@ public class ActionTest {
 
     @Test
     public void actionOpen() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_OPEN;
+
+        ItemFolder folder = (ItemFolder)Item.getInstance("folder");
+        action.setDirectObject(folder);
+        room.player.currentRoom().putItem(folder);
+
+        action.actionOpen(playerInterpreter.interpretString("open folder"), room.player);
+
+        assertFalse(room.player.currentRoom().hasItem(folder));
     }
 
     @Test
     public void actionEat() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_EAT;
+
+        ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee");
+        action.setDirectObject(coffee);
+        room.player.currentRoom().putItem(coffee);
+
+        action.actionEat(playerInterpreter.interpretString("eat coffee"), room.player);
+
+        assertFalse(room.player.currentRoom().hasItem(coffee));
     }
 
     @Test

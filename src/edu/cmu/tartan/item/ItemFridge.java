@@ -2,7 +2,8 @@ package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Pushable;
 import edu.cmu.tartan.room.RoomObscured;
-import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 
 /**
  * This class for a fridge, which can be pushed.
@@ -29,6 +30,15 @@ public class ItemFridge extends Item implements Pushable {
         setValue(1);
     }
 
+    public ItemFridge(String s, String sd, String[] a, ScannerInInterface scannerIn, PrintOutInterface printOut) {
+        super(s, sd, a);
+        this.wasPushed = false;
+        setValue(1);
+
+        super.printOut = printOut;
+        super.scannerIn = scannerIn;
+    }
+
     /**
      * Push the fridge out of the way to reveal an obscured room.
      */
@@ -37,7 +47,7 @@ public class ItemFridge extends Item implements Pushable {
         if (!this.wasPushed) {
             if (this.relatedRoom instanceof RoomObscured) {
                 ((RoomObscured) this.relatedRoom).setObscured(false);
-                PrintMessage.printConsole(((RoomObscured) this.relatedRoom).unobscureMessage());
+                super.printOut.console(((RoomObscured) this.relatedRoom).unobscureMessage());
             }
             this.wasPushed = true;
         }

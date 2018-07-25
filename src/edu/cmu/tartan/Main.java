@@ -8,6 +8,9 @@ import static edu.cmu.tartan.PrintMessage.setUpLogger;
 public class Main {
 	public static void main(String[] args) {
 		setUpLogger();
-		new Game().start();
+
+		Game game = new Game();
+		game.configureGame();
+		game.start();
 	}
 }

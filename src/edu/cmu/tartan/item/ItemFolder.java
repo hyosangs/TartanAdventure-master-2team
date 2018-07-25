@@ -1,7 +1,9 @@
 package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.properties.Openable;
-import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerIn;
+import edu.cmu.tartan.util.ScannerInInterface;
 
 /**
  * This class for a folder, which can be opened.
@@ -27,6 +29,14 @@ public class ItemFolder extends Item implements Openable {
         setValue(3);
     }
 
+    public ItemFolder(String s, String sd, String[] a, ScannerInInterface scannerIn , PrintOutInterface printOut) {
+
+        super(s, sd, a);
+        setValue(3);
+        super.printOut = printOut;
+        super.scannerIn = scannerIn;
+    }
+
     /**
      * Open the folder
      * @return true when the folder is opened
@@ -34,7 +44,7 @@ public class ItemFolder extends Item implements Openable {
     @Override
     public Boolean open() {
 
-        PrintMessage.printConsole(this.openMessage);
+        super.printOut.console(this.openMessage);
         return true;
     }
 

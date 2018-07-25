@@ -6,6 +6,10 @@ import edu.cmu.tartan.properties.Valuable;
 import edu.cmu.tartan.properties.Visible;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -23,6 +27,8 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Hostabl
     // every item is visible by default
     private boolean visible = true;
     private Integer value = null;
+    protected ScannerInInterface scannerIn;
+    protected PrintOutInterface printOut;
 
     /**
      * Items are referenced by descriptions
@@ -66,6 +72,21 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Hostabl
         this.inspectMessage = null;
         this.value = null;
         this.installedItem = null;
+        this.scannerIn = new ScannerIn();
+        this.printOut = new PrintOut();
+    }
+
+    public Item(String description, String detailDescription, String[] a,ScannerInInterface iScannerIn , PrintOutInterface iPrintOut) {
+        this.description = description;
+        this.detailDescription = detailDescription;
+        this.aliases = a;
+        this.relatedRoom = null;
+        this.relatedItem = null;
+        this.inspectMessage = null;
+        this.value = null;
+        this.installedItem = null;
+        this.scannerIn = iScannerIn;
+        this.printOut = iPrintOut;
     }
 
     /**
@@ -218,9 +239,9 @@ public class Item implements Comparable, Inspectable, Visible, Valuable, Hostabl
     // Inspectable
     public Boolean inspect() {
         if (this.inspectMessage != null) {
-            PrintMessage.printConsole(this.inspectMessage);
+            printOut.console(this.inspectMessage);
         } else {
-            PrintMessage.printConsole("It appears to be a " + this + ".");
+            printOut.console("It appears to be a " + this + ".");
         }
         return true;
     }

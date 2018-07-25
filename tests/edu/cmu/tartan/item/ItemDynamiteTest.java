@@ -1,14 +1,15 @@
 package edu.cmu.tartan.item;
 
-import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.room.RoomObscured;
-import org.junit.Ignore;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class ItemDynamiteTest {
     @Test
@@ -40,30 +41,49 @@ public class ItemDynamiteTest {
         assertTrue(dynamite.getExploded());
     }
 
-    @Ignore
     @Test
     public void explodeTwiceThenCheckLog(){
-        ItemDynamite dynamite = new ItemDynamite("test", "test", new String[]{"test"});
-        dynamite.explode();
-        dynamite.explode();
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
 
-        PrintMessage logger = mock(PrintMessage.class);
-
-        verify(logger,times(1)).printConsole("The dynamite has already been detonated.");
-    }
-
-    @Ignore
-    @Test
-    public void setExplodeMessageThenExplodeThenCheckExploedMessage(){
-        ItemDynamite dynamite = new ItemDynamite("test", "test", new String[]{"test"});
+        ItemDynamite dynamite = new ItemDynamite("test", "test", new String[]{"test"}, scannerIn , printOut);
         RoomObscured roomObscured = new RoomObscured("test","test",null);
         dynamite.setRelatedRoom(roomObscured);
-        PrintMessage logger = mock(PrintMessage.class);
+
+        dynamite.explode();
+        dynamite.explode();
+
+        verify(printOut,times(1)).console("The dynamite has already been detonated.");
+    }
+
+    @Test
+    public void setExplodeMessageThenExplodeThenCheckExploedMessage(){
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
+
+        ItemDynamite dynamite = new ItemDynamite("test", "test", new String[]{"test"}, scannerIn, printOut);
+        RoomObscured roomObscured = new RoomObscured("test","test",null);
+        dynamite.setRelatedRoom(roomObscured);
 
         dynamite.setExplodeMessage("setExplodeMessage Test");
         dynamite.explode();
 
-        verify(logger,times(1)).printConsole(roomObscured.unobscureMessage());
+        verify(printOut,times(1)).console(roomObscured.unobscureMessage());
+    }
+
+    @Test
+    public void setExplodeMessageNotObscuredRoomThenExplodeThenCheckExploedMessage(){
+        ScannerInInterface scannerIn = mock(ScannerIn.class);
+        PrintOutInterface printOut = mock(PrintOut.class);
+
+        ItemDynamite dynamite = new ItemDynamite("test", "test", new String[]{"test"}, scannerIn, printOut);
+        Room room = new Room();
+        dynamite.setRelatedRoom(room);
+
+        dynamite.setExplodeMessage("setExplodeMessage Test");
+        dynamite.explode();
+
+        verify(printOut,never()).console("");
     }
 
 }

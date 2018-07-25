@@ -1,7 +1,8 @@
 package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.action.Action;
-import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -41,6 +42,15 @@ public class RoomElevator extends Room {
 		this.restrictedFloors = new ArrayList<>();
 	}
 
+	public RoomElevator(String description, String shortDescription, ScannerInInterface scannerIn, PrintOutInterface printOut) {
+		super(description, shortDescription);
+		this.restrictedFloors = new ArrayList<>();
+
+		super.scannerIn = scannerIn;
+		super.printOut = printOut;
+	}
+
+
     /**
      * Set the elevator floors
      * @param descriptions the floor descriptions
@@ -65,23 +75,23 @@ public class RoomElevator extends Room {
      */
 	public void call(int index) {
 		if(this.restrictedFloors.contains(index)) {
-			PrintMessage.printConsole("You push the button, but nothing happens. Perhaps this floor is off-limits.");
+			super.printOut.console("You push the button, but nothing happens. Perhaps this floor is off-limits.");
 			return;
 		}
 		else if(index == currentFloor) {
-			PrintMessage.printConsole("The elevator is already on this floor -- the doors are open.");
+			super.printOut.console("The elevator is already on this floor -- the doors are open.");
 			return;
 		}
 		for(int i=0; i < 3; i++) {
-			PrintMessage.printConsole("...");
+			super.printOut.console("...");
 			try {
 				Thread.sleep(1000);
 			} catch(Exception e1) {
 				e1.printStackTrace();
 			}
 		}
-		PrintMessage.printConsole("Ding");
-		PrintMessage.printConsole("The doors open");
+		super.printOut.console("Ding");
+		super.printOut.console("The doors open");
 		setFloor(index);
 	}
 
@@ -104,4 +114,24 @@ public class RoomElevator extends Room {
 		int index = this.floors.indexOf(floor);
 		call(index);
 	}
+
+	/**
+	 * List<String> descriptions getter method
+	 * @return List<String> descriptions
+	 */
+
+	public List<String> descriptions() {
+		return descriptions;
+	}
+
+	/**
+	 * currentFloor getter method
+	 * @return currentFloor
+	 */
+	public int currentFloor() {
+		return currentFloor;
+	}
+
+
+
 }

@@ -1,8 +1,11 @@
 package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.ActionTest;
+import edu.cmu.tartan.goal.GameCollectGoalTest;
+import edu.cmu.tartan.goal.GameExploreGoalTest;
+import edu.cmu.tartan.goal.GamePointsGoalTest;
 import edu.cmu.tartan.item.*;
-import edu.cmu.tartan.room.RoomTest;
+import edu.cmu.tartan.room.*;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -97,7 +100,37 @@ public class LGTestRunnerJUnit {
         result = JUnitCore.runClasses(ItemVendingMachineTest.class);
         printResult(result);
 
+        result = JUnitCore.runClasses(RoomDarkTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(RoomElevatorTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(RoomExcavatableTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(RoomLockableTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(RoomObscuredTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(RoomRequiredItemTest.class);
+        printResult(result);
+
         result = JUnitCore.runClasses(RoomTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(GameTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(GameCollectGoalTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(GameExploreGoalTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(GamePointsGoalTest.class);
         printResult(result);
     }
 
