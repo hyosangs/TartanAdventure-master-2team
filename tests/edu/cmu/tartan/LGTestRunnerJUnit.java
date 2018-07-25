@@ -2,7 +2,7 @@ package edu.cmu.tartan;
 
 import edu.cmu.tartan.action.ActionTest;
 import edu.cmu.tartan.item.*;
-import edu.cmu.tartan.room.RoomTest;
+import edu.cmu.tartan.room.*;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -95,6 +95,24 @@ public class LGTestRunnerJUnit {
         printResult(result);
 
         result = JUnitCore.runClasses(ItemVendingMachineTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(RoomDarkTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(RoomElevatorTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(RoomExcavatableTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(RoomLockableTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(RoomObscuredTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(RoomRequiredItemTest.class);
         printResult(result);
 
         result = JUnitCore.runClasses(RoomTest.class);

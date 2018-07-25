@@ -1,7 +1,9 @@
 package edu.cmu.tartan.item;
 
-import edu.cmu.tartan.PrintMessage;
-import org.junit.Ignore;
+import edu.cmu.tartan.util.IPrintOut;
+import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -16,15 +18,16 @@ public class ItemFolderTest {
         assertEquals(3,folder.value());
     }
 
-    @Ignore
     @Test
     public void setOpenMessageThenCheckLog(){
-        ItemFolder folder = new ItemFolder("test","test",new String[]{"test"});
-        folder.setOpenMessage("setOpenMessage Test");
-        PrintMessage logger = mock(PrintMessage.class);
+        IPrintOut printOut = mock(PrintOut.class);
+        IScannerIn scannerIn = mock(ScannerIn.class);
 
-         folder.open();
-         verify(logger,times(1)).printConsole("setOpenMessage Test");
+        ItemFolder folder = new ItemFolder("test","test",new String[]{"test"}, scannerIn, printOut);
+        folder.setOpenMessage("setOpenMessage Test");
+        folder.open();
+
+        verify(printOut,times(1)).console("setOpenMessage Test");
 
     }
 
@@ -32,10 +35,7 @@ public class ItemFolderTest {
     public void openCheck(){
         ItemFolder folder = new ItemFolder("test","test",new String[]{"test"});
 
-
         assertTrue(folder.open());
-
-
     }
 
 }

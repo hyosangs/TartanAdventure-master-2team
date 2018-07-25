@@ -1,7 +1,9 @@
 package edu.cmu.tartan.item;
 
-import edu.cmu.tartan.PrintMessage;
-import org.junit.Ignore;
+import edu.cmu.tartan.util.IPrintOut;
+import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -16,15 +18,17 @@ public class ItemButtonTest {
         assertEquals(2,brick.value());
     }
 
-    @Ignore
     @Test
     public void setPushMessageThenCheckPushMessage(){
-        ItemButton itemButton = new ItemButton("Test","Test",new String[]{"test"});
-        PrintMessage logger = mock(PrintMessage.class);
+        IPrintOut printOut = mock(PrintOut.class);
+        IScannerIn scannerIn = mock(ScannerIn.class);
+
+        ItemButton itemButton = new ItemButton("Test","Test",new String[]{"test"}, scannerIn, printOut);
 
         itemButton.setPushMessage("push message set");
         itemButton.push();
-        verify(logger,times(1)).printConsole(itemButton.pushMessage);
+
+        verify(printOut,times(1)).console(itemButton.pushMessage);
     }
 
 }

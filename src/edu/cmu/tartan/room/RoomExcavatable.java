@@ -1,7 +1,6 @@
 package edu.cmu.tartan.room;
 
 import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.PrintMessage;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -35,12 +34,12 @@ public class RoomExcavatable extends Room {
 	public void dig() {
 
 		if(this.player.hasItem(Item.getInstance("shovel"))) {
-			PrintMessage.printConsole(digMessage);
+			super.printOut.console(digMessage);
 			this.wasDugUp = true;
 			this.items.addAll(this.revealableItems);
 		}
 		else {
-			PrintMessage.printConsole("You do not have an item you can use to dig.");
+			super.printOut.console("You do not have an item you can use to dig.");
 		}
 	}
 }

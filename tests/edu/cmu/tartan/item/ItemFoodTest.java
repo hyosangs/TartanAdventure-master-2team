@@ -1,7 +1,9 @@
 package edu.cmu.tartan.item;
 
-import edu.cmu.tartan.PrintMessage;
-import org.junit.Ignore;
+import edu.cmu.tartan.util.IPrintOut;
+import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -16,15 +18,15 @@ public class ItemFoodTest {
         assertEquals(3,food.value());
     }
 
-    @Ignore
     @Test
     public void eatFoodThenCheckLogger(){
-        ItemFood food = new ItemFood("test", "test", new String[]{"test"});
-        PrintMessage logger = mock(PrintMessage.class);
+        IPrintOut printOut = mock(PrintOut.class);
+        IScannerIn scannerIn = mock(ScannerIn.class);
+        ItemFood food = new ItemFood("test", "test", new String[]{"test"}, scannerIn, printOut);
 
         food.eat();
 
-        verify(logger,times(1)).printConsole("Yummy");
+        verify(printOut,times(1)).console("Yummy");
     }
 
     @Test

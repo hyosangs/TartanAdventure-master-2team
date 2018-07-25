@@ -1,7 +1,9 @@
 package edu.cmu.tartan.item;
 
-import edu.cmu.tartan.PrintMessage;
-import org.junit.Ignore;
+import edu.cmu.tartan.util.IPrintOut;
+import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -16,15 +18,16 @@ public class ItemClayPotTest {
         assertEquals(3,clayPot.value());
     }
 
-    @Ignore
     @Test
     public void setDestoryMessageThenDestoryItem(){
-        ItemClayPot clayPot = new ItemClayPot("test","test",new String[]{"test"});
-        PrintMessage logger = mock(PrintMessage.class);
+        IScannerIn scannerIn = mock(ScannerIn.class);
+        IPrintOut printOut = mock(PrintOut.class);
+
+        ItemClayPot clayPot = new ItemClayPot("test","test",new String[]{"test"},scannerIn , printOut);
 
         clayPot.setDestroyMessage("Destory Test");
         clayPot.destroy();
-        verify(logger,times(1)).printConsole("Destory Test");;
+        verify(printOut,times(1)).console("Destory Test");;
     }
 
     @Test

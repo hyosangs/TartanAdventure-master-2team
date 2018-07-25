@@ -1,12 +1,8 @@
 package edu.cmu.tartan.item;
 
-import edu.cmu.tartan.PrintMessage;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 public class ItemKeycardReaderTest {
     @Test
@@ -34,11 +30,10 @@ public class ItemKeycardReaderTest {
         Item relatedItem = new Item("test", "test", new String[]{"test"});
         keycardReader.setRelatedItem(relatedItem);
         keycardReader.setInstallMessage("setInstallMessage Test");
-        PrintMessage logger = mock(PrintMessage.class);
 
         keycardReader.install(keycard);
 
-        //verify(logger,times(1)).printConsole(keycardReader.installMessage());
+        assertEquals("setInstallMessage Test",keycardReader.installMessage());
     }
 
     @Test

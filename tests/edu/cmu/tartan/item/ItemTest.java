@@ -1,10 +1,14 @@
 package edu.cmu.tartan.item;
 
 import edu.cmu.tartan.room.Room;
-import org.junit.Ignore;
+import edu.cmu.tartan.util.IPrintOut;
+import edu.cmu.tartan.util.IScannerIn;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 public class ItemTest {
 
@@ -109,7 +113,6 @@ public class ItemTest {
         assertTrue(item.inspect());
     }
 
-    @Ignore
     @Test
     public void notSetInspectMessageThenCheckInspectMessageEqual(){
         Item item = new Item("Test","It's test item",new String[]{"test"});
@@ -233,12 +236,15 @@ public class ItemTest {
         assertEquals("shovel",item.description());
     }
 
-    @Ignore
     @Test
-    public void getInstanceDuplicateTest(){
-        Item item = Item.getInstance("shovel");
-        Item item2 = Item.getInstance("shovel");
-        assertEquals("shovel",item2.description());
+    public void IOInterfaceConstructorTest(){
+        IScannerIn scannerIn = mock(ScannerIn.class);
+        IPrintOut printOut = mock(PrintOut.class);
+
+        Item item = new Item("test","Test",new String[]{"test"}, scannerIn, printOut);
+
+        assertNotEquals(null,item.scannerIn);
+        assertNotEquals(null,item.printOut);
     }
 
 
