@@ -6,6 +6,7 @@ import edu.cmu.tartan.goal.DemoGoal;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.util.PrintOut;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -180,6 +181,54 @@ public class PlayerTest {
 
         // then
         assertEquals("Required", player.currentRoom().shortDescription());
+    }
+
+    @Ignore
+    public void moveCurrentRequiredRoomActionTest(){
+        // given
+        Item food = Item.getInstance("food");
+        RoomRequiredItem startRoom = new RoomRequiredItem("You are in the room that required food", "Required",
+                "food", "Warning you need food", food);
+        Room nextRoom = new Room("Second Room", "Room2");
+
+//        Item key = Item.getInstance("key");
+//        Room nextRoom = new RoomLockable("You are in the locked room. There is a fridge here", "locked",
+//                true, key);
+
+        startRoom.setAdjacentRoom(Action.ACTION_GO_EAST, nextRoom);
+        Player player = new Player(startRoom);
+        PrintOut printOut = new PrintOut();
+        player.setPrintOutInterface(printOut);
+
+        // when
+        player.move(Action.ACTION_GO_EAST);
+
+        // then
+        assertEquals("Required", player.currentRoom().shortDescription());
+    }
+
+    @Test
+    public void moveCurrentDarkRoomActionTest(){
+        // given
+//        RoomDark startRoom = new RoomDark("You are in a dark room. You can go South to West to the beginning and you can go South",
+//                "room2", "You cannot see", "blind!");
+//        //Room nextRoom = new Room("Second Room", "Room2");
+        Room startRoom = new Room("First Room, exist room to the East", "Room1");
+        String passageDescription = "You are in a dark corridor dimly lit by torches.";
+        String passageShortDescription = "Dark Corridor.";
+        Item fridge = Item.getInstance("fridge");
+        RoomObscured nextRoom = new RoomObscured(passageDescription ,passageShortDescription, fridge);
+
+        startRoom.setAdjacentRoom(Action.ACTION_GO_EAST, nextRoom);
+        Player player = new Player(startRoom);
+        PrintOut printOut = new PrintOut();
+        player.setPrintOutInterface(printOut);
+
+        // when
+        player.move(Action.ACTION_GO_EAST);
+
+        // then
+        assertEquals("Room1", player.currentRoom().shortDescription());
     }
 
     @Test
