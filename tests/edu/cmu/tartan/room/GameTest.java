@@ -4,6 +4,7 @@ import edu.cmu.tartan.Game;
 import edu.cmu.tartan.Player;
 import edu.cmu.tartan.goal.DemoGoal;
 import edu.cmu.tartan.goal.GameGoal;
+import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.util.PrintOutInterface;
 import edu.cmu.tartan.util.ScannerInInterface;
 import org.junit.Test;
@@ -28,6 +29,21 @@ public class GameTest {
 
         // Then
         verify(printOutInterface).console("[Game Configuration]");
+    }
+
+    @Test
+    public void configureGameHelpTest() {
+        // given
+        ScannerInInterface scannerInInterface= mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface= mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("help").thenReturn("8");    //8.Demo ����
+        game.configureGame();
+
+        // Then
+        verify(printOutInterface).console("[Help Description]");
     }
 
     @Test
@@ -124,12 +140,353 @@ public class GameTest {
         // when
         when(scannerInInterface.nextLine()).thenReturn("8");
         game.configureGame();
-        when(scannerInInterface.nextLine()).thenReturn("go E").thenReturn("quit");
+        when(scannerInInterface.nextLine()).thenReturn("go E").thenReturn("status").thenReturn("quit");
         game.start();
 
         // then
         verify(printOutInterface).console(game.getPlayer().currentRoom().description());
     }
+
+    @Test
+    public void startDirectObjectActionPickUpTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("take torch").thenReturn("quit");
+        game.start();
+
+        // then
+        assertTrue(game.getPlayer().getCollectedItems().contains(Item.getInstance("torch")));
+    }
+
+    @Test
+    public void startDirectObjectActionDestroyTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("destroy pot").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startDirectObjectActionDropTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("drop pot").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startDirectObjectActionThrowTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("throw pot").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startDirectObjectActionShakeTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("shake pot").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startDirectObjectActionEnableTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("enable  pot").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startDirectObjectActionPushTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("push pot").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startDirectObjectActionDigTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("dig pot").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startDirectObjectActionEatTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("eat pot").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startDirectObjectActionOpenTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("open pot").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startDirectObjectActionExplodeTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("explode pot").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startIndirectObjectActionTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("install card in reader").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startHasNoObjectLookActionTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("l").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startHasNoObjectClimbActionTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("climb").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startHasNoObjectJumpActionTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("jump").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startHasNoObjectViewItemActionTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("inventory").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startHasNoObjectDieActionTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("die").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startHasNoObjectHelpActionTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("help").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startUnknownErrorActionTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("abc").thenReturn("quit");
+        game.start();
+
+        // then
+        assertEquals(0, game.getPlayer().getCollectedItems().size());
+    }
+
+    @Test
+    public void startDirectObjectActionInspectTest(){
+        // given
+        ScannerInInterface scannerInInterface = mock(ScannerInInterface.class);
+        PrintOutInterface printOutInterface = mock(PrintOutInterface.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        // when
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("take torch").thenReturn("inspect torch").thenReturn("quit");
+        game.start();
+
+        // then
+        assertTrue(game.getPlayer().getCollectedItems().contains(Item.getInstance("torch")));
+    }
+
 
     @Test
     public void startWinTest(){
