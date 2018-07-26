@@ -1,4 +1,4 @@
-package edu.cmu.tartan.room;
+package edu.cmu.tartan;
 
 import edu.cmu.tartan.PlayerInterpreter;
 import edu.cmu.tartan.action.Action;
