@@ -40,6 +40,8 @@ public class ObscuredRoomGame extends GameConfiguration {
         Room room1 = new Room("You are in the first room. There is a fridge in here.",
                 "Room1");
 
+        game.roomArrayList.add(room1);
+
         // You must push the fridge to expose the hidden passage
         Item fridge = Item.getInstance("fridge");
 		RoomObscured passage = new RoomObscured(passageDescription ,passageShortDescription, fridge);
@@ -47,6 +49,8 @@ public class ObscuredRoomGame extends GameConfiguration {
         passage.setUnobscureMessage("You've revelealed a hidden passage to the east!");
         passage.setObscureMessage("This room is hidden");
         passage.putItem(Item.getInstance("torch"));
+
+        game.roomArrayList.add(passage);
 
         room1.setAdjacentRoom(Action.ACTION_GO_EAST,passage);
 		room1.putItem(fridge);

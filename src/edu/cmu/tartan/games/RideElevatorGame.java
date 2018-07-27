@@ -44,6 +44,8 @@ public class RideElevatorGame extends GameConfiguration {
         elevator.putItem(Item.getInstance("3"));
         elevator.putItem(Item.getInstance("4"));
 
+        game.roomArrayList.add(elevator);
+
         // configure the floors and buttons needed to reach them
 
         Room floor1 = new Room("floor1", "floor1");
@@ -66,6 +68,11 @@ public class RideElevatorGame extends GameConfiguration {
         Item b4 = Item.getInstance(MSG_BUTTON);
         b4.setRelatedRoom(elevator);
         floor4.putItem(b4);
+
+        game.roomArrayList.add(floor1);
+        game.roomArrayList.add(floor2);
+        game.roomArrayList.add(floor3);
+        game.roomArrayList.add(floor4);
 
         ArrayList<Room> list = new ArrayList<>();
         list.add(floor1);

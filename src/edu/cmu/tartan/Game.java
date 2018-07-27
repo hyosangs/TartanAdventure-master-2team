@@ -14,11 +14,7 @@ import edu.cmu.tartan.room.RoomRequiredItem;
 import edu.cmu.tartan.PrintMessage;
 import edu.cmu.tartan.util.*;
 
-import java.util.Iterator;
-import java.util.Scanner;
-
-import java.util.List;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * The main class for game logic. Many if not all decisions about game play are
@@ -55,6 +51,8 @@ public class Game {
 
 	private ScannerInInterface scannerInInterface;
 	private PrintOutInterface printOutInterface;
+
+	public ArrayList<Room> roomArrayList = new ArrayList<>();
 
 	///////////////////////////////////////////////////////////
 	/**
