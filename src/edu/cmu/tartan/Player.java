@@ -365,4 +365,14 @@ public class Player {
     public void setPrintOutInterface(PrintOutInterface printOutInterface){
         this.printOutInterface = printOutInterface;
     }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void setCurrentRoom(Room currentRoom) {
+        this.currentRoom = currentRoom;
+    }
+
+
 }
