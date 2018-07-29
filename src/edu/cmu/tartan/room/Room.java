@@ -282,4 +282,13 @@ public class Room implements Comparable {
         }
         return -1;
     }
+
+
+    public void setRoomWasVisited(boolean roomWasVisited) {
+        this.roomWasVisited = roomWasVisited;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
 }
