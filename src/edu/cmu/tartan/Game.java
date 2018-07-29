@@ -5,13 +5,7 @@ import edu.cmu.tartan.action.Type;
 import edu.cmu.tartan.games.*;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.item.ItemMagicBox;
-import edu.cmu.tartan.properties.*;
 import edu.cmu.tartan.room.Room;
-import edu.cmu.tartan.room.RoomElevator;
-import edu.cmu.tartan.room.RoomExcavatable;
-import edu.cmu.tartan.room.RoomRequiredItem;
-import edu.cmu.tartan.PrintMessage;
 import edu.cmu.tartan.util.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -28,12 +22,6 @@ import java.util.*;
  * 2018 - initial version
  */
 public class Game {
-
-	/**
-	 * Reads input from the command line.
-	 */
-	private Scanner scanner;
-
 	/**
 	 * Attempt to interpret input more flexibly.
 	 */
@@ -57,6 +45,7 @@ public class Game {
 	private PrintOutInterface printOutInterface;
 	private WriteFileInterface writeFileInterface;
 	private ReadFileInterface readFileInterface;
+	private Timer saveScheduler = new Timer();
 
 	public List<Room> roomArrayList = new ArrayList<>();
 
@@ -67,20 +56,12 @@ public class Game {
 	public Game() {
 
 		// Parse room from file
-		//this.scanner = new Scanner(System.in);
 		this.scannerInInterface = new ScannerIn();
 		this.printOutInterface = new PrintOut();
 		this.writeFileInterface = new WriteFile();
 		this.readFileInterface = new ReadFile();
 
-		// Configure the game, add the goals and exe
-//		configureGame();
-//
 		this.interpreter = new PlayerInterpreter();
-//
-//		for (GameGoal g : goals) {
-//			this.player.addGoal(g);
-//		}
 	}
 
 	public Game(ScannerInInterface scannerInInterface, PrintOutInterface printOutInterface){
@@ -156,6 +137,14 @@ public class Game {
                 input = this.scannerInInterface.nextLine();
 
                 if (input.compareTo("quit") == 0) {
+					saveScheduler.cancel();
+
+                	printOutInterface.console("Do you want to save the game? (Yes/No)");
+                	String response = scannerInInterface.nextLine();
+
+                	if(response.equalsIgnoreCase("yes") || response.equalsIgnoreCase("y")){
+                		save();
+					}
                     for (GameGoal g : goals) {
                         PrintMessage.printConsole(g.getStatus());
                     }
@@ -169,9 +158,19 @@ public class Game {
                     help();
                 } else if (input.compareTo("status") == 0) {
                     status();
-                } else if(input.compareTo("save") == 0){
+                } else if(input.split(" ")[0].compareTo("save") == 0){
 					printOutInterface.console("save....");
-					save();
+					if(input.split(" ").length > 1){
+						int min = Integer.parseInt(input.split(" ")[1]);
+						if(min < 1 || min >10){
+							printOutInterface.console("save time period  allow 1 min to 10 min");
+							printOutInterface.console("save fail");
+							continue;
+						}
+						save(min*1000*60);
+					}else {
+						save();
+					}
 				}else if(input.compareTo("load") == 0){
 					printOutInterface.console("load....");
 					load();
@@ -576,6 +575,9 @@ public class Game {
 		PrintMessage.printConsole("- " + indirobj.toString() + "\n");
 		PrintMessage.printConsole("- " + misc.toString() + "\n");
 		PrintMessage.printConsole("- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
+		PrintMessage.printConsole("- You can save the game by typing \"save\"\n");
+		PrintMessage.printConsole("- You can periodic save the game by typing \"save <minute>\"\n");
+		PrintMessage.printConsole("- You can load the game by typing \"load\"\n");
 		PrintMessage.printConsole("- You can quit by typing \"quit\"\n");
 		PrintMessage.printConsole("- Good luck!\n");
 
@@ -616,7 +618,12 @@ public class Game {
         return collectedItems;
     }
 
-	public void save(){
+    public void save(int period){
+		SaveTask saveTask = new SaveTask(this);
+		saveScheduler.schedule(saveTask,100,period);
+	}
+
+	public synchronized void save()  {
 		printOutInterface.console("Save start");
 
 		JSONObject jsonObject = new JSONObject();
@@ -725,7 +732,7 @@ public class Game {
         }
     }
 
-	public void load(){
+	public synchronized void load(){
 		JSONParser jsonParser = new JSONParser();
 
 		try {
@@ -758,7 +765,8 @@ public class Game {
 			status();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+				printOutInterface.console("The save file does not exist.");
+				printOutInterface.console("Load failed.");
 		}
 
 	}
