@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LockRoomGame.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.games</a> &gt; <span class="el_source">LockRoomGame.java</span></div><h1>LockRoomGame.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.games;
+
+import edu.cmu.tartan.Game;
+import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.Player;
+import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.goal.GameExploreGoal;
+import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.item.ItemLock;
+import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.room.RoomLockable;
+
+import java.util.List;
+import java.util.LinkedList;
+
+/**
+ * Demonstrate a locked room game.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class LockRoomGame extends GameConfiguration {
+
+<span class="fc" id="L26">    public LockRoomGame() {</span>
+<span class="fc" id="L27">        super.name = &quot;Lock Demo&quot;;</span>
+<span class="fc" id="L28">    }</span>
+
+    /**
+     * Configure the game
+     * @param game the Game object that will manage execution
+     * @throws InvalidGameException
+     */
+    @Override
+    public void configure(Game game) throws InvalidGameException {
+
+<span class="nc" id="L38">        Room mid1 = new Room(&quot;There is a fork&quot;, &quot;Fork&quot;);</span>
+<span class="nc" id="L39">        Room mid2 = new Room(&quot;Ferocious bear&quot;, &quot;bear&quot;);</span>
+<span class="nc" id="L40">        Item key = Item.getInstance(&quot;key&quot;);</span>
+<span class="nc" id="L41">        Room end = new RoomLockable(&quot;You are inside of a building&quot;, &quot;interior&quot;,</span>
+                true, key);
+
+<span class="nc" id="L44">        game.roomArrayList.add(mid1);</span>
+<span class="nc" id="L45">        game.roomArrayList.add(mid2);</span>
+<span class="nc" id="L46">        game.roomArrayList.add(end);</span>
+
+<span class="nc" id="L48">        end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);</span>
+
+<span class="nc" id="L50">        List&lt;Item&gt; startItems = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L51">        Item lock = Item.getInstance(&quot;lock&quot;);</span>
+
+        // Install the lock and key to unlock the locked room. You must 'open' or 'unlock' the lock
+        // to go through the door into the locked room
+<span class="nc" id="L55">        ((ItemLock) lock).install(key);</span>
+<span class="nc" id="L56">        lock.setRelatedRoom(end);</span>
+<span class="nc" id="L57">        mid2.putItem(lock);</span>
+
+<span class="nc" id="L59">        startItems.add(key);</span>
+<span class="nc" id="L60">        startItems.add(lock);</span>
+
+<span class="nc" id="L62">        Room start = new Room(&quot;There is a tree, with a building to the West. There is a lock on the door.&quot;, &quot;Tree&quot; );</span>
+<span class="nc" id="L63">        start.setAdjacentRoom(Action.ACTION_GO_NORTH, mid1);</span>
+<span class="nc" id="L64">        start.setAdjacentRoom(Action.ACTION_GO_EAST, mid2);</span>
+<span class="nc" id="L65">        start.setAdjacentRoom(Action.ACTION_GO_WEST, end);</span>
+<span class="nc" id="L66">        start.putItems(startItems);</span>
+
+<span class="nc" id="L68">        game.roomArrayList.add(start);</span>
+
+<span class="nc" id="L70">        List&lt;String&gt; goals = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L71">        goals.add(&quot;Fork&quot;);</span>
+<span class="nc" id="L72">        goals.add(&quot;bear&quot;);</span>
+<span class="nc" id="L73">        goals.add(&quot;interior&quot;);</span>
+
+<span class="nc" id="L75">        Player player = new Player(start);</span>
+
+<span class="nc" id="L77">        game.setPlayer(player);</span>
+<span class="nc" id="L78">        game.addGoal(new GameExploreGoal(goals, game.getPlayer()));</span>
+
+<span class="nc" id="L80">        game.setDescription(&quot;The objective of this game is to unlock a room.&quot;);</span>
+
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        if (!(game.validate())) throw new InvalidGameException(&quot;Game improperly configured&quot;);</span>
+<span class="nc" id="L83">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

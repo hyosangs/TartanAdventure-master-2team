@@ -1,0 +1,261 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PlayerInterpreter</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PlayerInterpreter (edu.cmu.tartan)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PlayerInterpreter</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81%
+  </span>
+  <span class="absValue">
+    (51/ 63)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PlayerInterpreter$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81.2%
+  </span>
+  <span class="absValue">
+    (52/ 64)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import edu.cmu.tartan.action.Action;
+<i>4</i>&nbsp;import edu.cmu.tartan.item.Item;
+<i>5</i>&nbsp;import edu.cmu.tartan.PrintMessage;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.Arrays;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * This class attempts to interpret player input in a flexible way. It is experimental at best!
+<i>11</i>&nbsp; */
+<b class="fc"><i>12</i>&nbsp;public class PlayerInterpreter {</b>
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    /**
+<i>15</i>&nbsp;     * Interpret the input in terms of its action.
+<i>16</i>&nbsp;     * @param string input string.
+<i>17</i>&nbsp;     * @return an Action corresponding to the input.
+<i>18</i>&nbsp;     */
+<i>19</i>&nbsp;    public Action interpretString(String string) {
+<i>20</i>&nbsp;
+<b class="fc"><i>21</i>&nbsp;        if(string.equals(&quot;&quot;)) {</b>
+<b class="fc"><i>22</i>&nbsp;            return Action.ACTION_PASS;</b>
+<i>23</i>&nbsp;        }
+<b class="fc"><i>24</i>&nbsp;        return action(string.toLowerCase().split(&quot; &quot;));</b>
+<i>25</i>&nbsp;    }
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /**
+<i>28</i>&nbsp;     * Attempt to select the appropriate action for the given input string
+<i>29</i>&nbsp;     * @param string the description of what is to be done
+<i>30</i>&nbsp;     * @return
+<i>31</i>&nbsp;     * @throws ArrayIndexOutOfBoundsException
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    private Action action(String[] string){
+<i>34</i>&nbsp;//        if(string == null || string.length == 0) {
+<i>35</i>&nbsp;//            return Action.ACTION_PASS;
+<i>36</i>&nbsp;//        }
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;        Action retVal = null;</b>
+<b class="fc"><i>39</i>&nbsp;        String[] command = getCommendString(string);</b>
+<b class="fc"><i>40</i>&nbsp;        Action action = getActionFromString(command);</b>
+<b class="fc"><i>41</i>&nbsp;        if(action == null){</b>
+<b class="nc"><i>42</i>&nbsp;            return Action.ACTION_ERROR;</b>
+<i>43</i>&nbsp;        }
+<i>44</i>&nbsp;
+<b class="fc"><i>45</i>&nbsp;        switch(action.type()){</b>
+<i>46</i>&nbsp;            case TYPE_DIRECTIONAL:
+<b class="fc"><i>47</i>&nbsp;                retVal = action;</b>
+<b class="fc"><i>48</i>&nbsp;                break;</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;            case TYPE_HASDIRECTOBJECT:
+<b class="fc"><i>51</i>&nbsp;                retVal = getActionHasDirectObject(action, command);</b>
+<b class="fc"><i>52</i>&nbsp;                break;</b>
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;            case TYPE_HASINDIRECTOBJECT:
+<b class="fc"><i>55</i>&nbsp;                retVal = getActionHasIndirectObject(action, command);</b>
+<b class="fc"><i>56</i>&nbsp;                break;</b>
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;            case TYPE_HASNOOBJECT:
+<b class="nc"><i>59</i>&nbsp;                retVal = action;</b>
+<b class="nc"><i>60</i>&nbsp;                break;</b>
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;            case TYPE_UNKNOWN:
+<b class="nc"><i>63</i>&nbsp;                retVal = Action.ACTION_ERROR;</b>
+<b class="nc"><i>64</i>&nbsp;                break;</b>
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;            default:
+<b class="nc"><i>67</i>&nbsp;                PrintMessage.printConsole(&quot;Unknown type&quot;);</b>
+<b class="nc"><i>68</i>&nbsp;                retVal = Action.ACTION_ERROR;</b>
+<i>69</i>&nbsp;                break;
+<i>70</i>&nbsp;        }
+<i>71</i>&nbsp;
+<b class="fc"><i>72</i>&nbsp;        return retVal;</b>
+<i>73</i>&nbsp;    }
+<i>74</i>&nbsp;
+<i>75</i>&nbsp;    private String[] getCommendString(String[] string){
+<b class="fc"><i>76</i>&nbsp;        String[] command = null;</b>
+<b class="fc"><i>77</i>&nbsp;        if(string[0].compareTo(&quot;go&quot;) == 0 || string[0].compareTo(&quot;travel&quot;) == 0 || string[0].compareTo(&quot;move&quot;) == 0){</b>
+<b class="fc"><i>78</i>&nbsp;            command = Arrays.copyOfRange(string, 1, string.length);</b>
+<i>79</i>&nbsp;        }
+<i>80</i>&nbsp;        else{
+<b class="fc"><i>81</i>&nbsp;            command = string;</b>
+<i>82</i>&nbsp;        }
+<i>83</i>&nbsp;
+<b class="fc"><i>84</i>&nbsp;        return command;</b>
+<i>85</i>&nbsp;    }
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;    private Action getActionFromString(String[] string){
+<b class="fc"><i>88</i>&nbsp;        String s = string[0];</b>
+<b class="fc"><i>89</i>&nbsp;        Action action = null;</b>
+<i>90</i>&nbsp;
+<b class="fc"><i>91</i>&nbsp;        for( Action a : Action.values()) {</b>
+<b class="fc"><i>92</i>&nbsp;            for(String alias : a.getAliases()) {</b>
+<b class="fc"><i>93</i>&nbsp;                if(s.compareTo(alias) == 0) {</b>
+<b class="fc"><i>94</i>&nbsp;                    action = a;</b>
+<b class="fc"><i>95</i>&nbsp;                    break;</b>
+<i>96</i>&nbsp;                }
+<i>97</i>&nbsp;            }
+<i>98</i>&nbsp;        }
+<i>99</i>&nbsp;
+<b class="fc"><i>100</i>&nbsp;        return action;</b>
+<i>101</i>&nbsp;    }
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;    private Action getActionHasDirectObject(Action action, String[] string){
+<b class="fc"><i>104</i>&nbsp;        Action retVal=null;</b>
+<i>105</i>&nbsp;
+<b class="fc"><i>106</i>&nbsp;        if(string.length &gt; 1) {</b>
+<b class="fc"><i>107</i>&nbsp;            String d = string[1];</b>
+<b class="fc"><i>108</i>&nbsp;            Item item = Item.getInstance(d);</b>
+<i>109</i>&nbsp;            // item is the direct object of the action
+<b class="fc"><i>110</i>&nbsp;            action.setDirectObject(item);</b>
+<b class="fc"><i>111</i>&nbsp;            retVal = action;</b>
+<b class="fc"><i>112</i>&nbsp;        }</b>
+<i>113</i>&nbsp;        else {
+<b class="nc"><i>114</i>&nbsp;            PrintMessage.printConsole(&quot;You must supply a direct object.&quot;);</b>
+<b class="nc"><i>115</i>&nbsp;            retVal = Action.ACTION_PASS;</b>
+<i>116</i>&nbsp;        }
+<i>117</i>&nbsp;
+<b class="fc"><i>118</i>&nbsp;        return retVal;</b>
+<i>119</i>&nbsp;    }
+<i>120</i>&nbsp;
+<i>121</i>&nbsp;    private Action getActionHasIndirectObject(Action action, String[] string){
+<i>122</i>&nbsp;        // test if it has indirect object
+<i>123</i>&nbsp;        // &quot;Take Diamond from Microwave&quot;
+<b class="fc"><i>124</i>&nbsp;        Action retVal=null;</b>
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;        ///////////////////////
+<i>127</i>&nbsp;        // origin : string.length &gt; 0 --&gt; change : sting.length &gt; 1
+<b class="fc"><i>128</i>&nbsp;        if(string.length &gt; 3) {</b>
+<b class="fc"><i>129</i>&nbsp;            String d = string[1];</b>
+<b class="fc"><i>130</i>&nbsp;            Item item = Item.getInstance(d);</b>
+<i>131</i>&nbsp;            // item is the direct object of the action
+<b class="fc"><i>132</i>&nbsp;            action.setDirectObject(item);</b>
+<b class="fc"><i>133</i>&nbsp;            String in = string[2];</b>
+<b class="fc"><i>134</i>&nbsp;            if(in.equals(&quot;in&quot;) || in.equals(&quot;from&quot;)) {</b>
+<b class="fc"><i>135</i>&nbsp;                String io = string[3];</b>
+<b class="fc"><i>136</i>&nbsp;                Item indob = Item.getInstance(io);</b>
+<b class="fc"><i>137</i>&nbsp;                action.setIndirectObject(indob);</b>
+<b class="fc"><i>138</i>&nbsp;                retVal = action;</b>
+<b class="fc"><i>139</i>&nbsp;            }</b>
+<i>140</i>&nbsp;            else {
+<b class="nc"><i>141</i>&nbsp;                retVal = Action.ACTION_PASS;</b>
+<i>142</i>&nbsp;            }
+<b class="fc"><i>143</i>&nbsp;        }</b>
+<i>144</i>&nbsp;        else {
+<b class="nc"><i>145</i>&nbsp;            PrintMessage.printConsole(&quot;You must supply a direct object.&quot;);</b>
+<b class="nc"><i>146</i>&nbsp;            retVal = Action.ACTION_ERROR;</b>
+<i>147</i>&nbsp;        }
+<i>148</i>&nbsp;
+<b class="fc"><i>149</i>&nbsp;        return retVal;</b>
+<i>150</i>&nbsp;    }
+<i>151</i>&nbsp;
+<i>152</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-26 07:47</div>
+</div>
+</body>
+</html>

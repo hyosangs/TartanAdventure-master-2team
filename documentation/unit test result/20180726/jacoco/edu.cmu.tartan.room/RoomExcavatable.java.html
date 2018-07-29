@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoomExcavatable.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.room</a> &gt; <span class="el_source">RoomExcavatable.java</span></div><h1>RoomExcavatable.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.room;
+
+import edu.cmu.tartan.item.Item;
+
+import java.util.List;
+import java.util.LinkedList;
+
+public class RoomExcavatable extends Room {
+
+	protected String digMessage;
+	protected boolean wasDugUp;
+	protected List&lt;Item&gt; revealableItems;
+
+	public RoomExcavatable(String description, String shortDescription, String digMessage) {
+<span class="fc" id="L15">		super(description, shortDescription);</span>
+<span class="fc" id="L16">		this.digMessage = digMessage;</span>
+<span class="fc" id="L17">		this.wasDugUp = false;</span>
+<span class="fc" id="L18">		this.revealableItems = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L19">	}</span>
+
+    /**
+     * Set the item(s) to be excavated
+     * @param items the list of excavatable items
+     */
+	public void setRevealableItems(LinkedList&lt;Item&gt; items) {
+<span class="fc bfc" id="L26" title="All 2 branches covered.">		if(items != null) {</span>
+<span class="fc" id="L27">			this.revealableItems = items;</span>
+		}
+<span class="fc" id="L29">	}</span>
+
+    /**
+     * Perform the excavation
+     */
+	public void dig() {
+
+<span class="fc bfc" id="L36" title="All 2 branches covered.">		if(this.player.hasItem(Item.getInstance(&quot;shovel&quot;))) {</span>
+<span class="fc" id="L37">			super.printOut.console(digMessage);</span>
+<span class="fc" id="L38">			this.wasDugUp = true;</span>
+<span class="fc" id="L39">			this.items.addAll(this.revealableItems);</span>
+		}
+		else {
+<span class="fc" id="L42">			super.printOut.console(&quot;You do not have an item you can use to dig.&quot;);</span>
+		}
+<span class="fc" id="L44">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

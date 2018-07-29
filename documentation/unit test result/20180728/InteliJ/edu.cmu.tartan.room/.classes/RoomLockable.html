@@ -1,0 +1,195 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: RoomLockable</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.room</a> ]
+</div>
+
+<h1>Coverage Summary for Class: RoomLockable (edu.cmu.tartan.room)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RoomLockable</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (33/ 33)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.room;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import edu.cmu.tartan.item.Item;
+<i>4</i>&nbsp;import edu.cmu.tartan.util.PrintOutInterface;
+<i>5</i>&nbsp;import edu.cmu.tartan.util.ScannerInInterface;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;/**
+<i>8</i>&nbsp; * The class for a locked room. A key is required to open this type of room
+<i>9</i>&nbsp; * from this class.
+<i>10</i>&nbsp; * &lt;p&gt;
+<i>11</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>12</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>13</i>&nbsp; * Versions:
+<i>14</i>&nbsp; * 1.0 March 2018 - initial version
+<i>15</i>&nbsp; */
+<i>16</i>&nbsp;public class RoomLockable extends Room {
+<i>17</i>&nbsp;    private boolean locked;
+<i>18</i>&nbsp;    private Item key;
+<i>19</i>&nbsp;    private boolean causesDeath;
+<i>20</i>&nbsp;    private String deathMessage;
+<i>21</i>&nbsp;    private String unlockMessage;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    /**
+<i>24</i>&nbsp;     * Create a new locked room
+<i>25</i>&nbsp;     * @param description description
+<i>26</i>&nbsp;     * @param shortDescription short description
+<i>27</i>&nbsp;     * @param locked indicates whether the room is locked
+<i>28</i>&nbsp;     * @param key the specific key needed to unlock this toon
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;	public RoomLockable(String description, String shortDescription, boolean locked, Item key) {
+<b class="fc"><i>31</i>&nbsp;		super(description, shortDescription);</b>
+<i>32</i>&nbsp;
+<b class="fc"><i>33</i>&nbsp;		this.locked = locked;</b>
+<b class="fc"><i>34</i>&nbsp;		this.key = key;</b>
+<b class="fc"><i>35</i>&nbsp;		this.causesDeath = false;</b>
+<b class="fc"><i>36</i>&nbsp;		this.deathMessage = &quot;&quot;;</b>
+<b class="fc"><i>37</i>&nbsp;		this.unlockMessage = &quot;Room unlocked.&quot;;</b>
+<b class="fc"><i>38</i>&nbsp;	}</b>
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;	public RoomLockable(String description, String shortDescription, boolean locked, Item key, ScannerInInterface scannerIn, PrintOutInterface printOut) {
+<b class="fc"><i>41</i>&nbsp;		super(description, shortDescription);</b>
+<i>42</i>&nbsp;
+<b class="fc"><i>43</i>&nbsp;		this.locked = locked;</b>
+<b class="fc"><i>44</i>&nbsp;		this.key = key;</b>
+<b class="fc"><i>45</i>&nbsp;		this.causesDeath = false;</b>
+<b class="fc"><i>46</i>&nbsp;		this.deathMessage = &quot;&quot;;</b>
+<b class="fc"><i>47</i>&nbsp;		this.unlockMessage = &quot;Room unlocked.&quot;;</b>
+<i>48</i>&nbsp;
+<b class="fc"><i>49</i>&nbsp;		super.scannerIn = scannerIn;</b>
+<b class="fc"><i>50</i>&nbsp;		super.printOut = printOut;</b>
+<b class="fc"><i>51</i>&nbsp;	}</b>
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    /**
+<i>54</i>&nbsp;     * Create a locked room (unlocked by default)
+<i>55</i>&nbsp;     * @param description description
+<i>56</i>&nbsp;     * @param shortDescription short description
+<i>57</i>&nbsp;     */
+<i>58</i>&nbsp;	public RoomLockable(String description, String shortDescription) {
+<i>59</i>&nbsp;		// unlocked by default
+<b class="fc"><i>60</i>&nbsp;		this(description, shortDescription, false, Item.getInstance(&quot;unknown&quot;));</b>
+<b class="fc"><i>61</i>&nbsp;	}</b>
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    /**
+<i>64</i>&nbsp;     * Indicate whether room is locked
+<i>65</i>&nbsp;     * @return
+<i>66</i>&nbsp;     */
+<i>67</i>&nbsp;	public boolean isLocked() {
+<b class="fc"><i>68</i>&nbsp;		return this.locked;</b>
+<i>69</i>&nbsp;	}
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;	// Handle player death
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;	public void setCausesDeath(boolean causesDeath, String message) {
+<b class="fc"><i>74</i>&nbsp;		this.causesDeath = causesDeath;</b>
+<b class="fc"><i>75</i>&nbsp;		this.deathMessage = message;</b>
+<b class="fc"><i>76</i>&nbsp;	}</b>
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;	public boolean causesDeath() {
+<b class="fc"><i>79</i>&nbsp;		return this.causesDeath;</b>
+<i>80</i>&nbsp;	}
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;	public String deathMessage() {
+<b class="fc"><i>83</i>&nbsp;		return this.deathMessage;</b>
+<i>84</i>&nbsp;	}
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;    /**
+<i>87</i>&nbsp;     * Set unlock message
+<i>88</i>&nbsp;     * @param s the unlock message
+<i>89</i>&nbsp;     */
+<i>90</i>&nbsp;	public void setUnlockMessage(String s){
+<b class="fc"><i>91</i>&nbsp;		this.unlockMessage = s;</b>
+<b class="fc"><i>92</i>&nbsp;	}</b>
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;    /**
+<i>95</i>&nbsp;     * Unlock the room
+<i>96</i>&nbsp;     * @param key the key to use to unlock
+<i>97</i>&nbsp;     * @return true if it is the right key; false otherwise
+<i>98</i>&nbsp;     */
+<i>99</i>&nbsp;	public boolean unlock(Item key) {
+<b class="fc"><i>100</i>&nbsp;		if(this.key.compareTo(key) == 0) {</b>
+<b class="fc"><i>101</i>&nbsp;			this.locked = false;</b>
+<b class="fc"><i>102</i>&nbsp;			super.printOut.console(this.unlockMessage);</b>
+<b class="fc"><i>103</i>&nbsp;			return true;</b>
+<i>104</i>&nbsp;		}
+<i>105</i>&nbsp;		else { 
+<b class="fc"><i>106</i>&nbsp;			if(!causesDeath()) {</b>
+<b class="fc"><i>107</i>&nbsp;				super.printOut.console(&quot;This key doesn&#39;t seem to fit&quot;);</b>
+<i>108</i>&nbsp;			}
+<b class="fc"><i>109</i>&nbsp;			return false;</b>
+<i>110</i>&nbsp;		}
+<i>111</i>&nbsp;	}
+<i>112</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-29 11:10</div>
+</div>
+</body>
+</html>

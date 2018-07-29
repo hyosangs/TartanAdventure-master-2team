@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ObscuredRoomGame.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.games</a> &gt; <span class="el_source">ObscuredRoomGame.java</span></div><h1>ObscuredRoomGame.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.games;
+
+import edu.cmu.tartan.Game;
+import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.Player;
+import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.goal.GameExploreGoal;
+import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.room.RoomObscured;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * A game demonstrating a hidden (obscured) room.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class ObscuredRoomGame extends GameConfiguration {
+
+<span class="fc" id="L25">    public ObscuredRoomGame() {</span>
+<span class="fc" id="L26">        super.name = &quot;Obscured&quot;;</span>
+<span class="fc" id="L27">    }</span>
+
+    /**
+     * Configure the game
+     * @param game the Game object that will manage execution
+     * @throws InvalidGameException
+     */
+    @Override
+    public void configure(Game game) throws InvalidGameException{
+
+<span class="nc" id="L37">        String passageDescription = &quot;You are in a dark corridor dimly lit by torches.&quot;;</span>
+<span class="nc" id="L38">		String passageShortDescription = &quot;Dark Corridor.&quot;;</span>
+
+<span class="nc" id="L40">        Room room1 = new Room(&quot;You are in the first room. There is a fridge in here.&quot;,</span>
+                &quot;Room1&quot;);
+
+        // You must push the fridge to expose the hidden passage
+<span class="nc" id="L44">        Item fridge = Item.getInstance(&quot;fridge&quot;);</span>
+<span class="nc" id="L45">		RoomObscured passage = new RoomObscured(passageDescription ,passageShortDescription, fridge);</span>
+<span class="nc" id="L46">		passage.setObscured(true);</span>
+<span class="nc" id="L47">        passage.setUnobscureMessage(&quot;You've revelealed a hidden passage to the east!&quot;);</span>
+<span class="nc" id="L48">        passage.setObscureMessage(&quot;This room is hidden&quot;);</span>
+<span class="nc" id="L49">        passage.putItem(Item.getInstance(&quot;torch&quot;));</span>
+
+<span class="nc" id="L51">        room1.setAdjacentRoom(Action.ACTION_GO_EAST,passage);</span>
+<span class="nc" id="L52">		room1.putItem(fridge);</span>
+<span class="nc" id="L53">		fridge.setRelatedRoom(passage);</span>
+
+<span class="nc" id="L55">        Player player = new Player(room1);</span>
+<span class="nc" id="L56">        List&lt;String&gt; goalItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L57">        goalItems.add(&quot;passage&quot;);</span>
+<span class="nc" id="L58">        goalItems.add(&quot;room1&quot;);</span>
+
+<span class="nc" id="L60">        game.setPlayer(player);</span>
+<span class="nc" id="L61">        game.addGoal(new GameExploreGoal(goalItems,player));</span>
+
+<span class="nc" id="L63">        game.setDescription(&quot;The objective of this game is to earn explore an obscured room&quot;);</span>
+
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (!(game.validate())) throw new InvalidGameException(&quot;Game improperly configured&quot;);</span>
+<span class="nc" id="L66">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

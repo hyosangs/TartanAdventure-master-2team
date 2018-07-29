@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemClayPot.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.item</a> &gt; <span class="el_source">ItemClayPot.java</span></div><h1>ItemClayPot.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.item;
+
+import edu.cmu.tartan.properties.Destroyable;
+import edu.cmu.tartan.properties.Holdable;
+import edu.cmu.tartan.properties.Hostable;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
+
+/**
+ * A clay pot can be destroyed, held, and host other objects
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable {
+
+
+    private String destroyMessage;
+    private boolean disappears;
+
+    /**
+     * Create a new clay pot
+     * @param s description
+     * @param sd long description
+     * @param a aliases
+     */
+    public ItemClayPot(String s, String sd, String[] a) {
+<span class="fc" id="L30">        super(s, sd, a);</span>
+<span class="fc" id="L31">        setValue(3);</span>
+<span class="fc" id="L32">    }</span>
+
+    public ItemClayPot(String s, String sd, String[] a, ScannerInInterface scannerIn, PrintOutInterface printOut) {
+<span class="fc" id="L35">        super(s, sd, a);</span>
+<span class="fc" id="L36">        setValue(3);</span>
+
+<span class="fc" id="L38">        super.printOut = printOut;</span>
+<span class="fc" id="L39">        super.scannerIn = scannerIn;</span>
+<span class="fc" id="L40">    }</span>
+
+    /**
+     * Message to display when breaking the pot
+     * @param s the message
+     */
+    @Override
+    public void setDestroyMessage(String s) {
+<span class="fc" id="L48">        this.destroyMessage = s;</span>
+<span class="fc" id="L49">    }</span>
+
+    /**
+     * Break the pot
+     */
+    @Override
+    public void destroy() {
+<span class="fc" id="L56">        super.printOut.console(destroyMessage);</span>
+<span class="fc" id="L57">    }</span>
+
+    /**
+     * Sets whether pot should disappear
+     * @param b set to true if the item should disappear
+     */
+    @Override
+    public void setDisappears(boolean b) {
+<span class="fc" id="L65">        this.disappears = b;</span>
+<span class="fc" id="L66">    }</span>
+
+    /**
+     * Make the pot vanish
+     * @return
+     */
+    @Override
+    public boolean disappears() {
+<span class="fc" id="L74">        return this.disappears;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

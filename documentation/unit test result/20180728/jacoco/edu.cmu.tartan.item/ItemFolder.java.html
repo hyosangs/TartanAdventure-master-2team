@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemFolder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.item</a> &gt; <span class="el_source">ItemFolder.java</span></div><h1>ItemFolder.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.item;
+
+import edu.cmu.tartan.properties.Openable;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerIn;
+import edu.cmu.tartan.util.ScannerInInterface;
+
+/**
+ * This class for a folder, which can be opened.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class ItemFolder extends Item implements Openable {
+
+    private String openMessage;
+
+    /**
+     * Constructor
+     * @param s description
+     * @param sd long description
+     * @param a aliases
+     */
+    public ItemFolder(String s, String sd, String[] a) {
+
+<span class="fc" id="L28">        super(s, sd, a);</span>
+<span class="fc" id="L29">        setValue(3);</span>
+<span class="fc" id="L30">    }</span>
+
+    public ItemFolder(String s, String sd, String[] a, ScannerInInterface scannerIn , PrintOutInterface printOut) {
+
+<span class="fc" id="L34">        super(s, sd, a);</span>
+<span class="fc" id="L35">        setValue(3);</span>
+<span class="fc" id="L36">        super.printOut = printOut;</span>
+<span class="fc" id="L37">        super.scannerIn = scannerIn;</span>
+<span class="fc" id="L38">    }</span>
+
+    /**
+     * Open the folder
+     * @return true when the folder is opened
+     */
+    @Override
+    public Boolean open() {
+
+<span class="fc" id="L47">        super.printOut.console(this.openMessage);</span>
+<span class="fc" id="L48">        return true;</span>
+    }
+
+    /**
+     * The message to display when the folder is opened.
+     * @param o
+     */
+    public void setOpenMessage(String o) {
+<span class="fc" id="L56">        this.openMessage = o;</span>
+<span class="fc" id="L57">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

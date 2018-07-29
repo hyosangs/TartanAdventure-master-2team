@@ -1,0 +1,136 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ItemVendingMachine</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.item</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ItemVendingMachine (edu.cmu.tartan.item)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemVendingMachine</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/ 14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.item;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import edu.cmu.tartan.properties.Shakeable;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * This class for a keycard, which can be shaken.
+<i>7</i>&nbsp; * &lt;p&gt;
+<i>8</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>9</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>10</i>&nbsp; * Versions:
+<i>11</i>&nbsp; * 1.0 March 2018 - initial version
+<i>12</i>&nbsp; */
+<i>13</i>&nbsp;public class ItemVendingMachine extends Item implements Shakeable {
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    /**
+<i>16</i>&nbsp;     * Constructor
+<i>17</i>&nbsp;     * @param d description
+<i>18</i>&nbsp;     * @param sd long description
+<i>19</i>&nbsp;     * @param a aliases
+<i>20</i>&nbsp;     */
+<i>21</i>&nbsp;    public ItemVendingMachine(String d, String sd, String[] a) {
+<b class="fc"><i>22</i>&nbsp;        super(d, sd, a);</b>
+<b class="fc"><i>23</i>&nbsp;        this.count = 0;</b>
+<b class="fc"><i>24</i>&nbsp;        setValue(15);</b>
+<b class="fc"><i>25</i>&nbsp;    }</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /**
+<i>28</i>&nbsp;     * Shaking this machine too much can cause an accident
+<i>29</i>&nbsp;     * @return true if an accident can occur; false otherwise
+<i>30</i>&nbsp;     */
+<i>31</i>&nbsp;    public boolean accident() {
+<b class="fc"><i>32</i>&nbsp;        return this.count &gt; 2;</b>
+<i>33</i>&nbsp;    }
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    public void shake() {
+<b class="fc"><i>36</i>&nbsp;        switch (this.count) {</b>
+<i>37</i>&nbsp;            case 0:
+<b class="fc"><i>38</i>&nbsp;                super.printOut.console(&quot;You shake the vending machine, and your favorite treat inches its way off the tray.&quot;);</b>
+<b class="fc"><i>39</i>&nbsp;                break;</b>
+<i>40</i>&nbsp;            case 1:
+<b class="fc"><i>41</i>&nbsp;                super.printOut.console(&quot;The treat begins to bend toward the will of gravity.&quot;);</b>
+<b class="fc"><i>42</i>&nbsp;                break;</b>
+<i>43</i>&nbsp;            case 2:
+<b class="fc"><i>44</i>&nbsp;                super.printOut.console(&quot;Just as the candy falls, the machine also falls over and crushes you.&quot;);</b>
+<b class="fc"><i>45</i>&nbsp;                break;</b>
+<i>46</i>&nbsp;            default:
+<i>47</i>&nbsp;                break;
+<i>48</i>&nbsp;        }
+<b class="fc"><i>49</i>&nbsp;        this.count++;</b>
+<b class="fc"><i>50</i>&nbsp;    }</b>
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    protected int count;
+<i>53</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-26 07:47</div>
+</div>
+</body>
+</html>

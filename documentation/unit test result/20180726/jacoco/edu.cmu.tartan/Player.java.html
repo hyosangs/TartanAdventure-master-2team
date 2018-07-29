@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Player.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan</a> &gt; <span class="el_source">Player.java</span></div><h1>Player.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan;
+
+import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.goal.GameGoal;
+import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.item.ItemMagicBox;
+import edu.cmu.tartan.properties.Hostable;
+import edu.cmu.tartan.properties.Luminous;
+import edu.cmu.tartan.properties.Valuable;
+import edu.cmu.tartan.room.*;
+import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.Sleep;
+
+import java.util.HashMap;
+
+import java.util.List;
+import java.util.LinkedList;
+
+/**
+ * The player for a game.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class Player {
+
+    /**
+     * The player's score.
+     */
+<span class="fc" id="L34">    private int score=0;</span>
+
+    /**
+     * The list of rooms that this player has visited.
+     */
+<span class="fc" id="L39">    private List&lt;Room&gt; roomsVisited = new LinkedList&lt;&gt;();</span>
+
+    /**
+     * The points that this player can possibly score.
+     */
+<span class="fc" id="L44">    private int possiblePoints=0;</span>
+
+    /**
+     * The inventory of items this player has.
+     */
+<span class="fc" id="L49">    private List&lt;Item&gt; items = new LinkedList&lt;&gt;();</span>
+
+    /**
+     * This player's goals
+     */
+<span class="fc" id="L54">    private List&lt;GameGoal&gt; goals = new LinkedList&lt;&gt;();</span>
+
+    /**
+     * The current room this player is in.
+     */
+<span class="fc" id="L59">    private Room currentRoom = null;</span>
+
+
+    private PrintOutInterface printOutInterface;
+
+    /**
+     * Player constructor
+     *
+     * @param currentRoom the current room
+     */
+    public Player(Room currentRoom) {
+<span class="fc" id="L70">        this(currentRoom, new LinkedList&lt;Item&gt;());</span>
+<span class="fc" id="L71">    }</span>
+
+    /**
+     * Player constructor for player with items
+     * @param currentRoom the current room
+     * @param items the player's items
+     */
+<span class="fc" id="L78">    public Player(Room currentRoom, List&lt;Item&gt; items) {</span>
+<span class="fc" id="L79">        this.items = items;</span>
+<span class="fc" id="L80">        this.score = 0;</span>
+<span class="fc" id="L81">        this.currentRoom = currentRoom;</span>
+<span class="fc" id="L82">        this.currentRoom.player = this;</span>
+<span class="fc" id="L83">        this.printOutInterface = new PrintOut();</span>
+<span class="fc" id="L84">    }</span>
+
+    /**
+     * Drop an item
+     * @param item the item to drop.
+     * @return The dropped item or null if the item cannot be found.
+     */
+    public Item drop(Item item) {
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if(this.items.remove(item)) {</span>
+<span class="nc" id="L93">            this.score -= item.value();</span>
+<span class="nc" id="L94">            return item;</span>
+        }
+        else {
+<span class="nc" id="L97">            return null;</span>
+        }
+    }
+
+    /**
+     * Get the player's score.
+     * @return the score.
+     */
+    public int getScore() {
+<span class="fc" id="L106">        return score;</span>
+    }
+
+    /**
+     * Drop an item in the player's possession.
+     *
+     * @param item the item to drop. The dropped item remains in the room.
+     * @return true if the item is dropped, false otherwise.
+     */
+    public boolean dropItem(Item item) {
+
+<span class="nc" id="L117">        Item dropped = drop(item);</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (dropped == null) {</span>
+<span class="nc" id="L119">            PrintMessage.printConsole(&quot;You don't have this item to drop&quot;);</span>
+<span class="nc" id="L120">            return false;</span>
+        }
+<span class="nc" id="L122">        this.currentRoom.putItem(dropped);</span>
+<span class="nc" id="L123">        return true;</span>
+    }
+
+    /**
+     * Pickup an item.
+     * @param item the item to pickup.
+     * @return true
+     */
+    public boolean pickup(Item item){
+
+<span class="fc" id="L133">        this.grabItem(item);</span>
+<span class="fc" id="L134">        return true;</span>
+    }
+
+    /**
+     * Actually add the item to the player's inventory.
+     * @param item
+     */
+    public void grabItem(Item item) {
+<span class="fc" id="L142">        this.items.add(item);</span>
+<span class="fc" id="L143">    }</span>
+
+    public boolean hasItem(Item item) {
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">        if(item == null) return false;</span>
+<span class="fc" id="L147">        return this.items.contains(item);</span>
+    }
+
+    /**
+     * Return true if the player has a luminous object
+     * @return true if they have a luminous object, false otherwise.
+     */
+    public boolean hasLuminousItem() {
+<span class="fc bfc" id="L155" title="All 2 branches covered.">        for (Item item : this.items) {</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">            if (item instanceof Luminous) {</span>
+<span class="fc" id="L157">                return true;</span>
+            }
+<span class="nc" id="L159">        }</span>
+<span class="fc" id="L160">        return false;</span>
+    }
+
+    /**
+     * Get the current set of items.
+     * @return the items.
+     */
+    public List&lt;Item&gt; getCollectedItems() {
+<span class="fc" id="L168">        return this.items;</span>
+    }
+
+    public void putItemInItem(Item direct, Item indirect) {
+<span class="nc" id="L172">        ((Hostable)indirect).install(direct);</span>
+<span class="nc bnc" id="L173" title="All 4 branches missed.">        if(indirect instanceof ItemMagicBox &amp;&amp; direct instanceof Valuable) {</span>
+<span class="nc" id="L174">            score((Valuable)direct);</span>
+        }
+<span class="nc" id="L176">    }</span>
+
+    /**
+     * Move the player to a new room.
+     * @param nextRoom the new room.
+     */
+    public void move(Room nextRoom) {
+
+<span class="fc" id="L184">        nextRoom.setPlayer(this);</span>
+<span class="pc bpc" id="L185" title="2 of 4 branches missed.">        if(this.currentRoom != null &amp;&amp; nextRoom.compareTo(this.currentRoom) != 0) {</span>
+<span class="fc" id="L186">            Action directionOfTravel = this.currentRoom.getDirectionForRoom(nextRoom);</span>
+<span class="fc" id="L187">            HashMap&lt;Action, String&gt; messages = this.currentRoom.transitionMessages();</span>
+<span class="fc" id="L188">            String message = messages.get(directionOfTravel);</span>
+<span class="fc" id="L189">            int delay = this.currentRoom.transitionDelay();</span>
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">            if(message != null) {</span>
+<span class="nc" id="L191">                Sleep.mSecProgress(delay);</span>
+<span class="nc" id="L192">                PrintMessage.printConsole(message);</span>
+            }
+        }
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        if(nextRoom instanceof RoomRequiredItem) {</span>
+<span class="nc" id="L196">            RoomRequiredItem r = (RoomRequiredItem)nextRoom;</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">            if(r.diesOnEntry()) {</span>
+<span class="nc" id="L198">                PrintMessage.printConsole(r.loseMessage());</span>
+<span class="nc" id="L199">                this.terminate();</span>
+            }
+        }
+
+<span class="fc" id="L203">        this.currentRoom = nextRoom;</span>
+<span class="fc" id="L204">        saveRoom(currentRoom);</span>
+<span class="fc" id="L205">        PrintMessage.printConsole(this.currentRoom.description());</span>
+<span class="fc" id="L206">        printOutInterface.console(this.currentRoom.description());</span>
+<span class="fc" id="L207">    }</span>
+
+    /**
+     * Save the newly visited room to the list of rooms visited.
+     * @param room The room to save.
+     */
+    private void saveRoom(Room room) {
+
+<span class="fc" id="L215">        roomsVisited.add(room);</span>
+<span class="fc" id="L216">    }</span>
+
+    /**
+     * Get the list of rooms visited.
+     * @return The list of visited rooms.
+     */
+    public List&lt;Room&gt; getRoomsVisited() {
+<span class="fc" id="L223">        return roomsVisited;</span>
+    }
+
+    /**
+     * Move version two based on an action
+     * @param action the action associated with the move.
+     */
+    public void move(Action action) {
+
+<span class="fc" id="L232">        checkTerminate(action);</span>
+
+<span class="fc bfc" id="L234" title="All 2 branches covered.">        if(this.currentRoom.canMoveToRoomInDirection(action)) {</span>
+<span class="fc" id="L235">            Room nextRoom = this.currentRoom.getRoomForDirection(action);</span>
+
+<span class="pc bpc" id="L237" title="1 of 2 branches missed.">            if(!isValidNextRoom(nextRoom)){</span>
+<span class="nc" id="L238">                return;</span>
+            }
+
+<span class="fc" id="L241">            move(nextRoom);</span>
+<span class="fc" id="L242">        }</span>
+        else {
+<span class="fc" id="L244">            PrintMessage.printConsole(&quot;You can't move that way.&quot;);</span>
+        }
+<span class="fc" id="L246">    }</span>
+
+    private void checkTerminate(Action action){
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">        if(this.currentRoom instanceof RoomRequiredItem) {</span>
+<span class="nc" id="L250">            RoomRequiredItem room = (RoomRequiredItem)this.currentRoom;</span>
+
+<span class="nc bnc" id="L252" title="All 2 branches missed.">            if(room.shouldLoseForAction(action)) {</span>
+<span class="nc" id="L253">                PrintMessage.printConsole(room.loseMessage());</span>
+<span class="nc" id="L254">                this.terminate();</span>
+            }
+<span class="nc" id="L256">        }</span>
+<span class="pc bpc" id="L257" title="1 of 2 branches missed.">        else if(this.currentRoom instanceof RoomDark) {</span>
+<span class="nc" id="L258">            RoomDark room = (RoomDark)this.currentRoom;</span>
+<span class="nc bnc" id="L259" title="All 4 branches missed.">            if(room.isDark() &amp;&amp; !this.hasLuminousItem()) {</span>
+<span class="nc" id="L260">                PrintMessage.printConsole(room.deathMessage());</span>
+<span class="nc" id="L261">                this.terminate();</span>
+            }
+        }
+<span class="fc" id="L264">    }</span>
+
+    private boolean isValidNextRoom(Room nextRoom){
+<span class="fc" id="L267">        boolean ret = true;</span>
+<span class="pc bpc" id="L268" title="1 of 2 branches missed.">        if(nextRoom instanceof RoomLockable) {</span>
+<span class="nc" id="L269">            RoomLockable lockedRoom = (RoomLockable)nextRoom;</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">            if(lockedRoom.isLocked()) {</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">                if(lockedRoom.causesDeath()) {</span>
+<span class="nc" id="L272">                    PrintMessage.printConsole(lockedRoom.deathMessage());</span>
+<span class="nc" id="L273">                    this.terminate();</span>
+                }
+<span class="nc" id="L275">                PrintMessage.printConsole(&quot;This door is locked.&quot;);</span>
+<span class="nc" id="L276">                ret = false;</span>
+            }
+<span class="nc" id="L278">        }</span>
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">        else if(nextRoom instanceof RoomObscured) {</span>
+<span class="nc" id="L280">            RoomObscured obscuredRoom = (RoomObscured)nextRoom;</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">            if(obscuredRoom.isObscured()) {</span>
+<span class="nc" id="L282">                PrintMessage.printConsole(&quot;You can't move that way.&quot;);</span>
+<span class="nc" id="L283">                ret = false;</span>
+            }
+        }
+
+<span class="fc" id="L287">        return ret;</span>
+    }
+
+    /**
+     * Get the current room.
+     * @return the current room.
+     */
+    public Room currentRoom() {
+<span class="fc" id="L295">        return this.currentRoom;</span>
+    }
+
+    /**
+     * Add a goal for this player
+     * @param g the new goal.
+     */
+    public void addGoal(GameGoal g) {
+<span class="fc" id="L303">        goals.add(g);</span>
+<span class="fc" id="L304">    }</span>
+
+    /**
+     * Print information about the room
+     */
+    public void lookAround() {
+<span class="fc" id="L310">        PrintMessage.printConsole(this.currentRoom.toString());</span>
+<span class="fc" id="L311">    }</span>
+
+    /**
+     * Score by doing something with a Valuable valuableObject.
+     * @param valuableObject the valuable valuableObject.
+     * @see Valuable
+     */
+    public void score(Valuable valuableObject) {
+<span class="nc" id="L319">        int localScore = valuableObject.value();</span>
+<span class="nc" id="L320">        score(localScore);</span>
+<span class="nc" id="L321">    }</span>
+
+    /**
+     * Add to the Player's score
+     * @param s the newly scored points.
+     */
+    public void score(int s) {
+<span class="fc" id="L328">        PrintMessage.printConsole(&quot;You scored &quot; + s + &quot; points.&quot;);</span>
+<span class="fc" id="L329">        score += s;</span>
+<span class="fc" id="L330">    }</span>
+
+    /**
+     * Terminate this player.
+     */
+    public void terminate() {
+<span class="nc" id="L336">        PrintMessage.printConsole(&quot;You have scored &quot; + this.score + &quot; out of  &quot; + possiblePoints + &quot; possible points.&quot;);</span>
+<span class="nc" id="L337">        System.exit(0);</span>
+<span class="nc" id="L338">    }</span>
+
+    /**
+     * Add points available to this player.
+     * @param p The new points available.
+     */
+    public void addPossiblePoints(int p) {
+<span class="nc" id="L345">        possiblePoints += p;</span>
+<span class="nc" id="L346">    }</span>
+
+    /**
+     * Get the points available to this player.
+     * @return the available points.
+     */
+    public int getPossiblePoints() {
+<span class="nc" id="L353">        return possiblePoints;</span>
+    }
+
+    /**
+     * Fetch the goals for this Player.
+     * @return the list of this Player's goals.
+     */
+    public List&lt;GameGoal&gt; getGoals() {
+<span class="fc" id="L361">        return goals;</span>
+    }
+
+
+    public void setPrintOutInterface(PrintOutInterface printOutInterface){
+<span class="fc" id="L366">        this.printOutInterface = printOutInterface;</span>
+<span class="fc" id="L367">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoomObscured.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.room</a> &gt; <span class="el_source">RoomObscured.java</span></div><h1>RoomObscured.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.room;
+
+import edu.cmu.tartan.item.Item;
+
+/**
+ * The class for an obscured room. An item is hiding this room
+ * from this class.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class RoomObscured extends Room {
+    // The item hiding this room
+    private boolean isObscured;
+    private String obscureMessage;
+    private String unobscureMessage;
+
+    /**
+     * Create a new obscured room
+     * @param description the description
+     * @param shortDescription the short description
+     * @param obscuringItem The item obscuring this room
+     */
+	public RoomObscured(String description, String shortDescription, Item obscuringItem) {
+<span class="fc" id="L27">		super(description, shortDescription);</span>
+<span class="fc" id="L28">		this.isObscured = true;</span>
+<span class="fc" id="L29">		this.obscureMessage = null;</span>
+<span class="fc" id="L30">		this.unobscureMessage = null;</span>
+<span class="fc" id="L31">	}</span>
+
+    // Getters &amp; setters
+
+	public boolean isObscured() {
+<span class="fc" id="L36">		return this.isObscured;</span>
+	}
+	public void setObscured(boolean obscured) {
+<span class="fc" id="L39">		this.isObscured = obscured;</span>
+<span class="fc" id="L40">	}</span>
+	public void setUnobscureMessage(String s) {
+<span class="fc" id="L42">		this.unobscureMessage = s;</span>
+<span class="fc" id="L43">	}</span>
+	public String unobscureMessage() {
+<span class="fc" id="L45">		return this.unobscureMessage;</span>
+	}
+	public void setObscureMessage(String s) {
+<span class="fc" id="L48">		this.obscureMessage = s;</span>
+<span class="fc" id="L49">	}</span>
+	public String obscureMessage() {
+<span class="fc" id="L51">		return this.obscureMessage;</span>
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

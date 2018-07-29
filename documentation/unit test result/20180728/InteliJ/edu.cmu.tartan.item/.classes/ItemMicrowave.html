@@ -1,0 +1,138 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ItemMicrowave</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.item</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ItemMicrowave (edu.cmu.tartan.item)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemMicrowave</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87.5%
+  </span>
+  <span class="absValue">
+    (14/ 16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.item;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import edu.cmu.tartan.properties.Hostable;
+<i>4</i>&nbsp;import edu.cmu.tartan.properties.Meltable;
+<i>5</i>&nbsp;import edu.cmu.tartan.properties.Startable;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;/**
+<i>8</i>&nbsp; * This class for a microwave, which can hold something and be started.
+<i>9</i>&nbsp; * &lt;p&gt;
+<i>10</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>11</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>12</i>&nbsp; * Versions:
+<i>13</i>&nbsp; * 1.0 March 2018 - initial version
+<i>14</i>&nbsp; */
+<i>15</i>&nbsp;public class ItemMicrowave extends Item implements Hostable, Startable {
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Constructor
+<i>20</i>&nbsp;     * @param s description
+<i>21</i>&nbsp;     * @param sd long description
+<i>22</i>&nbsp;     * @param a aliases
+<i>23</i>&nbsp;     */
+<i>24</i>&nbsp;    public ItemMicrowave(String s, String sd, String[] a) {
+<b class="fc"><i>25</i>&nbsp;        super(s, sd, a);</b>
+<b class="fc"><i>26</i>&nbsp;        setValue(5);</b>
+<b class="fc"><i>27</i>&nbsp;    }</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    /**
+<i>30</i>&nbsp;     * Start the microwave. If the installed item is meltable, then melt it
+<i>31</i>&nbsp;     * @return true if started
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    @Override
+<i>34</i>&nbsp;    public Boolean start() {
+<i>35</i>&nbsp;
+<b class="fc"><i>36</i>&nbsp;        for (int i = 0; i &lt; 3; i++) {</b>
+<b class="fc"><i>37</i>&nbsp;            super.printOut.console(&quot;...&quot;);</b>
+<i>38</i>&nbsp;            try {
+<b class="fc"><i>39</i>&nbsp;                Thread.sleep(1000);</b>
+<b class="nc"><i>40</i>&nbsp;            } catch (Exception e1) {</b>
+<b class="nc"><i>41</i>&nbsp;                e1.printStackTrace();</b>
+<b class="fc"><i>42</i>&nbsp;            }</b>
+<i>43</i>&nbsp;        }
+<b class="fc"><i>44</i>&nbsp;        super.printOut.console(&quot;Beep beep beep&quot;);</b>
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;        // Only meltable things can be microwaved
+<b class="fc"><i>47</i>&nbsp;        if (super.installedItem() instanceof Meltable) {</b>
+<b class="fc"><i>48</i>&nbsp;            Item item = ((Meltable) super.installedItem()).meltItem();</b>
+<b class="fc"><i>49</i>&nbsp;            super.printOut.console(&quot;You melted the &quot; + super.installedItem().detailDescription() + &quot;, and it revealed a &quot; + item.detailDescription() + &quot;!&quot;);</b>
+<b class="fc"><i>50</i>&nbsp;            super.install(item);</b>
+<b class="fc"><i>51</i>&nbsp;            return true;</b>
+<i>52</i>&nbsp;        }
+<b class="fc"><i>53</i>&nbsp;        return false;</b>
+<i>54</i>&nbsp;    }
+<i>55</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-29 11:10</div>
+</div>
+</body>
+</html>

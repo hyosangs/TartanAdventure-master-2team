@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameExploreGoal.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.goal</a> &gt; <span class="el_source">GameExploreGoal.java</span></div><h1>GameExploreGoal.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.goal;
+
+import edu.cmu.tartan.Player;
+import edu.cmu.tartan.room.Room;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * A game goal based on exploration of different areas. Traveling to each place is necessary to achieve this goal.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class GameExploreGoal implements GameGoal {
+    // the list of places required to visit
+<span class="fc" id="L19">    private List&lt;String&gt; itinerary = new ArrayList&lt;&gt;();</span>
+    // progress towards the goal
+<span class="fc" id="L21">    private int count = 0;</span>
+
+    private Player player;
+
+    /**
+     * Create a new exploration goal.
+     * @param places the list of places to explore
+     * @param p the player
+     */
+<span class="fc" id="L30">    public GameExploreGoal(List&lt;String&gt; places, Player p) {</span>
+<span class="fc" id="L31">        itinerary = places;</span>
+<span class="fc" id="L32">        player = p;</span>
+<span class="fc" id="L33">    }</span>
+
+    /**
+     * Describe the goal.
+     * @return a description of the goal.
+     */
+    @Override
+    public String describe() {
+<span class="fc" id="L41">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L42">        sb.append(&quot;Game Explore Goal: You must visit the following rooms:&quot;);</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        for (String i : itinerary) {</span>
+<span class="fc" id="L44">            sb.append(&quot; * &quot; + i + &quot;\n&quot;);</span>
+<span class="fc" id="L45">        }</span>
+<span class="fc" id="L46">        return sb.toString();</span>
+    }
+
+    /**
+     * Fetch status of this goal
+     * @return a displayable string for progress towards this goal
+     */
+    public String getStatus() {
+<span class="fc" id="L54">        return &quot;You have explored &quot; + count + &quot; out of &quot; + itinerary.size() + &quot; rooms.&quot;;</span>
+    }
+
+    /**
+     * Evaluate whether this goal is achieved.
+     *
+     * @return true if the goal is achieved; false otherwise
+     */
+    @Override
+    public Boolean isAchieved() {
+<span class="fc" id="L64">        int newCount = 0;</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        for (String place : itinerary) {</span>
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">            for (Room room : player.getRoomsVisited()) {</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">                if (place.equalsIgnoreCase(room.shortDescription())) {</span>
+<span class="nc" id="L68">                    newCount++;</span>
+                }
+<span class="nc" id="L70">            }</span>
+<span class="fc" id="L71">        }</span>
+<span class="fc" id="L72">        count = newCount;</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">        return count == itinerary.size();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

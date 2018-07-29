@@ -1,0 +1,192 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DemoGame</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.games</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DemoGame (edu.cmu.tartan.games)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DemoGame</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (41/ 41)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.games;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import edu.cmu.tartan.Game;
+<i>4</i>&nbsp;import edu.cmu.tartan.GameConfiguration;
+<i>5</i>&nbsp;import edu.cmu.tartan.Player;
+<i>6</i>&nbsp;import edu.cmu.tartan.action.Action;
+<i>7</i>&nbsp;import edu.cmu.tartan.goal.DemoGoal;
+<i>8</i>&nbsp;import edu.cmu.tartan.item.Item;
+<i>9</i>&nbsp;import edu.cmu.tartan.item.ItemLock;
+<i>10</i>&nbsp;import edu.cmu.tartan.room.*;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; * Example game to explore a series of rooms. This is the configuraion discussed in the project description.
+<i>14</i>&nbsp; * &lt;p&gt;
+<i>15</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>16</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>17</i>&nbsp; * Versions:
+<i>18</i>&nbsp; * 1.0 March 2018 - initial version
+<i>19</i>&nbsp; */
+<i>20</i>&nbsp;public class DemoGame extends GameConfiguration {
+<i>21</i>&nbsp;
+<b class="fc"><i>22</i>&nbsp;    public DemoGame() {</b>
+<b class="fc"><i>23</i>&nbsp;        super.name = &quot;Demo&quot;;</b>
+<b class="fc"><i>24</i>&nbsp;    }</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    /**
+<i>27</i>&nbsp;     * Configure the game
+<i>28</i>&nbsp;     * @param game the Game object that will manage exectuion
+<i>29</i>&nbsp;     * @throws InvalidGameException
+<i>30</i>&nbsp;     */
+<i>31</i>&nbsp;    @Override
+<i>32</i>&nbsp;    public void configure(Game game) throws InvalidGameException {
+<i>33</i>&nbsp;
+<b class="fc"><i>34</i>&nbsp;        Room room1 = new Room(&quot;You are in the first room. There seems to be a dark room to the East.&quot;,</b>
+<i>35</i>&nbsp;                &quot;Room1&quot;);
+<i>36</i>&nbsp;
+<b class="fc"><i>37</i>&nbsp;        game.roomArrayList.add(room1);</b>
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;        // put the item in room1 for use in room 2
+<b class="fc"><i>40</i>&nbsp;        room1.putItem(Item.getInstance(&quot;torch&quot;));</b>
+<b class="fc"><i>41</i>&nbsp;        RoomDark room2 = new RoomDark(&quot;You are in a dark room. You can go South to West to the beginning and you can go South&quot;,</b>
+<i>42</i>&nbsp;                &quot;room2&quot;, &quot;You cannot see&quot;, &quot;blind!&quot;);
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;
+<b class="fc"><i>45</i>&nbsp;        game.roomArrayList.add(room2);</b>
+<i>46</i>&nbsp;
+<b class="fc"><i>47</i>&nbsp;        Room room3 = new Room(&quot;You are in room3. There is a locked room to the West and a room to the East.&quot;,</b>
+<i>48</i>&nbsp;                &quot;room3&quot;);
+<i>49</i>&nbsp;
+<b class="fc"><i>50</i>&nbsp;        game.roomArrayList.add(room3);</b>
+<i>51</i>&nbsp;
+<b class="fc"><i>52</i>&nbsp;        Item key = Item.getInstance(&quot;key&quot;);</b>
+<i>53</i>&nbsp;        // Install the lock and key to open room 4
+<b class="fc"><i>54</i>&nbsp;        Room room4 = new RoomLockable(&quot;You are in the locked room. There is a fridge here&quot;, &quot;locked&quot;,</b>
+<i>55</i>&nbsp;                true, key);
+<i>56</i>&nbsp;
+<b class="fc"><i>57</i>&nbsp;        game.roomArrayList.add(room4);</b>
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;        // Create the new lock item (note that key was created above)
+<b class="fc"><i>60</i>&nbsp;        Item lock = Item.getInstance(&quot;lock&quot;);</b>
+<b class="fc"><i>61</i>&nbsp;        ((ItemLock) lock).install(key);</b>
+<i>62</i>&nbsp;        // This lock &quot;locks&quot; room4
+<b class="fc"><i>63</i>&nbsp;        lock.setRelatedRoom(room4);</b>
+<i>64</i>&nbsp;        // Install the items
+<b class="fc"><i>65</i>&nbsp;        room3.putItem(lock);</b>
+<b class="fc"><i>66</i>&nbsp;        room3.putItem(key);</b>
+<i>67</i>&nbsp;
+<b class="fc"><i>68</i>&nbsp;        Item food = Item.getInstance(&quot;food&quot;);</b>
+<b class="fc"><i>69</i>&nbsp;        RoomRequiredItem room6 = new RoomRequiredItem(&quot;You are in the room that required food&quot;, &quot;Required&quot;,</b>
+<i>70</i>&nbsp;                &quot;food&quot;, &quot;Warning you need food&quot;, food);
+<i>71</i>&nbsp;
+<b class="fc"><i>72</i>&nbsp;        game.roomArrayList.add(room6);</b>
+<i>73</i>&nbsp;
+<b class="fc"><i>74</i>&nbsp;        room3.putItem(food);</b>
+<b class="fc"><i>75</i>&nbsp;        Item fridge = Item.getInstance(&quot;fridge&quot;);</b>
+<b class="fc"><i>76</i>&nbsp;        RoomObscured room5 = new RoomObscured(&quot;Obscured Room 5&quot; ,&quot;Room5&quot;, fridge);</b>
+<b class="fc"><i>77</i>&nbsp;        room5.setObscured(true);</b>
+<b class="fc"><i>78</i>&nbsp;        room5.setUnobscureMessage(&quot;You&#39;ve revelealed a hidden room to the West!&quot;);</b>
+<b class="fc"><i>79</i>&nbsp;        room5.setObscureMessage(&quot;This room is hidden&quot;);</b>
+<b class="fc"><i>80</i>&nbsp;        fridge.setRelatedRoom(room5);</b>
+<i>81</i>&nbsp;
+<b class="fc"><i>82</i>&nbsp;        game.roomArrayList.add(room5);</b>
+<i>83</i>&nbsp;
+<b class="fc"><i>84</i>&nbsp;        room4.putItem(fridge);</b>
+<i>85</i>&nbsp;
+<i>86</i>&nbsp;        // Connect the rooms.
+<i>87</i>&nbsp;        // From room 1 a player can go east to
+<i>88</i>&nbsp;        // room2, which is a dark room (i.e. they need a Luminous object).
+<b class="fc"><i>89</i>&nbsp;        room1.setAdjacentRoom(Action.ACTION_GO_EAST, room2);</b>
+<i>90</i>&nbsp;        // From room2 a player can go south to room 3
+<b class="fc"><i>91</i>&nbsp;        room2.setAdjacentRoom(Action.ACTION_GO_SOUTH, room3);</b>
+<i>92</i>&nbsp;        // from room3 a player can go east to room6 if they have the required item
+<b class="fc"><i>93</i>&nbsp;        room3.setAdjacentRoom(Action.ACTION_GO_EAST, room6);</b>
+<i>94</i>&nbsp;        // from room3 a player can go west to room4 if they can unlock the door
+<b class="fc"><i>95</i>&nbsp;        room3.setAdjacentRoom(Action.ACTION_GO_WEST, room4);</b>
+<i>96</i>&nbsp;        // from room4 a player can go west to room5 if they move the obscuring item
+<b class="fc"><i>97</i>&nbsp;        room4.setAdjacentRoom(Action.ACTION_GO_WEST, room5);</b>
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;        // Set the initial room
+<b class="fc"><i>100</i>&nbsp;        Player player = new Player(room1);</b>
+<b class="fc"><i>101</i>&nbsp;        game.setPlayer(player);</b>
+<b class="fc"><i>102</i>&nbsp;        game.addGoal(new DemoGoal());</b>
+<i>103</i>&nbsp;
+<b class="fc"><i>104</i>&nbsp;        game.setDescription(&quot;Demo game rooms.&quot;);</b>
+<i>105</i>&nbsp;
+<b class="fc"><i>106</i>&nbsp;        if (!(game.validate())) throw new InvalidGameException(&quot;Game improperly configured&quot;);</b>
+<b class="fc"><i>107</i>&nbsp;    }</b>
+<i>108</i>&nbsp;}
+<i>109</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-29 11:10</div>
+</div>
+</body>
+</html>

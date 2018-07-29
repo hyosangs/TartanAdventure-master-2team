@@ -1,0 +1,664 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Action</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.action</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Action (edu.cmu.tartan.action)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Action</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.8%
+  </span>
+  <span class="absValue">
+    (30/ 31)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    70.6%
+  </span>
+  <span class="absValue">
+    (178/ 252)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.action;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import edu.cmu.tartan.Player;
+<i>4</i>&nbsp;import edu.cmu.tartan.PrintMessage;
+<i>5</i>&nbsp;import edu.cmu.tartan.item.Item;
+<i>6</i>&nbsp;import edu.cmu.tartan.item.ItemMagicBox;
+<i>7</i>&nbsp;import edu.cmu.tartan.properties.*;
+<i>8</i>&nbsp;import edu.cmu.tartan.room.RoomElevator;
+<i>9</i>&nbsp;import edu.cmu.tartan.room.RoomExcavatable;
+<i>10</i>&nbsp;import edu.cmu.tartan.room.RoomRequiredItem;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import java.util.List;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;/**
+<i>15</i>&nbsp; * This enumeration of actions available to a game.
+<i>16</i>&nbsp; * &lt;p&gt;
+<i>17</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>18</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>19</i>&nbsp; * Versions:
+<i>20</i>&nbsp; * 1.0 March 2018 - initial version
+<i>21</i>&nbsp; */
+<b class="fc"><i>22</i>&nbsp;public enum Action {</b>
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    // Actions that do not rely on an object
+<b class="fc"><i>25</i>&nbsp;    ACTION_LOOK(new String[]{&quot;lookAround&quot;, &quot;l&quot;}, Type.TYPE_HASNOOBJECT),</b>
+<i>26</i>&nbsp;
+<b class="fc"><i>27</i>&nbsp;    ACTION_JUMP(new String[]{&quot;jump&quot;}, Type.TYPE_HASNOOBJECT),</b>
+<b class="fc"><i>28</i>&nbsp;    ACTION_CLIMB(new String[]{&quot;climb&quot;}, Type.TYPE_HASNOOBJECT),</b>
+<b class="fc"><i>29</i>&nbsp;    ACTION_VIEW_ITMES(new String[]{&quot;inventory&quot;, &quot;items&quot;, &quot;i&quot;}, Type.TYPE_HASNOOBJECT),</b>
+<b class="fc"><i>30</i>&nbsp;    ACTION_DIE(new String[]{&quot;terminate&quot;}, Type.TYPE_HASNOOBJECT),</b>
+<b class="fc"><i>31</i>&nbsp;    ACTION_HELP(new String[]{&quot;help&quot;, &quot;h&quot;}, Type.TYPE_HASNOOBJECT),</b>
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    // Directional actions; for movement
+<b class="fc"><i>34</i>&nbsp;    ACTION_GO_EAST(new String[]{&quot;east&quot;, &quot;e&quot;}, Type.TYPE_DIRECTIONAL),</b>
+<b class="fc"><i>35</i>&nbsp;    ACTION_GO_WEST(new String[]{&quot;west&quot;, &quot;w&quot;}, Type.TYPE_DIRECTIONAL),</b>
+<b class="fc"><i>36</i>&nbsp;    ACTION_GO_SOUTH(new String[]{&quot;south&quot;, &quot;s&quot;}, Type.TYPE_DIRECTIONAL),</b>
+<b class="fc"><i>37</i>&nbsp;    ACTION_GO_NORTH(new String[]{&quot;north&quot;, &quot;n&quot;}, Type.TYPE_DIRECTIONAL),</b>
+<b class="fc"><i>38</i>&nbsp;    ACTION_GO_NORTHEAST(new String[]{&quot;northeast&quot;, &quot;ne&quot;}, Type.TYPE_DIRECTIONAL),</b>
+<b class="fc"><i>39</i>&nbsp;    ACTION_GO_NORTHWEST(new String[]{&quot;northwest&quot;, &quot;nw&quot;}, Type.TYPE_DIRECTIONAL),</b>
+<b class="fc"><i>40</i>&nbsp;    ACTION_GO_SOUTHEAST(new String[]{&quot;southeast&quot;, &quot;se&quot;}, Type.TYPE_DIRECTIONAL),</b>
+<b class="fc"><i>41</i>&nbsp;    ACTION_GO_SOUTHWEST(new String[]{&quot;southwest&quot;, &quot;sw&quot;}, Type.TYPE_DIRECTIONAL),</b>
+<b class="fc"><i>42</i>&nbsp;    ACTION_GO_DOWN(new String[]{&quot;down&quot;, &quot;d&quot;}, Type.TYPE_DIRECTIONAL),</b>
+<b class="fc"><i>43</i>&nbsp;    ACTION_GO_UP(new String[]{&quot;up&quot;, &quot;u&quot;}, Type.TYPE_DIRECTIONAL),</b>
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    // Direct Object. Has one direct object e.g. Break shovel, throw lamp
+<b class="fc"><i>46</i>&nbsp;    ACTION_ACQUIRE(new String[]{&quot;acquire&quot;}, Type.TYPE_HASNOOBJECT),</b>
+<b class="fc"><i>47</i>&nbsp;    ACTION_BURN(new String[]{&quot;burn&quot;}, Type.TYPE_HASNOOBJECT),</b>
+<b class="fc"><i>48</i>&nbsp;    ACTION_DIG(new String[]{&quot;dig&quot;}, Type.TYPE_HASDIRECTOBJECT),</b>
+<b class="fc"><i>49</i>&nbsp;    ACTION_PICK_UP(new String[]{&quot;pickup&quot;, &quot;get&quot;, &quot;take&quot;, &quot;acquire&quot;, &quot;grab&quot;}, Type.TYPE_HASDIRECTOBJECT),</b>
+<b class="fc"><i>50</i>&nbsp;    ACTION_DESTROY(new String[]{&quot;break&quot;, &quot;smash&quot;, &quot;destroy&quot;, &quot;obliterate&quot;}, Type.TYPE_HASDIRECTOBJECT),</b>
+<b class="fc"><i>51</i>&nbsp;    ACTION_INSPECT(new String[]{&quot;inspect&quot;, &quot;examine&quot;, &quot;read&quot;, &quot;view&quot;}, Type.TYPE_HASDIRECTOBJECT),</b>
+<b class="fc"><i>52</i>&nbsp;    ACTION_DROP(new String[]{&quot;drop&quot;}, Type.TYPE_HASDIRECTOBJECT),</b>
+<b class="fc"><i>53</i>&nbsp;    ACTION_THROW(new String[]{&quot;throw&quot;, &quot;chuck&quot;}, Type.TYPE_HASDIRECTOBJECT),</b>
+<b class="fc"><i>54</i>&nbsp;    ACTION_SHAKE(new String[]{&quot;shake&quot;, &quot;chickendance&quot;}, Type.TYPE_HASDIRECTOBJECT),</b>
+<b class="fc"><i>55</i>&nbsp;    ACTION_ENABLE(new String[]{&quot;enable&quot;, &quot;hit&quot;, &quot;start&quot;, &quot;use&quot;, &quot;deploy&quot;}, Type.TYPE_HASDIRECTOBJECT),</b>
+<b class="fc"><i>56</i>&nbsp;    ACTION_PUSH(new String[]{&quot;push&quot;, &quot;call&quot;}, Type.TYPE_HASDIRECTOBJECT), // used with elevator</b>
+<b class="fc"><i>57</i>&nbsp;    ACTION_EAT(new String[]{&quot;eat&quot;, &quot;chew&quot;, &quot;consume&quot;, &quot;bite&quot;, &quot;swallow&quot;, &quot;drink&quot;}, Type.TYPE_HASDIRECTOBJECT),</b>
+<b class="fc"><i>58</i>&nbsp;    ACTION_OPEN(new String[]{&quot;open&quot;, &quot;unlock&quot;}, Type.TYPE_HASDIRECTOBJECT),</b>
+<b class="fc"><i>59</i>&nbsp;    ACTION_EXPLODE(new String[]{&quot;detonate&quot;, &quot;explode&quot;}, Type.TYPE_HASDIRECTOBJECT),</b>
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;    // Indirect Object. Has one direct object and one indirect object, e.g. Put cpu in computer
+<b class="fc"><i>62</i>&nbsp;    ACTION_PUT(new String[]{&quot;put&quot;, &quot;install&quot;}, Type.TYPE_HASINDIRECTOBJECT),</b>
+<b class="fc"><i>63</i>&nbsp;    ACTION_TAKE(new String[]{&quot;remove&quot;}, Type.TYPE_HASINDIRECTOBJECT),</b>
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    // Misc
+<b class="fc"><i>66</i>&nbsp;    ACTION_UNKNOWN(new String[]{}, Type.TYPE_UNKNOWN),</b>
+<b class="fc"><i>67</i>&nbsp;    ACTION_ERROR(new String[]{}, Type.TYPE_UNKNOWN),</b>
+<b class="fc"><i>68</i>&nbsp;    ACTION_PASS(new String[]{&quot;pass&quot;, &quot;\n&quot;}, Type.TYPE_UNKNOWN);</b>
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    /**
+<i>71</i>&nbsp;     * Create an new action
+<i>72</i>&nbsp;     * @param aliases THe set of alias fo rthe action
+<i>73</i>&nbsp;     * @param type the type of action
+<i>74</i>&nbsp;     */
+<b class="fc"><i>75</i>&nbsp;    Action(String[] aliases, Type type) {</b>
+<b class="fc"><i>76</i>&nbsp;        this.aliases = aliases;</b>
+<b class="fc"><i>77</i>&nbsp;        this.type = type;</b>
+<b class="fc"><i>78</i>&nbsp;    }</b>
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;    // Shortcuts to reverse movement
+<i>81</i>&nbsp;    static {
+<b class="fc"><i>82</i>&nbsp;        ACTION_GO_EAST.opposite = ACTION_GO_WEST;</b>
+<b class="fc"><i>83</i>&nbsp;        ACTION_GO_WEST.opposite = ACTION_GO_EAST;</b>
+<b class="fc"><i>84</i>&nbsp;        ACTION_GO_NORTH.opposite = ACTION_GO_SOUTH;</b>
+<b class="fc"><i>85</i>&nbsp;        ACTION_GO_SOUTH.opposite = ACTION_GO_NORTH;</b>
+<b class="fc"><i>86</i>&nbsp;        ACTION_GO_NORTHEAST.opposite = ACTION_GO_SOUTHWEST;</b>
+<b class="fc"><i>87</i>&nbsp;        ACTION_GO_SOUTHEAST.opposite = ACTION_GO_NORTHWEST;</b>
+<b class="fc"><i>88</i>&nbsp;        ACTION_GO_NORTHWEST.opposite = ACTION_GO_SOUTHEAST;</b>
+<b class="fc"><i>89</i>&nbsp;        ACTION_GO_SOUTHWEST.opposite = ACTION_GO_NORTHEAST;</b>
+<b class="fc"><i>90</i>&nbsp;        ACTION_GO_UP.opposite = ACTION_GO_DOWN;</b>
+<b class="fc"><i>91</i>&nbsp;        ACTION_GO_DOWN.opposite = ACTION_GO_UP;</b>
+<b class="fc"><i>92</i>&nbsp;    }</b>
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;    // Getters and Setters
+<i>95</i>&nbsp;    public String[] getAliases() {
+<b class="fc"><i>96</i>&nbsp;        return this.aliases;</b>
+<i>97</i>&nbsp;    }
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;    public Type type() {
+<b class="fc"><i>100</i>&nbsp;        return this.type;</b>
+<i>101</i>&nbsp;    }
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;    public void setDirectObject(Item directObject) {
+<b class="fc"><i>104</i>&nbsp;        this.directObject = directObject;</b>
+<b class="fc"><i>105</i>&nbsp;    }</b>
+<i>106</i>&nbsp;
+<i>107</i>&nbsp;    public Item directObject() {
+<b class="fc"><i>108</i>&nbsp;        return this.directObject;</b>
+<i>109</i>&nbsp;    }
+<i>110</i>&nbsp;
+<i>111</i>&nbsp;    public void setIndirectObject(Item indirectObject) {
+<b class="fc"><i>112</i>&nbsp;        this.indirectObject = indirectObject;</b>
+<b class="fc"><i>113</i>&nbsp;    }</b>
+<i>114</i>&nbsp;
+<i>115</i>&nbsp;    public Item indirectObject() {
+<b class="fc"><i>116</i>&nbsp;        return this.indirectObject;</b>
+<i>117</i>&nbsp;    }
+<i>118</i>&nbsp;
+<i>119</i>&nbsp;    // opposite directions are used for the directional enumeration constants.
+<i>120</i>&nbsp;    public Action getOppositeDirection() {
+<i>121</i>&nbsp;
+<b class="fc"><i>122</i>&nbsp;        if (this.type() == Type.TYPE_DIRECTIONAL) {</b>
+<b class="fc"><i>123</i>&nbsp;            return this.opposite;</b>
+<i>124</i>&nbsp;        } else {
+<b class="fc"><i>125</i>&nbsp;            return null;</b>
+<i>126</i>&nbsp;        }
+<i>127</i>&nbsp;    }
+<i>128</i>&nbsp;
+<i>129</i>&nbsp;    //The message when Player is can&#39;t see an item.
+<i>130</i>&nbsp;    private static final String MSG_IDONOTSEETHATHERE = &quot;I don&#39;t see that here.&quot;;
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    //String of taken
+<i>133</i>&nbsp;    private static final String MSG_TAKEN = &quot;Taken.&quot;;
+<i>134</i>&nbsp;
+<i>135</i>&nbsp;    /**
+<i>136</i>&nbsp;     * Execute ActionPickup of ActionLists
+<i>137</i>&nbsp;     * @param a
+<i>138</i>&nbsp;     * @param player
+<i>139</i>&nbsp;     */
+<i>140</i>&nbsp;    public void actionPickup(Action a, Player player) {
+<b class="fc"><i>141</i>&nbsp;        Item o = a.directObject();</b>
+<b class="fc"><i>142</i>&nbsp;        Item container = null;</b>
+<b class="fc"><i>143</i>&nbsp;        if(player.currentRoom().hasItem(o)) {</b>
+<b class="fc"><i>144</i>&nbsp;            if(o instanceof Holdable) {</b>
+<b class="fc"><i>145</i>&nbsp;                PrintMessage.printConsole(MSG_TAKEN);</b>
+<i>146</i>&nbsp;
+<b class="fc"><i>147</i>&nbsp;                player.currentRoom().remove(o);</b>
+<b class="fc"><i>148</i>&nbsp;                player.pickup(o);</b>
+<b class="fc"><i>149</i>&nbsp;                player.score( ((Holdable)o).value());</b>
+<i>150</i>&nbsp;            }
+<i>151</i>&nbsp;            else {
+<b class="fc"><i>152</i>&nbsp;                PrintMessage.printConsole(&quot;You cannot pick up this item.&quot;);</b>
+<i>153</i>&nbsp;            }
+<i>154</i>&nbsp;        }
+<b class="fc"><i>155</i>&nbsp;        else if((container = containerForItem(o, player)) != null) {</b>
+<i>156</i>&nbsp;
+<b class="nc"><i>157</i>&nbsp;            PrintMessage.printConsole(MSG_TAKEN);</b>
+<b class="nc"><i>158</i>&nbsp;            ((Hostable)container).uninstall(o);</b>
+<b class="nc"><i>159</i>&nbsp;            player.pickup(o);</b>
+<b class="nc"><i>160</i>&nbsp;            player.score( ((Holdable)o).value());</b>
+<i>161</i>&nbsp;        }
+<b class="fc"><i>162</i>&nbsp;        else if(player.hasItem(o)) {</b>
+<b class="nc"><i>163</i>&nbsp;            PrintMessage.printConsole(&quot;You already have that item in your inventory.&quot;);</b>
+<i>164</i>&nbsp;        }
+<i>165</i>&nbsp;        else {
+<b class="fc"><i>166</i>&nbsp;            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</b>
+<i>167</i>&nbsp;        }
+<b class="fc"><i>168</i>&nbsp;    }</b>
+<i>169</i>&nbsp;
+<i>170</i>&nbsp;    /**
+<i>171</i>&nbsp;     * Execute ActionError of ActionLists
+<i>172</i>&nbsp;     */
+<i>173</i>&nbsp;    public void actionError() {
+<b class="fc"><i>174</i>&nbsp;        PrintMessage.printConsole(&quot;I don&#39;t understand that.&quot;);</b>
+<b class="fc"><i>175</i>&nbsp;    }</b>
+<i>176</i>&nbsp;
+<i>177</i>&nbsp;    /**
+<i>178</i>&nbsp;     * Execute ActionDie of ActionLists
+<i>179</i>&nbsp;     */
+<i>180</i>&nbsp;    public void actionDie(Player player) {
+<b class="nc"><i>181</i>&nbsp;        player.terminate();</b>
+<b class="nc"><i>182</i>&nbsp;    }</b>
+<i>183</i>&nbsp;
+<i>184</i>&nbsp;    /**
+<i>185</i>&nbsp;     * Execute ActionViewItems of ActionLists
+<i>186</i>&nbsp;     * @param player
+<i>187</i>&nbsp;     */
+<i>188</i>&nbsp;    public void actionViewItems(Player player) {
+<b class="fc"><i>189</i>&nbsp;        List&lt;Item&gt; items = player.getCollectedItems();</b>
+<b class="fc"><i>190</i>&nbsp;        if (items.isEmpty()) {</b>
+<b class="fc"><i>191</i>&nbsp;            PrintMessage.printConsole(&quot;You don&#39;t have any items.&quot;);</b>
+<i>192</i>&nbsp;        }
+<i>193</i>&nbsp;        else {
+<b class="nc"><i>194</i>&nbsp;            for(Item item : player.getCollectedItems()) {</b>
+<b class="nc"><i>195</i>&nbsp;                PrintMessage.printConsole(&quot;You have a &quot; + item.description() + &quot;.&quot;);</b>
+<b class="nc"><i>196</i>&nbsp;            }</b>
+<i>197</i>&nbsp;        }
+<b class="fc"><i>198</i>&nbsp;    }</b>
+<i>199</i>&nbsp;
+<i>200</i>&nbsp;    /**
+<i>201</i>&nbsp;     * Execute ActionError of ActionLists
+<i>202</i>&nbsp;     * @param player
+<i>203</i>&nbsp;     */
+<i>204</i>&nbsp;    public void actionJump(Player player) {
+<b class="fc"><i>205</i>&nbsp;        player.move(Action.ACTION_GO_DOWN);</b>
+<b class="fc"><i>206</i>&nbsp;    }</b>
+<i>207</i>&nbsp;
+<i>208</i>&nbsp;    /**
+<i>209</i>&nbsp;     * Execute ActionClimb of ActionLists
+<i>210</i>&nbsp;     * @param player
+<i>211</i>&nbsp;     */
+<i>212</i>&nbsp;    public void actionClimb(Player player) {
+<b class="fc"><i>213</i>&nbsp;        player.move(Action.ACTION_GO_UP);</b>
+<b class="fc"><i>214</i>&nbsp;    }</b>
+<i>215</i>&nbsp;
+<i>216</i>&nbsp;    /**
+<i>217</i>&nbsp;     * Execute ActionLook of ActionLists
+<i>218</i>&nbsp;     * @param player
+<i>219</i>&nbsp;     */
+<i>220</i>&nbsp;    public void actionLook(Player player) {
+<b class="fc"><i>221</i>&nbsp;        player.lookAround();</b>
+<b class="fc"><i>222</i>&nbsp;    }</b>
+<i>223</i>&nbsp;
+<i>224</i>&nbsp;    /**
+<i>225</i>&nbsp;     * Execute ActionTask of ActionLists
+<i>226</i>&nbsp;     * @param a
+<i>227</i>&nbsp;     * @param player
+<i>228</i>&nbsp;     */
+<i>229</i>&nbsp;    public void actionTask(Action a, Player player) {
+<b class="fc"><i>230</i>&nbsp;        Item contents = a.directObject();</b>
+<b class="fc"><i>231</i>&nbsp;        Item container = a.indirectObject();</b>
+<b class="fc"><i>232</i>&nbsp;        if(!player.currentRoom().hasItem(container)) {</b>
+<b class="fc"><i>233</i>&nbsp;            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</b>
+<i>234</i>&nbsp;        }
+<b class="nc"><i>235</i>&nbsp;        else if(!(container instanceof Hostable)) {</b>
+<b class="nc"><i>236</i>&nbsp;            PrintMessage.printConsole(&quot;You can&#39;t have an item inside that.&quot;);</b>
+<i>237</i>&nbsp;        }
+<i>238</i>&nbsp;        else {
+<b class="nc"><i>239</i>&nbsp;            if(((Hostable)container).installedItem() == contents) {</b>
+<b class="nc"><i>240</i>&nbsp;                ((Hostable)container).uninstall(contents);</b>
+<b class="nc"><i>241</i>&nbsp;                player.pickup(contents);</b>
+<b class="nc"><i>242</i>&nbsp;                PrintMessage.printConsole(MSG_TAKEN);</b>
+<i>243</i>&nbsp;            }
+<i>244</i>&nbsp;            else {
+<b class="nc"><i>245</i>&nbsp;                PrintMessage.printConsole(&quot;That item is not inside this &quot; + container);</b>
+<i>246</i>&nbsp;            }
+<i>247</i>&nbsp;        }
+<b class="fc"><i>248</i>&nbsp;    }</b>
+<i>249</i>&nbsp;
+<i>250</i>&nbsp;    /**
+<i>251</i>&nbsp;     * Execute ActionPut of ActionLists
+<i>252</i>&nbsp;     * @param a
+<i>253</i>&nbsp;     * @param player
+<i>254</i>&nbsp;     */
+<i>255</i>&nbsp;    public void actionPut(Action a, Player player) {
+<b class="fc"><i>256</i>&nbsp;        Item itemToPut = a.directObject();</b>
+<b class="fc"><i>257</i>&nbsp;        Item itemToBePutInto = a.indirectObject();</b>
+<b class="fc"><i>258</i>&nbsp;        if(!player.hasItem(itemToPut)) {</b>
+<b class="fc"><i>259</i>&nbsp;            PrintMessage.printConsole(&quot;You don&#39;t have that object in your inventory.&quot;);</b>
+<i>260</i>&nbsp;        }
+<b class="nc"><i>261</i>&nbsp;        else if(itemToBePutInto == null) {</b>
+<b class="nc"><i>262</i>&nbsp;            PrintMessage.printConsole(&quot;You must supply an indirect object.&quot;);</b>
+<i>263</i>&nbsp;        }
+<b class="nc"><i>264</i>&nbsp;        else if(!player.currentRoom().hasItem(itemToBePutInto)) {</b>
+<b class="nc"><i>265</i>&nbsp;            PrintMessage.printConsole(&quot;That object doesn&#39;t exist in this room.&quot;);</b>
+<i>266</i>&nbsp;        }
+<b class="nc"><i>267</i>&nbsp;        else if(itemToBePutInto instanceof ItemMagicBox &amp;&amp; !(itemToPut instanceof Valuable)) {</b>
+<b class="nc"><i>268</i>&nbsp;            PrintMessage.printConsole(&quot;This item has no value--putting it in this &quot; + itemToBePutInto + &quot; will not score you any points.&quot;);</b>
+<i>269</i>&nbsp;        }
+<b class="nc"><i>270</i>&nbsp;        else if(!(itemToBePutInto instanceof Hostable) || !(itemToPut instanceof Installable)) {</b>
+<b class="nc"><i>271</i>&nbsp;            PrintMessage.printConsole(&quot;You cannot put a &quot; + itemToPut + &quot; into this &quot; + itemToBePutInto);</b>
+<i>272</i>&nbsp;        }
+<i>273</i>&nbsp;        else {
+<b class="nc"><i>274</i>&nbsp;            PrintMessage.printConsole(&quot;Done.&quot;);</b>
+<b class="nc"><i>275</i>&nbsp;            player.drop(itemToPut);</b>
+<b class="nc"><i>276</i>&nbsp;            player.putItemInItem(itemToPut, itemToBePutInto);</b>
+<i>277</i>&nbsp;        }
+<b class="fc"><i>278</i>&nbsp;    }</b>
+<i>279</i>&nbsp;
+<i>280</i>&nbsp;    /**
+<i>281</i>&nbsp;     * Execute ActionExplode of ActionLists
+<i>282</i>&nbsp;     * @param a
+<i>283</i>&nbsp;     * @param player
+<i>284</i>&nbsp;     */
+<i>285</i>&nbsp;    public void actionExplode(Action a, Player player) {
+<b class="fc"><i>286</i>&nbsp;        Item dynamite = a.directObject();</b>
+<b class="fc"><i>287</i>&nbsp;        if(player.currentRoom().hasItem(dynamite)) {</b>
+<b class="fc"><i>288</i>&nbsp;            if(dynamite instanceof Explodable) {</b>
+<b class="fc"><i>289</i>&nbsp;                if(player.currentRoom().isAdjacentToRoom(dynamite.relatedRoom())) {</b>
+<b class="nc"><i>290</i>&nbsp;                    Explodable explode = (Explodable)dynamite;</b>
+<b class="nc"><i>291</i>&nbsp;                    explode.explode();</b>
+<b class="nc"><i>292</i>&nbsp;                    player.score(explode.value());</b>
+<b class="nc"><i>293</i>&nbsp;                }</b>
+<i>294</i>&nbsp;                else {
+<b class="fc"><i>295</i>&nbsp;                    PrintMessage.printConsole(&quot;There isn&#39;t anything to blow up here.&quot;);</b>
+<i>296</i>&nbsp;                }
+<i>297</i>&nbsp;            }
+<i>298</i>&nbsp;            else {
+<b class="fc"><i>299</i>&nbsp;                PrintMessage.printConsole(&quot;That item is not an explosive.&quot;);</b>
+<i>300</i>&nbsp;            }
+<i>301</i>&nbsp;        }
+<i>302</i>&nbsp;        else {
+<b class="fc"><i>303</i>&nbsp;            PrintMessage.printConsole(&quot;You do not have that item in your inventory.&quot;);</b>
+<i>304</i>&nbsp;        }
+<b class="fc"><i>305</i>&nbsp;    }</b>
+<i>306</i>&nbsp;
+<i>307</i>&nbsp;    /**
+<i>308</i>&nbsp;     * Execute ActionOpen of ActionLists
+<i>309</i>&nbsp;     * @param a
+<i>310</i>&nbsp;     * @param player
+<i>311</i>&nbsp;     */
+<i>312</i>&nbsp;    public void actionOpen(Action a, Player player) {
+<b class="fc"><i>313</i>&nbsp;        Item item = a.directObject();</b>
+<b class="fc"><i>314</i>&nbsp;        if(player.hasItem(item) || player.currentRoom().hasItem(item)) {</b>
+<b class="fc"><i>315</i>&nbsp;            if(item instanceof Openable) {</b>
+<b class="fc"><i>316</i>&nbsp;                Openable o = ((Openable)item);</b>
+<i>317</i>&nbsp;                // if you can open the item , you score!
+<b class="fc"><i>318</i>&nbsp;                if (o.open() == true) {</b>
+<b class="fc"><i>319</i>&nbsp;                    player.score(item.value());</b>
+<b class="fc"><i>320</i>&nbsp;                    player.currentRoom().remove(item);</b>
+<i>321</i>&nbsp;                }
+<b class="fc"><i>322</i>&nbsp;            }</b>
+<i>323</i>&nbsp;            else {
+<b class="nc"><i>324</i>&nbsp;                PrintMessage.printConsole(&quot;You cannot open this.&quot;);</b>
+<i>325</i>&nbsp;            }
+<i>326</i>&nbsp;        }
+<i>327</i>&nbsp;        else {
+<b class="fc"><i>328</i>&nbsp;            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</b>
+<i>329</i>&nbsp;        }
+<b class="fc"><i>330</i>&nbsp;    }</b>
+<i>331</i>&nbsp;
+<i>332</i>&nbsp;    /**
+<i>333</i>&nbsp;     * Execute ActionEat of ActionLists
+<i>334</i>&nbsp;     * @param a
+<i>335</i>&nbsp;     * @param player
+<i>336</i>&nbsp;     */
+<i>337</i>&nbsp;    public void actionEat(Action a, Player player) {
+<b class="fc"><i>338</i>&nbsp;        Item item = a.directObject();</b>
+<b class="fc"><i>339</i>&nbsp;        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {</b>
+<b class="fc"><i>340</i>&nbsp;            if(item instanceof Edible) {</b>
+<i>341</i>&nbsp;                // eating something gives scores
+<b class="fc"><i>342</i>&nbsp;                Edible e = (Edible)item;</b>
+<b class="fc"><i>343</i>&nbsp;                e.eat();</b>
+<b class="fc"><i>344</i>&nbsp;                player.score(item.value());</b>
+<i>345</i>&nbsp;                // Once we eat it, then it&#39;s gone
+<b class="fc"><i>346</i>&nbsp;                player.currentRoom().remove(item);</b>
+<b class="fc"><i>347</i>&nbsp;            }</b>
+<i>348</i>&nbsp;            else {
+<b class="nc"><i>349</i>&nbsp;                if(item instanceof Holdable) {</b>
+<b class="nc"><i>350</i>&nbsp;                    PrintMessage.printConsole(&quot;As you  shove the &quot; + a.directObject() + &quot; down your throat, you begin to choke.&quot;);</b>
+<b class="nc"><i>351</i>&nbsp;                    actionDie(player);</b>
+<i>352</i>&nbsp;                }
+<i>353</i>&nbsp;                else {
+<b class="nc"><i>354</i>&nbsp;                    PrintMessage.printConsole(&quot;That cannot be consumed.&quot;);</b>
+<i>355</i>&nbsp;                }
+<i>356</i>&nbsp;            }
+<i>357</i>&nbsp;        }
+<b class="fc"><i>358</i>&nbsp;    }</b>
+<i>359</i>&nbsp;
+<i>360</i>&nbsp;    /**
+<i>361</i>&nbsp;     * Execute ActionDig of ActionLists
+<i>362</i>&nbsp;     * @param a
+<i>363</i>&nbsp;     * @param player
+<i>364</i>&nbsp;     */
+<i>365</i>&nbsp;    public void actionDig(Action a, Player player) {
+<b class="fc"><i>366</i>&nbsp;        Item item = a.directObject();</b>
+<b class="fc"><i>367</i>&nbsp;        if (player.currentRoom() instanceof RoomExcavatable &amp;&amp; item.description() == &quot;Shovel&quot;) {</b>
+<b class="nc"><i>368</i>&nbsp;            RoomExcavatable curr = (RoomExcavatable) player.currentRoom();</b>
+<b class="nc"><i>369</i>&nbsp;            curr.dig();</b>
+<b class="nc"><i>370</i>&nbsp;        } else {</b>
+<b class="fc"><i>371</i>&nbsp;            PrintMessage.printConsole(&quot;You are not allowed to dig here&quot;);</b>
+<i>372</i>&nbsp;        }
+<b class="fc"><i>373</i>&nbsp;    }</b>
+<i>374</i>&nbsp;
+<i>375</i>&nbsp;    /**
+<i>376</i>&nbsp;     * Execute ActionPush of ActionLists
+<i>377</i>&nbsp;     * @param a
+<i>378</i>&nbsp;     * @param player
+<i>379</i>&nbsp;     */
+<i>380</i>&nbsp;    public void actionPush(Action a, Player player) {
+<b class="fc"><i>381</i>&nbsp;        Item item = a.directObject();</b>
+<b class="fc"><i>382</i>&nbsp;        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {</b>
+<b class="fc"><i>383</i>&nbsp;            if(item instanceof Pushable) {</b>
+<i>384</i>&nbsp;
+<i>385</i>&nbsp;                // Pushing the button is worth points
+<b class="fc"><i>386</i>&nbsp;                Pushable p = (Pushable) item;</b>
+<b class="fc"><i>387</i>&nbsp;                p.push();</b>
+<b class="fc"><i>388</i>&nbsp;                player.score(item.value());</b>
+<i>389</i>&nbsp;
+<b class="fc"><i>390</i>&nbsp;                if(item.relatedRoom() instanceof RoomElevator) { // player is next to an elevator</b>
+<b class="nc"><i>391</i>&nbsp;                    ((RoomElevator)item.relatedRoom()).call(player.currentRoom());</b>
+<i>392</i>&nbsp;                }
+<b class="fc"><i>393</i>&nbsp;                else if(player.currentRoom() instanceof RoomElevator) { // player is in an elevator</b>
+<b class="nc"><i>394</i>&nbsp;                    ((RoomElevator)player.currentRoom()).call(Integer.parseInt(item.getAliases()[0])-1);</b>
+<i>395</i>&nbsp;                }
+<b class="fc"><i>396</i>&nbsp;            }</b>
+<i>397</i>&nbsp;            else {
+<b class="fc"><i>398</i>&nbsp;                PrintMessage.printConsole(&quot;Nothing happens.&quot;);</b>
+<i>399</i>&nbsp;            }
+<i>400</i>&nbsp;        }
+<i>401</i>&nbsp;        else {
+<b class="fc"><i>402</i>&nbsp;            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</b>
+<i>403</i>&nbsp;        }
+<b class="fc"><i>404</i>&nbsp;    }</b>
+<i>405</i>&nbsp;
+<i>406</i>&nbsp;    /**
+<i>407</i>&nbsp;     * Execute ActionEnable of ActionLists
+<i>408</i>&nbsp;     * @param a
+<i>409</i>&nbsp;     * @param player
+<i>410</i>&nbsp;     */
+<i>411</i>&nbsp;    public void actionEnable(Action a, Player player) {
+<b class="fc"><i>412</i>&nbsp;        Item item = a.directObject();</b>
+<b class="fc"><i>413</i>&nbsp;        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {</b>
+<b class="nc"><i>414</i>&nbsp;            if(item instanceof Startable) {</b>
+<b class="nc"><i>415</i>&nbsp;                PrintMessage.printConsole(&quot;Done.&quot;);</b>
+<b class="nc"><i>416</i>&nbsp;                ((Startable)item).start();</b>
+<i>417</i>&nbsp;            }
+<i>418</i>&nbsp;            else {
+<b class="nc"><i>419</i>&nbsp;                PrintMessage.printConsole(&quot;I don&#39;t know how to do that.&quot;);</b>
+<i>420</i>&nbsp;            }
+<i>421</i>&nbsp;        }
+<i>422</i>&nbsp;        else {
+<b class="fc"><i>423</i>&nbsp;            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</b>
+<i>424</i>&nbsp;        }
+<b class="fc"><i>425</i>&nbsp;    }</b>
+<i>426</i>&nbsp;
+<i>427</i>&nbsp;    /**
+<i>428</i>&nbsp;     * Execute ActionShake of ActionLists
+<i>429</i>&nbsp;     * @param a
+<i>430</i>&nbsp;     * @param player
+<i>431</i>&nbsp;     */
+<i>432</i>&nbsp;    public void actionShake(Action a, Player player) {
+<b class="fc"><i>433</i>&nbsp;        Item item = a.directObject();</b>
+<b class="fc"><i>434</i>&nbsp;        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {</b>
+<b class="nc"><i>435</i>&nbsp;            if(item instanceof Shakeable) {</b>
+<b class="nc"><i>436</i>&nbsp;                ((Shakeable)item).shake();</b>
+<b class="nc"><i>437</i>&nbsp;                if(((Shakeable)item).accident()) {</b>
+<b class="nc"><i>438</i>&nbsp;                    actionDie(player);</b>
+<i>439</i>&nbsp;                }
+<i>440</i>&nbsp;            }
+<i>441</i>&nbsp;            else {
+<b class="nc"><i>442</i>&nbsp;                PrintMessage.printConsole(&quot;I don&#39;t know how to do that.&quot;);</b>
+<i>443</i>&nbsp;            }
+<i>444</i>&nbsp;        }
+<i>445</i>&nbsp;        else {
+<b class="fc"><i>446</i>&nbsp;            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</b>
+<i>447</i>&nbsp;        }
+<b class="fc"><i>448</i>&nbsp;    }</b>
+<i>449</i>&nbsp;
+<i>450</i>&nbsp;    /**
+<i>451</i>&nbsp;     * Execute ActionThrow of ActionLists
+<i>452</i>&nbsp;     * @param a
+<i>453</i>&nbsp;     * @param player
+<i>454</i>&nbsp;     */
+<i>455</i>&nbsp;    public void actionThrow(Action a, Player player) {
+<b class="fc"><i>456</i>&nbsp;        Item item = a.directObject();</b>
+<b class="fc"><i>457</i>&nbsp;        if(player.hasItem(item)) {</b>
+<b class="nc"><i>458</i>&nbsp;            if(item instanceof Chuckable) {</b>
+<b class="nc"><i>459</i>&nbsp;                PrintMessage.printConsole(&quot;Thrown.&quot;);</b>
+<b class="nc"><i>460</i>&nbsp;                ((Chuckable)item).chuck();</b>
+<b class="nc"><i>461</i>&nbsp;                player.drop(item);</b>
+<b class="nc"><i>462</i>&nbsp;                player.currentRoom().putItem(item);</b>
+<i>463</i>&nbsp;            }
+<i>464</i>&nbsp;            else {
+<b class="nc"><i>465</i>&nbsp;                PrintMessage.printConsole(&quot;You cannot throw this item.&quot;);</b>
+<i>466</i>&nbsp;            }
+<i>467</i>&nbsp;        }
+<i>468</i>&nbsp;        else {
+<b class="fc"><i>469</i>&nbsp;            PrintMessage.printConsole(&quot;You don&#39;t have that item to throw.&quot;);</b>
+<i>470</i>&nbsp;        }
+<b class="fc"><i>471</i>&nbsp;    }</b>
+<i>472</i>&nbsp;
+<i>473</i>&nbsp;    /**
+<i>474</i>&nbsp;     * Execute ActionDrop of ActionLists
+<i>475</i>&nbsp;     * @param a
+<i>476</i>&nbsp;     * @param player
+<i>477</i>&nbsp;     */
+<i>478</i>&nbsp;    public void actionDrop(Action a, Player player) {
+<b class="fc"><i>479</i>&nbsp;        Item item = a.directObject();</b>
+<b class="fc"><i>480</i>&nbsp;        if(player.hasItem(item)) {</b>
+<b class="fc"><i>481</i>&nbsp;            if(item instanceof Holdable) {</b>
+<b class="fc"><i>482</i>&nbsp;                PrintMessage.printConsole(&quot;Dropped.&quot;);</b>
+<b class="fc"><i>483</i>&nbsp;                player.drop(item);</b>
+<b class="fc"><i>484</i>&nbsp;                PrintMessage.printConsole(&quot;You Dropped &#39;&quot; +item.description() + &quot;&#39; costing you &quot;</b>
+<b class="fc"><i>485</i>&nbsp;                        + item.value() + &quot; points.&quot;);</b>
+<b class="fc"><i>486</i>&nbsp;                player.currentRoom().putItem(item);</b>
+<i>487</i>&nbsp;            }
+<i>488</i>&nbsp;            else {
+<b class="nc"><i>489</i>&nbsp;                PrintMessage.printConsole(&quot;You cannot drop this item.&quot;);</b>
+<i>490</i>&nbsp;            }
+<i>491</i>&nbsp;        }
+<i>492</i>&nbsp;        else {
+<b class="fc"><i>493</i>&nbsp;            PrintMessage.printConsole(&quot;You don&#39;t have that item to drop.&quot;);</b>
+<i>494</i>&nbsp;        }
+<b class="fc"><i>495</i>&nbsp;        if(player.currentRoom() instanceof RoomRequiredItem) {</b>
+<b class="nc"><i>496</i>&nbsp;            RoomRequiredItem r = (RoomRequiredItem)player.currentRoom();</b>
+<b class="nc"><i>497</i>&nbsp;            r.playerDidDropRequiredItem();</b>
+<i>498</i>&nbsp;        }
+<b class="fc"><i>499</i>&nbsp;    }</b>
+<i>500</i>&nbsp;
+<i>501</i>&nbsp;    /**
+<i>502</i>&nbsp;     * Execute ActionInspect of ActionLists
+<i>503</i>&nbsp;     * @param a
+<i>504</i>&nbsp;     * @param player
+<i>505</i>&nbsp;     */
+<i>506</i>&nbsp;    public void actionInspect(Action a, Player player) {
+<b class="fc"><i>507</i>&nbsp;        Item item = a.directObject();</b>
+<b class="fc"><i>508</i>&nbsp;        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {</b>
+<b class="fc"><i>509</i>&nbsp;            if(item instanceof Inspectable) {</b>
+<b class="fc"><i>510</i>&nbsp;                (item).inspect();</b>
+<i>511</i>&nbsp;            }
+<i>512</i>&nbsp;            else {
+<b class="nc"><i>513</i>&nbsp;                PrintMessage.printConsole(&quot;You cannot inspect this item.&quot;);</b>
+<i>514</i>&nbsp;            }
+<i>515</i>&nbsp;        }
+<i>516</i>&nbsp;        else {
+<b class="nc"><i>517</i>&nbsp;            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</b>
+<i>518</i>&nbsp;        }
+<b class="fc"><i>519</i>&nbsp;    }</b>
+<i>520</i>&nbsp;
+<i>521</i>&nbsp;    /**
+<i>522</i>&nbsp;     * Execute ActionDestroy of ActionLists
+<i>523</i>&nbsp;     * @param a
+<i>524</i>&nbsp;     * @param player
+<i>525</i>&nbsp;     */
+<i>526</i>&nbsp;    public void actionDestroy(Action a, Player player) {
+<b class="fc"><i>527</i>&nbsp;        Item item = a.directObject();</b>
+<b class="fc"><i>528</i>&nbsp;        if (player.currentRoom().hasItem(item) || player.hasItem(item)) {</b>
+<b class="fc"><i>529</i>&nbsp;            if (item instanceof Destroyable) {</b>
+<b class="nc"><i>530</i>&nbsp;                PrintMessage.printConsole(&quot;Smashed.&quot;);</b>
+<b class="nc"><i>531</i>&nbsp;                ((Destroyable)item).destroy();</b>
+<b class="nc"><i>532</i>&nbsp;                item.setDescription(&quot;broken &quot; + item.toString());</b>
+<b class="nc"><i>533</i>&nbsp;                item.setDetailDescription(&quot;broken &quot; + item.detailDescription());</b>
+<b class="nc"><i>534</i>&nbsp;                if (((Destroyable)item).disappears()) {</b>
+<b class="nc"><i>535</i>&nbsp;                    player.drop(item);</b>
+<b class="nc"><i>536</i>&nbsp;                    player.currentRoom().remove(item);</b>
+<i>537</i>&nbsp;                    // Get points!
+<b class="nc"><i>538</i>&nbsp;                    player.score(item.value());</b>
+<i>539</i>&nbsp;                }
+<i>540</i>&nbsp;
+<b class="nc"><i>541</i>&nbsp;                if(item instanceof Hostable) {</b>
+<b class="nc"><i>542</i>&nbsp;                    player.currentRoom().putItem(((Hostable)item).installedItem());</b>
+<b class="nc"><i>543</i>&nbsp;                    ((Hostable)item).uninstall(((Hostable)item).installedItem());</b>
+<i>544</i>&nbsp;                }
+<i>545</i>&nbsp;            }
+<i>546</i>&nbsp;            else {
+<b class="fc"><i>547</i>&nbsp;                PrintMessage.printConsole(&quot;You cannot break this item.&quot;);</b>
+<i>548</i>&nbsp;            }
+<i>549</i>&nbsp;        }
+<i>550</i>&nbsp;        else {
+<b class="fc"><i>551</i>&nbsp;            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</b>
+<i>552</i>&nbsp;        }
+<b class="fc"><i>553</i>&nbsp;    }</b>
+<i>554</i>&nbsp;
+<i>555</i>&nbsp;    /**
+<i>556</i>&nbsp;     * Determine if item in room
+<i>557</i>&nbsp;     *
+<i>558</i>&nbsp;     * @param item
+<i>559</i>&nbsp;     *            the item to check
+<i>560</i>&nbsp;     * @return not null if the time is hosted in the room
+<i>561</i>&nbsp;     */
+<i>562</i>&nbsp;    private Item containerForItem(Item item, Player player) {
+<b class="fc"><i>563</i>&nbsp;        for (Item i : player.currentRoom().items) {</b>
+<b class="fc"><i>564</i>&nbsp;            if (i instanceof Hostable &amp;&amp; item == ((Hostable) i).installedItem() &amp;&amp; item.isVisible()) {</b>
+<b class="nc"><i>565</i>&nbsp;                return i;</b>
+<i>566</i>&nbsp;            }
+<b class="fc"><i>567</i>&nbsp;        }</b>
+<b class="fc"><i>568</i>&nbsp;        return null;</b>
+<i>569</i>&nbsp;    }
+<i>570</i>&nbsp;
+<i>571</i>&nbsp;
+<i>572</i>&nbsp;    /**
+<i>573</i>&nbsp;     * Fields to describe actions
+<i>574</i>&nbsp;     */
+<i>575</i>&nbsp;    private Action opposite;
+<i>576</i>&nbsp;    private String[] aliases;
+<i>577</i>&nbsp;    private Type type;
+<i>578</i>&nbsp;    private Item directObject;
+<i>579</i>&nbsp;    private Item indirectObject;
+<i>580</i>&nbsp;}
+<i>581</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-29 11:10</div>
+</div>
+</body>
+</html>

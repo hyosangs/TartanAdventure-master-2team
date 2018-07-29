@@ -1,0 +1,159 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ItemClayPot</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.item</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ItemClayPot (edu.cmu.tartan.item)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemClayPot</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (15/ 15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.item;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import edu.cmu.tartan.properties.Destroyable;
+<i>4</i>&nbsp;import edu.cmu.tartan.properties.Holdable;
+<i>5</i>&nbsp;import edu.cmu.tartan.properties.Hostable;
+<i>6</i>&nbsp;import edu.cmu.tartan.util.PrintOutInterface;
+<i>7</i>&nbsp;import edu.cmu.tartan.util.ScannerInInterface;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * A clay pot can be destroyed, held, and host other objects
+<i>11</i>&nbsp; * &lt;p&gt;
+<i>12</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>13</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>14</i>&nbsp; * Versions:
+<i>15</i>&nbsp; * 1.0 March 2018 - initial version
+<i>16</i>&nbsp; */
+<i>17</i>&nbsp;public class ItemClayPot extends Item implements Destroyable, Holdable, Hostable {
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    private String destroyMessage;
+<i>21</i>&nbsp;    private boolean disappears;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    /**
+<i>24</i>&nbsp;     * Create a new clay pot
+<i>25</i>&nbsp;     * @param s description
+<i>26</i>&nbsp;     * @param sd long description
+<i>27</i>&nbsp;     * @param a aliases
+<i>28</i>&nbsp;     */
+<i>29</i>&nbsp;    public ItemClayPot(String s, String sd, String[] a) {
+<b class="fc"><i>30</i>&nbsp;        super(s, sd, a);</b>
+<b class="fc"><i>31</i>&nbsp;        setValue(3);</b>
+<b class="fc"><i>32</i>&nbsp;    }</b>
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    public ItemClayPot(String s, String sd, String[] a, ScannerInInterface scannerIn, PrintOutInterface printOut) {
+<b class="fc"><i>35</i>&nbsp;        super(s, sd, a);</b>
+<b class="fc"><i>36</i>&nbsp;        setValue(3);</b>
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;        super.printOut = printOut;</b>
+<b class="fc"><i>39</i>&nbsp;        super.scannerIn = scannerIn;</b>
+<b class="fc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    /**
+<i>43</i>&nbsp;     * Message to display when breaking the pot
+<i>44</i>&nbsp;     * @param s the message
+<i>45</i>&nbsp;     */
+<i>46</i>&nbsp;    @Override
+<i>47</i>&nbsp;    public void setDestroyMessage(String s) {
+<b class="fc"><i>48</i>&nbsp;        this.destroyMessage = s;</b>
+<b class="fc"><i>49</i>&nbsp;    }</b>
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    /**
+<i>52</i>&nbsp;     * Break the pot
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    @Override
+<i>55</i>&nbsp;    public void destroy() {
+<b class="fc"><i>56</i>&nbsp;        super.printOut.console(destroyMessage);</b>
+<b class="fc"><i>57</i>&nbsp;    }</b>
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    /**
+<i>60</i>&nbsp;     * Sets whether pot should disappear
+<i>61</i>&nbsp;     * @param b set to true if the item should disappear
+<i>62</i>&nbsp;     */
+<i>63</i>&nbsp;    @Override
+<i>64</i>&nbsp;    public void setDisappears(boolean b) {
+<b class="fc"><i>65</i>&nbsp;        this.disappears = b;</b>
+<b class="fc"><i>66</i>&nbsp;    }</b>
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;    /**
+<i>69</i>&nbsp;     * Make the pot vanish
+<i>70</i>&nbsp;     * @return
+<i>71</i>&nbsp;     */
+<i>72</i>&nbsp;    @Override
+<i>73</i>&nbsp;    public boolean disappears() {
+<b class="fc"><i>74</i>&nbsp;        return this.disappears;</b>
+<i>75</i>&nbsp;    }
+<i>76</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-26 07:47</div>
+</div>
+</body>
+</html>

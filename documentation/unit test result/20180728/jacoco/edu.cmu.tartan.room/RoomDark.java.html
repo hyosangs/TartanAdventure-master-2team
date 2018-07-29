@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoomDark.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.room</a> &gt; <span class="el_source">RoomDark.java</span></div><h1>RoomDark.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.room;
+
+/**
+ * The class for a dark room. Players must have a Luminous item to enter this room safely
+ * from this class.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class RoomDark extends Room {
+
+	// Descriptions
+	private String darkDescription;
+	private String darkShortDescription;
+
+	// indicates whether the room is dark
+	private boolean isDark;
+
+	// Message to indicate accident in room
+	private String deathMessage;
+
+    /**
+     *
+     * Create a new dark room
+     * @param description the description
+     * @param shortDescription the short description
+     * @param darkDescription the dark description
+     * @param darkShortDescription the long description
+     */
+	public RoomDark(String description, String shortDescription, String darkDescription, String darkShortDescription) {
+
+<span class="fc" id="L34">		this(description, shortDescription, darkDescription, darkShortDescription, true);</span>
+<span class="fc" id="L35">	}</span>
+
+    /**
+     * Create a new dark room
+     * @param description the description
+     * @param shortDescription the short description
+     * @param darkDescription the dark description
+     * @param darkShortDescription the long description
+     * @param isDark determines if the room is dark to start
+     */
+	public RoomDark(String description, String shortDescription, String darkDescription, String darkShortDescription, boolean isDark){
+<span class="fc" id="L46">		super(description, shortDescription);</span>
+
+<span class="fc" id="L48">		this.isDark = isDark;</span>
+<span class="fc" id="L49">		this.darkDescription = darkDescription;</span>
+<span class="fc" id="L50">		this.darkShortDescription = darkShortDescription;</span>
+<span class="fc" id="L51">		this.deathMessage = null;</span>
+<span class="fc" id="L52">	}</span>
+	// getters &amp; setters
+	public boolean isDark() {
+<span class="fc" id="L55">		return this.isDark;</span>
+	}
+	public void setDark(boolean isDark) {
+<span class="fc" id="L58">		this.isDark = isDark;</span>
+<span class="fc" id="L59">	}</span>
+	public String deathMessage() {
+<span class="fc" id="L61">		return this.deathMessage;</span>
+	}	
+	public void setDeathMessage(String s) {
+<span class="fc" id="L64">		this.deathMessage = s;</span>
+<span class="fc" id="L65">	}</span>
+
+	@Override
+	public String toString() {
+
+<span class="fc bfc" id="L70" title="All 2 branches covered.">		if(this.isDark) {</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">			if(this.player.hasLuminousItem()) {</span>
+<span class="fc" id="L72">				return super.toString();</span>
+			}
+			else {
+<span class="fc" id="L75">				return this.darkDescription;</span>
+			}
+		}
+		else {
+<span class="fc" id="L79">			return super.toString();</span>
+		}
+	}
+	@Override
+	public String description() {
+<span class="fc bfc" id="L84" title="All 2 branches covered.">		if (this.isDark) {</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">			if (this.player.hasLuminousItem()) {</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">				String s = this.roomWasVisited ? this.shortDescription : this.description + &quot;\n&quot; + visibleItems();</span>
+<span class="fc" id="L87">				this.roomWasVisited = true;</span>
+<span class="fc" id="L88">				return s;</span>
+			} else {
+<span class="fc bfc" id="L90" title="All 2 branches covered.">				String s = this.roomWasVisited ? this.darkShortDescription : this.darkDescription;</span>
+<span class="fc" id="L91">				this.roomWasVisited = true;</span>
+<span class="fc" id="L92">				return s;</span>
+			}
+		} else {
+<span class="fc bfc" id="L95" title="All 2 branches covered.">			String s = this.roomWasVisited ? this.shortDescription : this.description + &quot;\n&quot; + visibleItems();</span>
+<span class="fc" id="L96">			this.roomWasVisited = true;</span>
+<span class="fc" id="L97">			return s;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

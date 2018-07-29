@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlayerInterpreter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan</a> &gt; <span class="el_source">PlayerInterpreter.java</span></div><h1>PlayerInterpreter.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan;
+
+import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.PrintMessage;
+
+import java.util.Arrays;
+
+/**
+ * This class attempts to interpret player input in a flexible way. It is experimental at best!
+ */
+<span class="fc" id="L12">public class PlayerInterpreter {</span>
+
+    /**
+     * Interpret the input in terms of its action.
+     * @param string input string.
+     * @return an Action corresponding to the input.
+     */
+    public Action interpretString(String string) {
+
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        if(string.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L22">            return Action.ACTION_PASS;</span>
+        }
+<span class="fc" id="L24">        return action(string.toLowerCase().split(&quot; &quot;));</span>
+    }
+
+    /**
+     * Attempt to select the appropriate action for the given input string
+     * @param string the description of what is to be done
+     * @return
+     * @throws ArrayIndexOutOfBoundsException
+     */
+    private Action action(String[] string){
+<span class="fc" id="L34">        Action retVal = null;</span>
+<span class="fc" id="L35">        String[] command = getCommendString(string);</span>
+<span class="fc" id="L36">        Action action = getActionFromString(command);</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if(action == null){</span>
+<span class="fc" id="L38">            return Action.ACTION_ERROR;</span>
+        }
+
+<span class="pc bpc" id="L41" title="1 of 6 branches missed.">        switch(action.type()){</span>
+            case TYPE_DIRECTIONAL:
+<span class="fc" id="L43">                retVal = action;</span>
+<span class="fc" id="L44">                break;</span>
+
+            case TYPE_HASDIRECTOBJECT:
+<span class="fc" id="L47">                retVal = getActionHasDirectObject(action, command);</span>
+<span class="fc" id="L48">                break;</span>
+
+            case TYPE_HASINDIRECTOBJECT:
+<span class="fc" id="L51">                retVal = getActionHasIndirectObject(action, command);</span>
+<span class="fc" id="L52">                break;</span>
+
+            case TYPE_HASNOOBJECT:
+<span class="fc" id="L55">                retVal = action;</span>
+<span class="fc" id="L56">                break;</span>
+
+            case TYPE_UNKNOWN:
+<span class="fc" id="L59">                retVal = Action.ACTION_ERROR;</span>
+<span class="fc" id="L60">                break;</span>
+
+            default:
+<span class="nc" id="L63">                PrintMessage.printConsole(&quot;Unknown type&quot;);</span>
+<span class="nc" id="L64">                retVal = Action.ACTION_ERROR;</span>
+                break;
+        }
+
+<span class="fc" id="L68">        return retVal;</span>
+    }
+
+    private String[] getCommendString(String[] string){
+<span class="fc" id="L72">        String[] command = null;</span>
+<span class="pc bpc" id="L73" title="2 of 6 branches missed.">        if(string[0].compareTo(&quot;go&quot;) == 0 || string[0].compareTo(&quot;travel&quot;) == 0 || string[0].compareTo(&quot;move&quot;) == 0){</span>
+<span class="fc" id="L74">            command = Arrays.copyOfRange(string, 1, string.length);</span>
+        }
+        else{
+<span class="fc" id="L77">            command = string;</span>
+        }
+
+<span class="fc" id="L80">        return command;</span>
+    }
+
+    private Action getActionFromString(String[] string){
+<span class="fc" id="L84">        String s = string[0];</span>
+<span class="fc" id="L85">        Action action = null;</span>
+
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        for( Action a : Action.values()) {</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">            for(String alias : a.getAliases()) {</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">                if(s.compareTo(alias) == 0) {</span>
+<span class="fc" id="L90">                    action = a;</span>
+<span class="fc" id="L91">                    break;</span>
+                }
+            }
+        }
+
+<span class="fc" id="L96">        return action;</span>
+    }
+
+    private Action getActionHasDirectObject(Action action, String[] string){
+<span class="fc" id="L100">        Action retVal=null;</span>
+
+<span class="fc bfc" id="L102" title="All 2 branches covered.">        if(string.length &gt; 1) {</span>
+<span class="fc" id="L103">            String d = string[1];</span>
+<span class="fc" id="L104">            Item item = Item.getInstance(d);</span>
+            // item is the direct object of the action
+<span class="fc" id="L106">            action.setDirectObject(item);</span>
+<span class="fc" id="L107">            retVal = action;</span>
+<span class="fc" id="L108">        }</span>
+        else {
+<span class="fc" id="L110">            PrintMessage.printConsole(&quot;You must supply a direct object.&quot;);</span>
+<span class="fc" id="L111">            retVal = Action.ACTION_PASS;</span>
+        }
+
+<span class="fc" id="L114">        return retVal;</span>
+    }
+
+    private Action getActionHasIndirectObject(Action action, String[] string){
+        // test if it has indirect object
+        // &quot;Take Diamond from Microwave&quot;
+<span class="fc" id="L120">        Action retVal=null;</span>
+
+        ///////////////////////
+        // origin : string.length &gt; 0 --&gt; change : sting.length &gt; 1
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        if(string.length &gt; 3) {</span>
+<span class="fc" id="L125">            String d = string[1];</span>
+<span class="fc" id="L126">            Item item = Item.getInstance(d);</span>
+            // item is the direct object of the action
+<span class="fc" id="L128">            action.setDirectObject(item);</span>
+<span class="fc" id="L129">            String in = string[2];</span>
+<span class="pc bpc" id="L130" title="1 of 4 branches missed.">            if(in.equals(&quot;in&quot;) || in.equals(&quot;from&quot;)) {</span>
+<span class="fc" id="L131">                String io = string[3];</span>
+<span class="fc" id="L132">                Item indob = Item.getInstance(io);</span>
+<span class="fc" id="L133">                action.setIndirectObject(indob);</span>
+<span class="fc" id="L134">                retVal = action;</span>
+<span class="fc" id="L135">            }</span>
+            else {
+<span class="fc" id="L137">                retVal = Action.ACTION_PASS;</span>
+            }
+<span class="fc" id="L139">        }</span>
+        else {
+<span class="fc" id="L141">            PrintMessage.printConsole(&quot;You must supply a direct object.&quot;);</span>
+<span class="fc" id="L142">            retVal = Action.ACTION_ERROR;</span>
+        }
+
+<span class="fc" id="L145">        return retVal;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

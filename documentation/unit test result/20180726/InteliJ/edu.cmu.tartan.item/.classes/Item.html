@@ -1,0 +1,383 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Item</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.item</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Item (edu.cmu.tartan.item)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Item</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (26/ 26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    99.2%
+  </span>
+  <span class="absValue">
+    (118/ 119)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.item;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import edu.cmu.tartan.properties.Hostable;
+<i>4</i>&nbsp;import edu.cmu.tartan.properties.Inspectable;
+<i>5</i>&nbsp;import edu.cmu.tartan.properties.Valuable;
+<i>6</i>&nbsp;import edu.cmu.tartan.properties.Visible;
+<i>7</i>&nbsp;import edu.cmu.tartan.room.Room;
+<i>8</i>&nbsp;import edu.cmu.tartan.PrintMessage;
+<i>9</i>&nbsp;import edu.cmu.tartan.util.PrintOutInterface;
+<i>10</i>&nbsp;import edu.cmu.tartan.util.ScannerInInterface;
+<i>11</i>&nbsp;import edu.cmu.tartan.util.PrintOut;
+<i>12</i>&nbsp;import edu.cmu.tartan.util.ScannerIn;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;import java.util.List;
+<i>15</i>&nbsp;import java.util.LinkedList;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;/**
+<i>18</i>&nbsp; * This is the main class for game items. Items are things that can be used in the game
+<i>19</i>&nbsp; * &lt;p&gt;
+<i>20</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>21</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>22</i>&nbsp; * Versions:
+<i>23</i>&nbsp; * 1.0 March 2018 - initial version
+<i>24</i>&nbsp; */
+<i>25</i>&nbsp;public class Item implements Comparable, Inspectable, Visible, Valuable, Hostable {
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    // every item is visible by default
+<b class="fc"><i>28</i>&nbsp;    private boolean visible = true;</b>
+<b class="fc"><i>29</i>&nbsp;    private Integer value = null;</b>
+<i>30</i>&nbsp;    protected ScannerInInterface scannerIn;
+<i>31</i>&nbsp;    protected PrintOutInterface printOut;
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    /**
+<i>34</i>&nbsp;     * Items are referenced by descriptions
+<i>35</i>&nbsp;     */
+<b class="fc"><i>36</i>&nbsp;    private String description=null;</b>
+<b class="fc"><i>37</i>&nbsp;    String detailDescription= null;</b>
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /**
+<i>40</i>&nbsp;     * Items can have a list of unique aliases
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    private String[] aliases;
+<i>43</i>&nbsp;    private static List&lt;Item&gt; sharedInstances;
+<i>44</i>&nbsp;    
+<i>45</i>&nbsp;    // items can open rooms, call elevators, etc (e.g., an ItemButton instance)
+<i>46</i>&nbsp;    Room relatedRoom; 
+<i>47</i>&nbsp;    
+<i>48</i>&nbsp;    // items can also affect other items, like setting other items breakable (like a junction box)
+<i>49</i>&nbsp;    Item relatedItem; 
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    private String inspectMessage;
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    /**
+<i>54</i>&nbsp;     *  String of unknown
+<i>55</i>&nbsp;     */
+<i>56</i>&nbsp;    private static final String MSG_UNKNOWN = &quot;unknown&quot;;
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    private Item installedItem;
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * Create a new item
+<i>62</i>&nbsp;     * @param description short description
+<i>63</i>&nbsp;     * @param detailDescription long description
+<i>64</i>&nbsp;     * @param a alias list
+<i>65</i>&nbsp;     */
+<b class="fc"><i>66</i>&nbsp;    public Item(String description, String detailDescription, String[] a) {</b>
+<b class="fc"><i>67</i>&nbsp;        this.description = description;</b>
+<b class="fc"><i>68</i>&nbsp;        this.detailDescription = detailDescription;</b>
+<b class="fc"><i>69</i>&nbsp;        this.aliases = a;</b>
+<b class="fc"><i>70</i>&nbsp;        this.relatedRoom = null;</b>
+<b class="fc"><i>71</i>&nbsp;        this.relatedItem = null;</b>
+<b class="fc"><i>72</i>&nbsp;        this.inspectMessage = null;</b>
+<b class="fc"><i>73</i>&nbsp;        this.value = null;</b>
+<b class="fc"><i>74</i>&nbsp;        this.installedItem = null;</b>
+<b class="fc"><i>75</i>&nbsp;        this.scannerIn = new ScannerIn();</b>
+<b class="fc"><i>76</i>&nbsp;        this.printOut = new PrintOut();</b>
+<b class="fc"><i>77</i>&nbsp;    }</b>
+<i>78</i>&nbsp;
+<b class="fc"><i>79</i>&nbsp;    public Item(String description, String detailDescription, String[] a,ScannerInInterface iScannerIn , PrintOutInterface iPrintOut) {</b>
+<b class="fc"><i>80</i>&nbsp;        this.description = description;</b>
+<b class="fc"><i>81</i>&nbsp;        this.detailDescription = detailDescription;</b>
+<b class="fc"><i>82</i>&nbsp;        this.aliases = a;</b>
+<b class="fc"><i>83</i>&nbsp;        this.relatedRoom = null;</b>
+<b class="fc"><i>84</i>&nbsp;        this.relatedItem = null;</b>
+<b class="fc"><i>85</i>&nbsp;        this.inspectMessage = null;</b>
+<b class="fc"><i>86</i>&nbsp;        this.value = null;</b>
+<b class="fc"><i>87</i>&nbsp;        this.installedItem = null;</b>
+<b class="fc"><i>88</i>&nbsp;        this.scannerIn = iScannerIn;</b>
+<b class="fc"><i>89</i>&nbsp;        this.printOut = iPrintOut;</b>
+<b class="fc"><i>90</i>&nbsp;    }</b>
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    /**
+<i>93</i>&nbsp;     * Initialize default items. These are the items initially available
+<i>94</i>&nbsp;     */
+<i>95</i>&nbsp;    private static void initSharedInstances() {
+<i>96</i>&nbsp;
+<b class="fc"><i>97</i>&nbsp;        sharedInstances = new LinkedList&lt;&gt;();</b>
+<b class="fc"><i>98</i>&nbsp;        sharedInstances.add(new ItemShovel(&quot;shovel&quot;, &quot;metal shovel&quot;, new String[]{&quot;shovel&quot;}));</b>
+<b class="fc"><i>99</i>&nbsp;        sharedInstances.add(new ItemBrick(&quot;brick&quot;, &quot;clay brick&quot;, new String[]{&quot;brick&quot;}));</b>
+<b class="fc"><i>100</i>&nbsp;        sharedInstances.add(new ItemFood(&quot;food&quot;, &quot;food&quot;, new String[]{&quot;food&quot;}));</b>
+<b class="fc"><i>101</i>&nbsp;        sharedInstances.add(new ItemLadder(&quot;ladder&quot;, &quot;wooden ladder&quot;, new String[]{&quot;ladder&quot;}));</b>
+<b class="fc"><i>102</i>&nbsp;        sharedInstances.add(new ItemKey(&quot;key&quot;, &quot;gold key&quot;, new String[]{&quot;key&quot;}));</b>
+<b class="fc"><i>103</i>&nbsp;        sharedInstances.add(new ItemLock(&quot;lock&quot;, &quot;gold lock&quot;, new String[]{&quot;lock&quot;}));</b>
+<b class="fc"><i>104</i>&nbsp;        sharedInstances.add(new ItemKeycard(&quot;keycard&quot;, &quot;plastic keycard&quot;, new String[]{&quot;keycard&quot;, &quot;card&quot;}));</b>
+<b class="fc"><i>105</i>&nbsp;        sharedInstances.add(new ItemKeycardReader(&quot;keycard reader&quot;, &quot;metal keycard reader&quot;, new String[]{&quot;reader&quot;, &quot;slot&quot;}));</b>
+<b class="fc"><i>106</i>&nbsp;        sharedInstances.add(new ItemClayPot(&quot;pot&quot;, &quot;clay pot&quot;, new String[]{&quot;pot&quot;, &quot;pottery&quot;}));</b>
+<b class="fc"><i>107</i>&nbsp;        sharedInstances.add(new ItemDiamond(&quot;diamond&quot;, &quot;white diamond&quot;, new String[]{&quot;diamond&quot;, &quot;jewel&quot;}));</b>
+<b class="fc"><i>108</i>&nbsp;        sharedInstances.add(new ItemGold(&quot;gold&quot;, &quot;shiny gold bar&quot;, new String[]{&quot;gold&quot;, &quot;bar&quot;}));</b>
+<b class="fc"><i>109</i>&nbsp;        sharedInstances.add(new ItemMicrowave(&quot;microwave&quot;, &quot;microwave that stinks of month old popcorn&quot;, new String[]{&quot;microwave&quot;, &quot;appliance&quot;}));</b>
+<b class="fc"><i>110</i>&nbsp;        sharedInstances.add(new ItemFridge(&quot;fridge&quot;, &quot;white refrigerator&quot;, new String[]{&quot;fridge&quot;, &quot;refrigerator&quot;}));</b>
+<b class="fc"><i>111</i>&nbsp;        sharedInstances.add(new ItemFlashlight(&quot;flashlight&quot;, &quot;battery operated flashlight&quot;, new String[]{&quot;flashlight&quot;}));</b>
+<b class="fc"><i>112</i>&nbsp;        sharedInstances.add(new ItemTorch(&quot;torch&quot;, &quot;metal torch&quot;, new String[]{&quot;torch&quot;, &quot;candle&quot;}));</b>
+<b class="fc"><i>113</i>&nbsp;        sharedInstances.add(new ItemMagicBox(&quot;pit&quot;, &quot;bottomless pit&quot;, new String[]{&quot;pit&quot;, &quot;hole&quot;}));</b>
+<b class="fc"><i>114</i>&nbsp;        sharedInstances.add(new ItemVendingMachine(&quot;machine&quot;, &quot;vending machine with assorted candies and treats&quot;, new String[]{&quot;machine&quot;, &quot;vendor&quot;}));</b>
+<b class="fc"><i>115</i>&nbsp;        sharedInstances.add(new ItemSafe(&quot;safe&quot;, &quot;bullet-proof safe&quot;, new String[]{&quot;safe&quot;}));</b>
+<b class="fc"><i>116</i>&nbsp;        sharedInstances.add(new ItemFolder(&quot;folder&quot;, &quot;manilla folder&quot;, new String[]{&quot;folder&quot;}));</b>
+<b class="fc"><i>117</i>&nbsp;        sharedInstances.add(new ItemDocument(&quot;document&quot;, &quot;Secret document&quot;, new String[]{&quot;document&quot;}));</b>
+<b class="fc"><i>118</i>&nbsp;        sharedInstances.add(new ItemLock(&quot;fan&quot;, &quot;ventilation fan&quot;, new String[]{&quot;fan&quot;}));</b>
+<b class="fc"><i>119</i>&nbsp;        sharedInstances.add(new ItemComputer(&quot;computer&quot;, &quot;Apple computer&quot;, new String[]{&quot;apple&quot;, &quot;computer&quot;, &quot;keyboard&quot;, &quot;imac&quot;}));</b>
+<b class="fc"><i>120</i>&nbsp;        sharedInstances.add(new ItemCoffee(&quot;coffee&quot;, &quot;steaming cup of coffee&quot;, new String[]{&quot;coffee&quot;, &quot;beverage&quot;, &quot;mug&quot;}));</b>
+<b class="fc"><i>121</i>&nbsp;        sharedInstances.add(new ItemDeskLight(&quot;light&quot;, &quot;desk light&quot;, new String[]{&quot;light&quot;}));</b>
+<b class="fc"><i>122</i>&nbsp;        sharedInstances.add(new ItemDynamite(&quot;dynamite&quot;, &quot;bundle of dynamite&quot;, new String[]{&quot;dynamite&quot;, &quot;explosive&quot;, &quot;explosives&quot;}));</b>
+<b class="fc"><i>123</i>&nbsp;        sharedInstances.add(new ItemButton(&quot;Button&quot;, &quot;Elevator Button&quot;, new String[]{&quot;button&quot;}));</b>
+<b class="fc"><i>124</i>&nbsp;        for(int i=1; i&lt;=4; i++){</b>
+<b class="fc"><i>125</i>&nbsp;            sharedInstances.add(new ItemButton(&quot;Floor &quot;+i+&quot; Button&quot;, &quot;Elevator Floor &quot;+i+&quot; Button&quot;, new String[]{Integer.toString(i)}));</b>
+<i>126</i>&nbsp;        }
+<b class="fc"><i>127</i>&nbsp;        sharedInstances.add(new ItemUnknown(MSG_UNKNOWN, MSG_UNKNOWN, new String[]{MSG_UNKNOWN}));</b>
+<i>128</i>&nbsp;
+<i>129</i>&nbsp;        // there can be no overlap in aliases
+<b class="fc"><i>130</i>&nbsp;        checkUniqueAliases();</b>
+<b class="fc"><i>131</i>&nbsp;    }</b>
+<i>132</i>&nbsp;
+<i>133</i>&nbsp;    /**
+<i>134</i>&nbsp;     * Factory to create a designed item. All items must be instantiated using this method. Items are created by name
+<i>135</i>&nbsp;     * @param s the name of the item (or perhaps it&#39;s alias)
+<i>136</i>&nbsp;     * @return the newly instantiated item
+<i>137</i>&nbsp;     */
+<i>138</i>&nbsp;    public static Item getInstance(String s) {
+<b class="fc"><i>139</i>&nbsp;        if (sharedInstances == null) {</b>
+<b class="fc"><i>140</i>&nbsp;            initSharedInstances();</b>
+<i>141</i>&nbsp;        }
+<b class="fc"><i>142</i>&nbsp;        for (Item i : sharedInstances) {</b>
+<b class="fc"><i>143</i>&nbsp;            for (String a : i.getAliases()) {</b>
+<b class="fc"><i>144</i>&nbsp;                if (s.equals(a)) {</b>
+<b class="fc"><i>145</i>&nbsp;                    return i;</b>
+<i>146</i>&nbsp;                }
+<i>147</i>&nbsp;            }
+<b class="fc"><i>148</i>&nbsp;        }</b>
+<b class="fc"><i>149</i>&nbsp;        return null;</b>
+<i>150</i>&nbsp;    }
+<i>151</i>&nbsp;
+<i>152</i>&nbsp;    /**
+<i>153</i>&nbsp;     * Ensure that aliases are unique
+<i>154</i>&nbsp;     */
+<i>155</i>&nbsp;    private static void checkUniqueAliases() {
+<b class="fc"><i>156</i>&nbsp;        for (Item item : sharedInstances) {</b>
+<b class="fc"><i>157</i>&nbsp;            for (Item i : sharedInstances) {</b>
+<b class="fc"><i>158</i>&nbsp;                if (item == i) {</b>
+<b class="fc"><i>159</i>&nbsp;                    continue;</b>
+<i>160</i>&nbsp;                }
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;                // need to report the Error
+<b class="fc"><i>163</i>&nbsp;                checkDuplicateItemAliases(item, i);</b>
+<b class="fc"><i>164</i>&nbsp;            }</b>
+<b class="fc"><i>165</i>&nbsp;        }</b>
+<b class="fc"><i>166</i>&nbsp;    }</b>
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;    private static void checkDuplicateItemAliases(Item item1, Item item2){
+<b class="fc"><i>169</i>&nbsp;        for (String string : item1.getAliases()) {</b>
+<b class="fc"><i>170</i>&nbsp;            for (String s : item2.getAliases()) {</b>
+<b class="fc"><i>171</i>&nbsp;                if (string == s) {</b>
+<b class="nc"><i>172</i>&nbsp;                    PrintMessage.printSevereLog(&quot;Warning: alias conflict between &quot; + item1 + &quot; and &quot; + item2);</b>
+<i>173</i>&nbsp;                }
+<i>174</i>&nbsp;            }
+<i>175</i>&nbsp;        }
+<b class="fc"><i>176</i>&nbsp;    }</b>
+<i>177</i>&nbsp;
+<i>178</i>&nbsp;    // Getter &amp; setters
+<i>179</i>&nbsp;    public Item relatedItem() {
+<b class="fc"><i>180</i>&nbsp;        return this.relatedItem;</b>
+<i>181</i>&nbsp;    }
+<i>182</i>&nbsp;    public void setRelatedItem(Item i) {
+<b class="fc"><i>183</i>&nbsp;        this.relatedItem = i;</b>
+<b class="fc"><i>184</i>&nbsp;    }</b>
+<i>185</i>&nbsp;
+<i>186</i>&nbsp;    public Room relatedRoom() {
+<b class="fc"><i>187</i>&nbsp;        return this.relatedRoom;</b>
+<i>188</i>&nbsp;    }
+<i>189</i>&nbsp;    public void setRelatedRoom(Room r) {
+<b class="fc"><i>190</i>&nbsp;        this.relatedRoom = r;</b>
+<b class="fc"><i>191</i>&nbsp;    }</b>
+<i>192</i>&nbsp;
+<i>193</i>&nbsp;    public String[] getAliases() {
+<b class="fc"><i>194</i>&nbsp;        return this.aliases;</b>
+<i>195</i>&nbsp;    }
+<i>196</i>&nbsp;
+<i>197</i>&nbsp;    public String toString() {
+<b class="fc"><i>198</i>&nbsp;        return this.description;</b>
+<i>199</i>&nbsp;    }
+<i>200</i>&nbsp;
+<i>201</i>&nbsp;    public String detailDescription() {
+<b class="fc"><i>202</i>&nbsp;        return this.detailDescription;</b>
+<i>203</i>&nbsp;    }
+<i>204</i>&nbsp;    public String description() {
+<b class="fc"><i>205</i>&nbsp;        return this.description;</b>
+<i>206</i>&nbsp;    }
+<i>207</i>&nbsp;
+<i>208</i>&nbsp;    public void setDescription(String s) {
+<b class="fc"><i>209</i>&nbsp;        this.description = s;</b>
+<b class="fc"><i>210</i>&nbsp;    }</b>
+<i>211</i>&nbsp;    public void setDetailDescription(String s) {
+<b class="fc"><i>212</i>&nbsp;        this.detailDescription = s;</b>
+<b class="fc"><i>213</i>&nbsp;    }</b>
+<i>214</i>&nbsp;
+<i>215</i>&nbsp;    /**
+<i>216</i>&nbsp;     * The comparison is based on description
+<i>217</i>&nbsp;     * @param i
+<i>218</i>&nbsp;     * @return
+<i>219</i>&nbsp;     */
+<i>220</i>&nbsp;    public int compareTo(Object i) {
+<b class="fc"><i>221</i>&nbsp;        if (((Item) i).detailDescription.equals(this.detailDescription())) {</b>
+<b class="fc"><i>222</i>&nbsp;            return 0;</b>
+<i>223</i>&nbsp;        } else {
+<b class="fc"><i>224</i>&nbsp;            return 1;</b>
+<i>225</i>&nbsp;        }
+<i>226</i>&nbsp;    }
+<i>227</i>&nbsp;
+<i>228</i>&nbsp;    /**
+<i>229</i>&nbsp;     * Control visibility
+<i>230</i>&nbsp;     */
+<i>231</i>&nbsp;    public boolean isVisible() {
+<b class="fc"><i>232</i>&nbsp;        return visible;</b>
+<i>233</i>&nbsp;    }
+<i>234</i>&nbsp;
+<i>235</i>&nbsp;    public void setVisible(boolean b) {
+<b class="fc"><i>236</i>&nbsp;        this.visible = b;</b>
+<b class="fc"><i>237</i>&nbsp;    }</b>
+<i>238</i>&nbsp;
+<i>239</i>&nbsp;    // Inspectable
+<i>240</i>&nbsp;    public Boolean inspect() {
+<b class="fc"><i>241</i>&nbsp;        if (this.inspectMessage != null) {</b>
+<b class="fc"><i>242</i>&nbsp;            printOut.console(this.inspectMessage);</b>
+<i>243</i>&nbsp;        } else {
+<b class="fc"><i>244</i>&nbsp;            printOut.console(&quot;It appears to be a &quot; + this + &quot;.&quot;);</b>
+<i>245</i>&nbsp;        }
+<b class="fc"><i>246</i>&nbsp;        return true;</b>
+<i>247</i>&nbsp;    }
+<i>248</i>&nbsp;
+<i>249</i>&nbsp;    public void setInspectMessage(String message) {
+<b class="fc"><i>250</i>&nbsp;        this.inspectMessage = message;</b>
+<b class="fc"><i>251</i>&nbsp;    }</b>
+<i>252</i>&nbsp;
+<i>253</i>&nbsp;    @Override
+<i>254</i>&nbsp;    public int value() {
+<b class="fc"><i>255</i>&nbsp;        return this.value;</b>
+<i>256</i>&nbsp;    }
+<i>257</i>&nbsp;
+<i>258</i>&nbsp;    @Override
+<i>259</i>&nbsp;    public void setValue(int value) {
+<b class="fc"><i>260</i>&nbsp;        this.value = value;</b>
+<b class="fc"><i>261</i>&nbsp;    }</b>
+<i>262</i>&nbsp;
+<i>263</i>&nbsp;    /**
+<i>264</i>&nbsp;     * Install an item in the pot
+<i>265</i>&nbsp;     * @param item the item to install
+<i>266</i>&nbsp;     */
+<i>267</i>&nbsp;    @Override
+<i>268</i>&nbsp;    public void install(Item item) {
+<b class="fc"><i>269</i>&nbsp;        this.installedItem = item;</b>
+<b class="fc"><i>270</i>&nbsp;    }</b>
+<i>271</i>&nbsp;
+<i>272</i>&nbsp;    /**
+<i>273</i>&nbsp;     * Uninstall an item
+<i>274</i>&nbsp;     * @param item the item
+<i>275</i>&nbsp;     * @return true if uninstalled; false otherwise
+<i>276</i>&nbsp;     */
+<i>277</i>&nbsp;    @Override
+<i>278</i>&nbsp;    public boolean uninstall(Item item) {
+<b class="fc"><i>279</i>&nbsp;        if (this.installedItem == null) {</b>
+<b class="fc"><i>280</i>&nbsp;            return false;</b>
+<b class="fc"><i>281</i>&nbsp;        } else if (this.installedItem == item) {</b>
+<b class="fc"><i>282</i>&nbsp;            this.installedItem = null;</b>
+<b class="fc"><i>283</i>&nbsp;            return true;</b>
+<i>284</i>&nbsp;        } else {
+<b class="fc"><i>285</i>&nbsp;            return false;</b>
+<i>286</i>&nbsp;        }
+<i>287</i>&nbsp;    }
+<i>288</i>&nbsp;
+<i>289</i>&nbsp;    /**
+<i>290</i>&nbsp;     * Fetch the item
+<i>291</i>&nbsp;     * @return the item installed
+<i>292</i>&nbsp;     */
+<i>293</i>&nbsp;    @Override
+<i>294</i>&nbsp;    public Item installedItem() {
+<b class="fc"><i>295</i>&nbsp;        return this.installedItem;</b>
+<i>296</i>&nbsp;    }
+<i>297</i>&nbsp;}
+<i>298</i>&nbsp;
+<i>299</i>&nbsp;
+<i>300</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-26 07:47</div>
+</div>
+</body>
+</html>

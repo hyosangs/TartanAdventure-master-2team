@@ -1,0 +1,77 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GameGoal</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.goal</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GameGoal (edu.cmu.tartan.goal)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">GameGoal</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.goal;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * Interface that all goals must implement
+<i>5</i>&nbsp; * &lt;p&gt;
+<i>6</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>7</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>8</i>&nbsp; * Versions:
+<i>9</i>&nbsp; * 1.0 March 2018 - initial version
+<i>10</i>&nbsp; */
+<i>11</i>&nbsp;public interface GameGoal {
+<i>12</i>&nbsp;    /**
+<i>13</i>&nbsp;     * Evaluate goal progress
+<i>14</i>&nbsp;     * @return true if achieved; false otherwise.
+<i>15</i>&nbsp;     */
+<i>16</i>&nbsp;    public Boolean isAchieved();
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Describe the goal
+<i>20</i>&nbsp;     * @return goal description
+<i>21</i>&nbsp;     */
+<i>22</i>&nbsp;    public String describe();
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    /**
+<i>25</i>&nbsp;     * Fetch the current status
+<i>26</i>&nbsp;     * @return the status
+<i>27</i>&nbsp;     */
+<i>28</i>&nbsp;    public String getStatus();
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-26 07:47</div>
+</div>
+</body>
+</html>

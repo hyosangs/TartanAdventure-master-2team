@@ -1,0 +1,151 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ItemFood</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.item</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ItemFood (edu.cmu.tartan.item)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemFood</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/ 14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.item;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import edu.cmu.tartan.properties.Edible;
+<i>4</i>&nbsp;import edu.cmu.tartan.properties.Holdable;
+<i>5</i>&nbsp;import edu.cmu.tartan.properties.Meltable;
+<i>6</i>&nbsp;import edu.cmu.tartan.util.PrintOutInterface;
+<i>7</i>&nbsp;import edu.cmu.tartan.util.ScannerInInterface;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * This class for food, which can be held and eaten.
+<i>11</i>&nbsp; * &lt;p&gt;
+<i>12</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>13</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>14</i>&nbsp; * Versions:
+<i>15</i>&nbsp; * 1.0 March 2018 - initial version
+<i>16</i>&nbsp; */
+<i>17</i>&nbsp;public class ItemFood extends Item implements Edible, Holdable, Meltable {
+<i>18</i>&nbsp;
+<b class="fc"><i>19</i>&nbsp;    private Item hiddenItem = null;</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /**
+<i>22</i>&nbsp;     * Constructor for food item
+<i>23</i>&nbsp;     * @param s description
+<i>24</i>&nbsp;     * @param sd long description
+<i>25</i>&nbsp;     * @param a aliases
+<i>26</i>&nbsp;     */
+<i>27</i>&nbsp;    public ItemFood(String s, String sd, String[] a) {
+<i>28</i>&nbsp;
+<b class="fc"><i>29</i>&nbsp;        super(s, sd, a);</b>
+<b class="fc"><i>30</i>&nbsp;        setValue(3);</b>
+<b class="fc"><i>31</i>&nbsp;    }</b>
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    public ItemFood(String s, String sd, String[] a, ScannerInInterface scannerIn, PrintOutInterface printOut) {
+<i>34</i>&nbsp;
+<b class="fc"><i>35</i>&nbsp;        super(s, sd, a);</b>
+<b class="fc"><i>36</i>&nbsp;        setValue(3);</b>
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;        super.scannerIn = scannerIn;</b>
+<b class="fc"><i>39</i>&nbsp;        super.printOut = printOut;</b>
+<b class="fc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    /**
+<i>43</i>&nbsp;     * Eat the food
+<i>44</i>&nbsp;     */
+<i>45</i>&nbsp;    @Override
+<i>46</i>&nbsp;    public void eat() {
+<b class="fc"><i>47</i>&nbsp;        super.printOut.console(&quot;Yummy&quot;);</b>
+<b class="fc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     * Set the item to reveal when the food is melted
+<i>52</i>&nbsp;     * @param item the item to melt
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    @Override
+<i>55</i>&nbsp;    public void setMeltItem(Item item) {
+<b class="fc"><i>56</i>&nbsp;        hiddenItem = item;</b>
+<i>57</i>&nbsp;
+<b class="fc"><i>58</i>&nbsp;    }</b>
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * Reveal the hidden item
+<i>62</i>&nbsp;     * @return the hidden item
+<i>63</i>&nbsp;     */
+<i>64</i>&nbsp;    @Override
+<i>65</i>&nbsp;    public Item meltItem() {
+<b class="fc"><i>66</i>&nbsp;        return hiddenItem;</b>
+<i>67</i>&nbsp;    }
+<i>68</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-29 11:10</div>
+</div>
+</body>
+</html>

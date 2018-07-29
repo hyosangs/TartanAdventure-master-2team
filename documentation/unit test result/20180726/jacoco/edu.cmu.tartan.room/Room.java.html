@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Room.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.room</a> &gt; <span class="el_source">Room.java</span></div><h1>Room.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.room;
+
+import edu.cmu.tartan.Player;
+import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.properties.Valuable;
+import edu.cmu.tartan.properties.Visible;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
+import edu.cmu.tartan.util.PrintOut;
+import edu.cmu.tartan.util.ScannerIn;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.LinkedList;
+
+/**
+ * The main class for a room. All room types must extend this class.
+ * from this class.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class Room implements Comparable {
+
+    // Room description
+    protected String description;
+    protected String shortDescription;
+
+    // adjacent rooms
+    protected HashMap&lt;Action, Room&gt; adjacentRooms;
+
+    // transition information for what happens when a room is left/entered
+    protected HashMap&lt;Action, String&gt; transitionMessages;
+    protected int transitionDelay;
+
+    // indicates that a room was visited
+    protected boolean roomWasVisited;
+
+    // items in the room
+    public List&lt;Item&gt; items;
+
+    // the player within the room
+    public Player player;
+
+    protected ScannerInInterface scannerIn;
+    protected PrintOutInterface printOut;
+
+    /**
+     * Create a new room
+     */
+    public Room() {
+<span class="fc" id="L55">        this(&quot;You are in a room&quot;, &quot;Room&quot;);</span>
+
+<span class="fc" id="L57">        this.scannerIn = new ScannerIn();</span>
+<span class="fc" id="L58">        this.printOut = new PrintOut();</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Create a room with default descriptions
+     * @param description the room description
+     * @param shortDescription the short room description
+     */
+<span class="fc" id="L66">    public Room(String description, String shortDescription) {</span>
+
+<span class="fc" id="L68">        this.roomWasVisited = false;</span>
+<span class="fc" id="L69">        this.description = description;</span>
+<span class="fc" id="L70">        this.shortDescription = shortDescription;</span>
+<span class="fc" id="L71">        this.items = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L72">        this.adjacentRooms = new HashMap&lt;Action, Room&gt;();</span>
+<span class="fc" id="L73">        this.transitionMessages = new HashMap&lt;Action, String&gt;();</span>
+<span class="fc" id="L74">        this.transitionDelay = 0;</span>
+
+<span class="fc" id="L76">        this.scannerIn = new ScannerIn();</span>
+<span class="fc" id="L77">        this.printOut = new PrintOut();</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Create a room with default descriptions
+     * @param description the room description
+     * @param shortDescription the short room description
+     * @param scannerIn the scanner
+     * @param printOut the out console
+     */
+<span class="fc" id="L87">    public Room(String description, String shortDescription, ScannerInInterface scannerIn, PrintOutInterface printOut) {</span>
+
+<span class="fc" id="L89">        this.roomWasVisited = false;</span>
+<span class="fc" id="L90">        this.description = description;</span>
+<span class="fc" id="L91">        this.shortDescription = shortDescription;</span>
+<span class="fc" id="L92">        this.items = new LinkedList&lt;&gt;();</span>
+<span class="fc" id="L93">        this.adjacentRooms = new HashMap&lt;Action, Room&gt;();</span>
+<span class="fc" id="L94">        this.transitionMessages = new HashMap&lt;Action, String&gt;();</span>
+<span class="fc" id="L95">        this.transitionDelay = 0;</span>
+
+<span class="fc" id="L97">        this.scannerIn = scannerIn;</span>
+<span class="fc" id="L98">        this.printOut = printOut;</span>
+<span class="fc" id="L99">    }</span>
+
+    /**
+     * Set the adjacent room
+     * @param a action required to get to this room
+     * @param r the adjacent room
+     */
+    public void setAdjacentRoom(Action a, Room r) {
+<span class="fc" id="L107">        setOneWayAdjacentRoom(a, r);</span>
+<span class="fc" id="L108">        r.setOneWayAdjacentRoom(a.getOppositeDirection(), this);</span>
+<span class="fc" id="L109">    }</span>
+
+    /**
+     * Set an adjacent room that a player cannot return from
+     * @param a action required to get to this room
+     * @param r the adjacent room
+     */
+    public void setOneWayAdjacentRoom(Action a, Room r) {
+<span class="fc" id="L117">        this.adjacentRooms.put(a, r);</span>
+<span class="fc" id="L118">    }</span>
+
+    /**
+     * Fetch the room for a given direction (action)
+     * @param a action required to get to this room
+     * @return the room
+     */
+    public Room getRoomForDirection(Action a) {
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        if (canMoveToRoomInDirection(a)) {</span>
+<span class="fc" id="L127">            return this.adjacentRooms.get(a);</span>
+        }
+<span class="fc" id="L129">        return null;</span>
+    }
+
+    /**
+     * Fetch the direction (as an action) for a given room
+     * @param room room for the specified direction to get to this room
+     * @return the action
+     */
+    public Action getDirectionForRoom(Room room) {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        for (HashMap.Entry&lt;Action,Room&gt; entry : this.adjacentRooms.entrySet()) {</span>
+<span class="fc" id="L139">            Action a = entry.getKey();</span>
+<span class="fc" id="L140">            Room r = entry.getValue();</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">            if (r.compareTo(room) == 0) {</span>
+<span class="fc" id="L142">                return a;</span>
+            }
+<span class="fc" id="L144">        }</span>
+<span class="fc" id="L145">        return Action.ACTION_UNKNOWN;</span>
+    }
+
+    /**
+     * Test is the player can enter a room in a given direction
+     * @param a the direction
+     * @return true if the room is accessible; false otherwise
+     */
+    public boolean canMoveToRoomInDirection(Action a) {
+<span class="fc" id="L154">        return this.adjacentRooms.containsKey(a);</span>
+    }
+
+    public void setAdjacentRoomTransitionMessage(String message, Action direction) {
+<span class="fc" id="L158">        this.transitionMessages.put(direction, message);</span>
+<span class="fc" id="L159">    }</span>
+
+    public void setAdjacentRoomTransitionMessageWithDelay(String message, Action direction, int delay) {
+<span class="fc" id="L162">        this.setAdjacentRoomTransitionMessage(message, direction);</span>
+<span class="fc" id="L163">        this.transitionDelay = delay;</span>
+<span class="fc" id="L164">    }</span>
+
+    /**
+     * Test if two rooms are connected
+     * @param other the other room
+     * @return true if the rooms are connected; false otherwise
+     */
+    public boolean isAdjacentToRoom(Room other) {
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        for (Room room : this.adjacentRooms.values()) {</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">            if (other.compareTo(room) == 0) {</span>
+<span class="fc" id="L174">                return true;</span>
+            }
+<span class="fc" id="L176">        }</span>
+<span class="fc" id="L177">        return false;</span>
+    }
+
+    /**
+     * Fetch the appropriate transition message
+     * @return the message/action pair
+     */
+    public HashMap&lt;Action, String&gt; transitionMessages() {
+<span class="fc" id="L185">        return this.transitionMessages;</span>
+    }
+
+    /**
+     *  Get transition delay
+     * @return the delay
+     */
+    public int transitionDelay() {
+<span class="fc" id="L193">        return this.transitionDelay;</span>
+    }
+
+    /**
+     * Place an item in the room
+     * @param item the item to add
+     */
+    public void putItem(Item item) {
+<span class="fc" id="L201">        this.items.add(item);</span>
+<span class="fc" id="L202">    }</span>
+
+    /**
+     * Put a list of items in a room
+     * @param items the items
+     */
+    public void putItems(List&lt;Item&gt; items) {
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        for (Item i : items) {</span>
+<span class="fc" id="L210">            this.items.add(i);</span>
+<span class="fc" id="L211">        }</span>
+<span class="fc" id="L212">    }</span>
+
+    public Item takeItem(Item item) {
+<span class="fc bfc" id="L215" title="All 2 branches covered.">        if (item == null) {</span>
+<span class="fc" id="L216">            return null;</span>
+        } else {
+<span class="fc" id="L218">            printOut.console(&quot;I don't see that here.&quot;);</span>
+        }
+<span class="fc" id="L220">        return Item.getInstance(&quot;unknown&quot;);</span>
+    }
+
+    /**
+     * Remove an item from the room
+     * @param item the item to remove
+     * @return the removed item
+     */
+    public Item remove(Item item) {
+<span class="fc bfc" id="L229" title="All 4 branches covered.">        if (this.items.contains(item) &amp;&amp; item instanceof Valuable) {</span>
+<span class="fc" id="L230">            this.items.remove(item);</span>
+<span class="fc" id="L231">            return item;</span>
+        }
+<span class="fc" id="L233">        return null;</span>
+    }
+
+    /**
+     * Check if a room contains an item (assuming it is not invisible
+     * @param item the item to check for
+     * @return true if the room contains the item; false otherwise
+     */
+    public boolean hasItem(Item item) {
+<span class="fc bfc" id="L242" title="All 4 branches covered.">        if (item == null || !item.isVisible()) return false;</span>
+        // if the item is invisible, then fool the player1
+<span class="fc" id="L244">        return this.items.contains(item);</span>
+    }
+
+    public void setPlayer(Player p) {
+<span class="fc" id="L248">        this.player = p;</span>
+<span class="fc" id="L249">    }</span>
+
+    public String toString() {
+<span class="fc" id="L252">        return this.description + visibleItems();</span>
+    }
+
+    /**
+     * Fetch a list of visible items for a room
+     * @return the list of items
+     */
+    public String visibleItems() {
+<span class="fc" id="L260">        String s = &quot;&quot;;</span>
+<span class="fc bfc" id="L261" title="All 2 branches covered.">        for (Item item : this.items) {</span>
+<span class="pc bpc" id="L262" title="1 of 4 branches missed.">            if (item instanceof Visible &amp;&amp; item.isVisible()) {</span>
+<span class="fc" id="L263">                s += &quot;\nThere is a '&quot; + item.detailDescription() + &quot;' (i.e. &quot; + item.description() + &quot; ) here.&quot;;</span>
+            }
+<span class="fc" id="L265">        }</span>
+<span class="fc" id="L266">        return s;</span>
+    }
+
+    public String description() {
+<span class="fc bfc" id="L270" title="All 2 branches covered.">        String d = this.roomWasVisited ? this.shortDescription : this.description + visibleItems();</span>
+<span class="fc" id="L271">        this.roomWasVisited = true;</span>
+<span class="fc" id="L272">        return d;</span>
+    }
+
+    public String shortDescription() {
+<span class="fc" id="L276">        return this.shortDescription;</span>
+    }
+
+    public int compareTo(Object other) {
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        if (shortDescription.equals(((Room) other).shortDescription())) {</span>
+<span class="fc" id="L281">            return 0;</span>
+        }
+<span class="fc" id="L283">        return -1;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

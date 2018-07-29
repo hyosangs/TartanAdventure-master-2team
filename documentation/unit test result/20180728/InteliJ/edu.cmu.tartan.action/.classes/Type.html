@@ -1,0 +1,110 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Type</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.action</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Type (edu.cmu.tartan.action)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Type</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.action;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * Enumeration of action types.
+<i>5</i>&nbsp; * &lt;p&gt;
+<i>6</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>7</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>8</i>&nbsp; * Versions:
+<i>9</i>&nbsp; * 1.0 March 2018 - initial version
+<i>10</i>&nbsp; */
+<b class="fc"><i>11</i>&nbsp;public enum Type {</b>
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;     // Directional actions move the player through the game.
+<b class="fc"><i>14</i>&nbsp;	TYPE_DIRECTIONAL,</b>
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    // Some actions require direct objects to perform
+<b class="fc"><i>17</i>&nbsp;    TYPE_HASDIRECTOBJECT,</b>
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    // Indirect objects are things that other objects need/use
+<b class="fc"><i>20</i>&nbsp;    TYPE_HASINDIRECTOBJECT,</b>
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;     // No object and unknown are self-explanatory
+<b class="fc"><i>23</i>&nbsp;    TYPE_HASNOOBJECT,</b>
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    // Catch all
+<b class="fc"><i>26</i>&nbsp;	TYPE_UNKNOWN</b>
+<i>27</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-29 11:10</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,159 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PrintMessage</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PrintMessage (edu.cmu.tartan)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PrintMessage</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (4/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    60%
+  </span>
+  <span class="absValue">
+    (12/ 20)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">PrintMessage$UserFormatter</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (2/ 6)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    62.5%
+  </span>
+  <span class="absValue">
+    (5/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    53.8%
+  </span>
+  <span class="absValue">
+    (14/ 26)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.logging.*;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;public class PrintMessage {
+<i>6</i>&nbsp;	
+<i>7</i>&nbsp;	/**
+<i>8</i>&nbsp;	 * Logger instead of LOGGER.info
+<i>9</i>&nbsp;	 */
+<b class="fc"><i>10</i>&nbsp;	private static final Logger LOGGER = Logger.getLogger(PrintMessage.class.getName());</b>
+<b class="fc"><i>11</i>&nbsp;	private static final Logger MESSAGE = Logger.getLogger(Game.class.getName());</b>
+<b class="fc"><i>12</i>&nbsp;	private static final LogRecord logRd = new LogRecord(Level.ALL,&quot;&quot;);</b>
+<b class="fc"><i>13</i>&nbsp;	private static final Formatter formatter = new PrintMessage.UserFormatter();</b>
+<b class="fc"><i>14</i>&nbsp;	private static final Handler streamHandler = new ConsoleHandler() ;</b>
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;	public static void setUpLogger(){
+<b class="nc"><i>17</i>&nbsp;		MESSAGE.setUseParentHandlers(false);</b>
+<b class="nc"><i>18</i>&nbsp;		formatter.formatMessage(logRd);</b>
+<b class="nc"><i>19</i>&nbsp;		streamHandler.setFormatter(formatter);</b>
+<b class="nc"><i>20</i>&nbsp;		MESSAGE.addHandler(streamHandler);</b>
+<b class="nc"><i>21</i>&nbsp;		LOGGER.addHandler(new ConsoleHandler());</b>
+<b class="nc"><i>22</i>&nbsp;	}</b>
+<i>23</i>&nbsp;	
+<i>24</i>&nbsp;	public static void printConsole(String consolemessage) {
+<b class="fc"><i>25</i>&nbsp;		MESSAGE.info(consolemessage);</b>
+<b class="fc"><i>26</i>&nbsp;		MESSAGE.info(&quot;\n&quot;);</b>
+<b class="fc"><i>27</i>&nbsp;	}</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;	public static void printChar(String consolemessage) {
+<b class="fc"><i>30</i>&nbsp;		MESSAGE.info(consolemessage);</b>
+<b class="fc"><i>31</i>&nbsp;	}</b>
+<i>32</i>&nbsp;	
+<i>33</i>&nbsp;	public static void printSevereLog(String logmessage) {
+<b class="fc"><i>34</i>&nbsp;		LOGGER.log(Level.SEVERE, logmessage);</b>
+<b class="fc"><i>35</i>&nbsp;	}</b>
+<i>36</i>&nbsp;
+<b class="nc"><i>37</i>&nbsp;	private PrintMessage() {</b>
+<b class="nc"><i>38</i>&nbsp;		throw new IllegalStateException(&quot;Utility class&quot;);</b>
+<i>39</i>&nbsp;	}
+<i>40</i>&nbsp;
+<b class="fc"><i>41</i>&nbsp;	static class UserFormatter extends Formatter {</b>
+<b class="fc"><i>42</i>&nbsp;		private StringBuilder stringBuilder = new StringBuilder();</b>
+<i>43</i>&nbsp;		public String format(LogRecord record) {
+<b class="nc"><i>44</i>&nbsp;			stringBuilder.setLength(0);</b>
+<b class="nc"><i>45</i>&nbsp;			String message = formatMessage(record);</b>
+<b class="nc"><i>46</i>&nbsp;			stringBuilder.append(message);</b>
+<b class="nc"><i>47</i>&nbsp;			return stringBuilder.toString();</b>
+<i>48</i>&nbsp;		}
+<i>49</i>&nbsp;	}
+<i>50</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-26 07:47</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoomLockable.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.room</a> &gt; <span class="el_source">RoomLockable.java</span></div><h1>RoomLockable.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.room;
+
+import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.util.PrintOutInterface;
+import edu.cmu.tartan.util.ScannerInInterface;
+
+/**
+ * The class for a locked room. A key is required to open this type of room
+ * from this class.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class RoomLockable extends Room {
+    private boolean locked;
+    private Item key;
+    private boolean causesDeath;
+    private String deathMessage;
+    private String unlockMessage;
+
+    /**
+     * Create a new locked room
+     * @param description description
+     * @param shortDescription short description
+     * @param locked indicates whether the room is locked
+     * @param key the specific key needed to unlock this toon
+     */
+	public RoomLockable(String description, String shortDescription, boolean locked, Item key) {
+<span class="fc" id="L31">		super(description, shortDescription);</span>
+
+<span class="fc" id="L33">		this.locked = locked;</span>
+<span class="fc" id="L34">		this.key = key;</span>
+<span class="fc" id="L35">		this.causesDeath = false;</span>
+<span class="fc" id="L36">		this.deathMessage = &quot;&quot;;</span>
+<span class="fc" id="L37">		this.unlockMessage = &quot;Room unlocked.&quot;;</span>
+<span class="fc" id="L38">	}</span>
+
+	public RoomLockable(String description, String shortDescription, boolean locked, Item key, ScannerInInterface scannerIn, PrintOutInterface printOut) {
+<span class="fc" id="L41">		super(description, shortDescription);</span>
+
+<span class="fc" id="L43">		this.locked = locked;</span>
+<span class="fc" id="L44">		this.key = key;</span>
+<span class="fc" id="L45">		this.causesDeath = false;</span>
+<span class="fc" id="L46">		this.deathMessage = &quot;&quot;;</span>
+<span class="fc" id="L47">		this.unlockMessage = &quot;Room unlocked.&quot;;</span>
+
+<span class="fc" id="L49">		super.scannerIn = scannerIn;</span>
+<span class="fc" id="L50">		super.printOut = printOut;</span>
+<span class="fc" id="L51">	}</span>
+
+    /**
+     * Create a locked room (unlocked by default)
+     * @param description description
+     * @param shortDescription short description
+     */
+	public RoomLockable(String description, String shortDescription) {
+		// unlocked by default
+<span class="fc" id="L60">		this(description, shortDescription, false, Item.getInstance(&quot;unknown&quot;));</span>
+<span class="fc" id="L61">	}</span>
+
+    /**
+     * Indicate whether room is locked
+     * @return
+     */
+	public boolean isLocked() {
+<span class="fc" id="L68">		return this.locked;</span>
+	}
+
+	// Handle player death
+
+	public void setCausesDeath(boolean causesDeath, String message) {
+<span class="fc" id="L74">		this.causesDeath = causesDeath;</span>
+<span class="fc" id="L75">		this.deathMessage = message;</span>
+<span class="fc" id="L76">	}</span>
+
+	public boolean causesDeath() {
+<span class="fc" id="L79">		return this.causesDeath;</span>
+	}
+
+	public String deathMessage() {
+<span class="fc" id="L83">		return this.deathMessage;</span>
+	}
+
+    /**
+     * Set unlock message
+     * @param s the unlock message
+     */
+	public void setUnlockMessage(String s){
+<span class="fc" id="L91">		this.unlockMessage = s;</span>
+<span class="fc" id="L92">	}</span>
+
+    /**
+     * Unlock the room
+     * @param key the key to use to unlock
+     * @return true if it is the right key; false otherwise
+     */
+	public boolean unlock(Item key) {
+<span class="fc bfc" id="L100" title="All 2 branches covered.">		if(this.key.compareTo(key) == 0) {</span>
+<span class="fc" id="L101">			this.locked = false;</span>
+<span class="fc" id="L102">			super.printOut.console(this.unlockMessage);</span>
+<span class="fc" id="L103">			return true;</span>
+		}
+		else { 
+<span class="fc bfc" id="L106" title="All 2 branches covered.">			if(!causesDeath()) {</span>
+<span class="fc" id="L107">				super.printOut.console(&quot;This key doesn't seem to fit&quot;);</span>
+			}
+<span class="fc" id="L109">			return false;</span>
+		}
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

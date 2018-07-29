@@ -1,0 +1,183 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: RoomDark</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.room</a> ]
+</div>
+
+<h1>Coverage Summary for Class: RoomDark (edu.cmu.tartan.room)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">RoomDark</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (30/ 30)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.room;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * The class for a dark room. Players must have a Luminous item to enter this room safely
+<i>5</i>&nbsp; * from this class.
+<i>6</i>&nbsp; * &lt;p&gt;
+<i>7</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>8</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>9</i>&nbsp; * Versions:
+<i>10</i>&nbsp; * 1.0 March 2018 - initial version
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;public class RoomDark extends Room {
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;	// Descriptions
+<i>15</i>&nbsp;	private String darkDescription;
+<i>16</i>&nbsp;	private String darkShortDescription;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;	// indicates whether the room is dark
+<i>19</i>&nbsp;	private boolean isDark;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;	// Message to indicate accident in room
+<i>22</i>&nbsp;	private String deathMessage;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    /**
+<i>25</i>&nbsp;     *
+<i>26</i>&nbsp;     * Create a new dark room
+<i>27</i>&nbsp;     * @param description the description
+<i>28</i>&nbsp;     * @param shortDescription the short description
+<i>29</i>&nbsp;     * @param darkDescription the dark description
+<i>30</i>&nbsp;     * @param darkShortDescription the long description
+<i>31</i>&nbsp;     */
+<i>32</i>&nbsp;	public RoomDark(String description, String shortDescription, String darkDescription, String darkShortDescription) {
+<i>33</i>&nbsp;
+<b class="fc"><i>34</i>&nbsp;		this(description, shortDescription, darkDescription, darkShortDescription, true);</b>
+<b class="fc"><i>35</i>&nbsp;	}</b>
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    /**
+<i>38</i>&nbsp;     * Create a new dark room
+<i>39</i>&nbsp;     * @param description the description
+<i>40</i>&nbsp;     * @param shortDescription the short description
+<i>41</i>&nbsp;     * @param darkDescription the dark description
+<i>42</i>&nbsp;     * @param darkShortDescription the long description
+<i>43</i>&nbsp;     * @param isDark determines if the room is dark to start
+<i>44</i>&nbsp;     */
+<i>45</i>&nbsp;	public RoomDark(String description, String shortDescription, String darkDescription, String darkShortDescription, boolean isDark){
+<b class="fc"><i>46</i>&nbsp;		super(description, shortDescription);</b>
+<i>47</i>&nbsp;
+<b class="fc"><i>48</i>&nbsp;		this.isDark = isDark;</b>
+<b class="fc"><i>49</i>&nbsp;		this.darkDescription = darkDescription;</b>
+<b class="fc"><i>50</i>&nbsp;		this.darkShortDescription = darkShortDescription;</b>
+<b class="fc"><i>51</i>&nbsp;		this.deathMessage = null;</b>
+<b class="fc"><i>52</i>&nbsp;	}</b>
+<i>53</i>&nbsp;	// getters &amp; setters
+<i>54</i>&nbsp;	public boolean isDark() {
+<b class="fc"><i>55</i>&nbsp;		return this.isDark;</b>
+<i>56</i>&nbsp;	}
+<i>57</i>&nbsp;	public void setDark(boolean isDark) {
+<b class="fc"><i>58</i>&nbsp;		this.isDark = isDark;</b>
+<b class="fc"><i>59</i>&nbsp;	}</b>
+<i>60</i>&nbsp;	public String deathMessage() {
+<b class="fc"><i>61</i>&nbsp;		return this.deathMessage;</b>
+<i>62</i>&nbsp;	}	
+<i>63</i>&nbsp;	public void setDeathMessage(String s) {
+<b class="fc"><i>64</i>&nbsp;		this.deathMessage = s;</b>
+<b class="fc"><i>65</i>&nbsp;	}</b>
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;	@Override
+<i>68</i>&nbsp;	public String toString() {
+<i>69</i>&nbsp;
+<b class="fc"><i>70</i>&nbsp;		if(this.isDark) {</b>
+<b class="fc"><i>71</i>&nbsp;			if(this.player.hasLuminousItem()) {</b>
+<b class="fc"><i>72</i>&nbsp;				return super.toString();</b>
+<i>73</i>&nbsp;			}
+<i>74</i>&nbsp;			else {
+<b class="fc"><i>75</i>&nbsp;				return this.darkDescription;</b>
+<i>76</i>&nbsp;			}
+<i>77</i>&nbsp;		}
+<i>78</i>&nbsp;		else {
+<b class="fc"><i>79</i>&nbsp;			return super.toString();</b>
+<i>80</i>&nbsp;		}
+<i>81</i>&nbsp;	}
+<i>82</i>&nbsp;	@Override
+<i>83</i>&nbsp;	public String description() {
+<b class="fc"><i>84</i>&nbsp;		if (this.isDark) {</b>
+<b class="fc"><i>85</i>&nbsp;			if (this.player.hasLuminousItem()) {</b>
+<b class="fc"><i>86</i>&nbsp;				String s = this.roomWasVisited ? this.shortDescription : this.description + &quot;\n&quot; + visibleItems();</b>
+<b class="fc"><i>87</i>&nbsp;				this.roomWasVisited = true;</b>
+<b class="fc"><i>88</i>&nbsp;				return s;</b>
+<i>89</i>&nbsp;			} else {
+<b class="fc"><i>90</i>&nbsp;				String s = this.roomWasVisited ? this.darkShortDescription : this.darkDescription;</b>
+<b class="fc"><i>91</i>&nbsp;				this.roomWasVisited = true;</b>
+<b class="fc"><i>92</i>&nbsp;				return s;</b>
+<i>93</i>&nbsp;			}
+<i>94</i>&nbsp;		} else {
+<b class="fc"><i>95</i>&nbsp;			String s = this.roomWasVisited ? this.shortDescription : this.description + &quot;\n&quot; + visibleItems();</b>
+<b class="fc"><i>96</i>&nbsp;			this.roomWasVisited = true;</b>
+<b class="fc"><i>97</i>&nbsp;			return s;</b>
+<i>98</i>&nbsp;		}
+<i>99</i>&nbsp;	}
+<i>100</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-26 07:47</div>
+</div>
+</body>
+</html>

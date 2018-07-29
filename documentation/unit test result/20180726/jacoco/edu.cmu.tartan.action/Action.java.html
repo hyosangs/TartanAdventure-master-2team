@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Action.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.action</a> &gt; <span class="el_source">Action.java</span></div><h1>Action.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.action;
+
+import edu.cmu.tartan.Player;
+import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.item.ItemMagicBox;
+import edu.cmu.tartan.properties.*;
+import edu.cmu.tartan.room.RoomElevator;
+import edu.cmu.tartan.room.RoomExcavatable;
+import edu.cmu.tartan.room.RoomRequiredItem;
+
+import java.util.List;
+
+/**
+ * This enumeration of actions available to a game.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+<span class="fc" id="L22">public enum Action {</span>
+
+    // Actions that do not rely on an object
+<span class="fc" id="L25">    ACTION_LOOK(new String[]{&quot;lookAround&quot;, &quot;l&quot;}, Type.TYPE_HASNOOBJECT),</span>
+
+<span class="fc" id="L27">    ACTION_JUMP(new String[]{&quot;jump&quot;}, Type.TYPE_HASNOOBJECT),</span>
+<span class="fc" id="L28">    ACTION_CLIMB(new String[]{&quot;climb&quot;}, Type.TYPE_HASNOOBJECT),</span>
+<span class="fc" id="L29">    ACTION_VIEW_ITMES(new String[]{&quot;inventory&quot;, &quot;items&quot;, &quot;i&quot;}, Type.TYPE_HASNOOBJECT),</span>
+<span class="fc" id="L30">    ACTION_DIE(new String[]{&quot;terminate&quot;}, Type.TYPE_HASNOOBJECT),</span>
+<span class="fc" id="L31">    ACTION_HELP(new String[]{&quot;help&quot;, &quot;h&quot;}, Type.TYPE_HASNOOBJECT),</span>
+
+    // Directional actions; for movement
+<span class="fc" id="L34">    ACTION_GO_EAST(new String[]{&quot;east&quot;, &quot;e&quot;}, Type.TYPE_DIRECTIONAL),</span>
+<span class="fc" id="L35">    ACTION_GO_WEST(new String[]{&quot;west&quot;, &quot;w&quot;}, Type.TYPE_DIRECTIONAL),</span>
+<span class="fc" id="L36">    ACTION_GO_SOUTH(new String[]{&quot;south&quot;, &quot;s&quot;}, Type.TYPE_DIRECTIONAL),</span>
+<span class="fc" id="L37">    ACTION_GO_NORTH(new String[]{&quot;north&quot;, &quot;n&quot;}, Type.TYPE_DIRECTIONAL),</span>
+<span class="fc" id="L38">    ACTION_GO_NORTHEAST(new String[]{&quot;northeast&quot;, &quot;ne&quot;}, Type.TYPE_DIRECTIONAL),</span>
+<span class="fc" id="L39">    ACTION_GO_NORTHWEST(new String[]{&quot;northwest&quot;, &quot;nw&quot;}, Type.TYPE_DIRECTIONAL),</span>
+<span class="fc" id="L40">    ACTION_GO_SOUTHEAST(new String[]{&quot;southeast&quot;, &quot;se&quot;}, Type.TYPE_DIRECTIONAL),</span>
+<span class="fc" id="L41">    ACTION_GO_SOUTHWEST(new String[]{&quot;southwest&quot;, &quot;sw&quot;}, Type.TYPE_DIRECTIONAL),</span>
+<span class="fc" id="L42">    ACTION_GO_DOWN(new String[]{&quot;down&quot;, &quot;d&quot;}, Type.TYPE_DIRECTIONAL),</span>
+<span class="fc" id="L43">    ACTION_GO_UP(new String[]{&quot;up&quot;, &quot;u&quot;}, Type.TYPE_DIRECTIONAL),</span>
+
+    // Direct Object. Has one direct object e.g. Break shovel, throw lamp
+<span class="fc" id="L46">    ACTION_ACQUIRE(new String[]{&quot;acquire&quot;}, Type.TYPE_HASNOOBJECT),</span>
+<span class="fc" id="L47">    ACTION_BURN(new String[]{&quot;burn&quot;}, Type.TYPE_HASNOOBJECT),</span>
+<span class="fc" id="L48">    ACTION_DIG(new String[]{&quot;dig&quot;}, Type.TYPE_HASDIRECTOBJECT),</span>
+<span class="fc" id="L49">    ACTION_PICK_UP(new String[]{&quot;pickup&quot;, &quot;get&quot;, &quot;take&quot;, &quot;acquire&quot;, &quot;grab&quot;}, Type.TYPE_HASDIRECTOBJECT),</span>
+<span class="fc" id="L50">    ACTION_DESTROY(new String[]{&quot;break&quot;, &quot;smash&quot;, &quot;destroy&quot;, &quot;obliterate&quot;}, Type.TYPE_HASDIRECTOBJECT),</span>
+<span class="fc" id="L51">    ACTION_INSPECT(new String[]{&quot;inspect&quot;, &quot;examine&quot;, &quot;read&quot;, &quot;view&quot;}, Type.TYPE_HASDIRECTOBJECT),</span>
+<span class="fc" id="L52">    ACTION_DROP(new String[]{&quot;drop&quot;}, Type.TYPE_HASDIRECTOBJECT),</span>
+<span class="fc" id="L53">    ACTION_THROW(new String[]{&quot;throw&quot;, &quot;chuck&quot;}, Type.TYPE_HASDIRECTOBJECT),</span>
+<span class="fc" id="L54">    ACTION_SHAKE(new String[]{&quot;shake&quot;, &quot;chickendance&quot;}, Type.TYPE_HASDIRECTOBJECT),</span>
+<span class="fc" id="L55">    ACTION_ENABLE(new String[]{&quot;enable&quot;, &quot;hit&quot;, &quot;start&quot;, &quot;use&quot;, &quot;deploy&quot;}, Type.TYPE_HASDIRECTOBJECT),</span>
+<span class="fc" id="L56">    ACTION_PUSH(new String[]{&quot;push&quot;, &quot;call&quot;}, Type.TYPE_HASDIRECTOBJECT), // used with elevator</span>
+<span class="fc" id="L57">    ACTION_EAT(new String[]{&quot;eat&quot;, &quot;chew&quot;, &quot;consume&quot;, &quot;bite&quot;, &quot;swallow&quot;, &quot;drink&quot;}, Type.TYPE_HASDIRECTOBJECT),</span>
+<span class="fc" id="L58">    ACTION_OPEN(new String[]{&quot;open&quot;, &quot;unlock&quot;}, Type.TYPE_HASDIRECTOBJECT),</span>
+<span class="fc" id="L59">    ACTION_EXPLODE(new String[]{&quot;detonate&quot;, &quot;explode&quot;}, Type.TYPE_HASDIRECTOBJECT),</span>
+
+    // Indirect Object. Has one direct object and one indirect object, e.g. Put cpu in computer
+<span class="fc" id="L62">    ACTION_PUT(new String[]{&quot;put&quot;, &quot;install&quot;}, Type.TYPE_HASINDIRECTOBJECT),</span>
+<span class="fc" id="L63">    ACTION_TAKE(new String[]{&quot;remove&quot;}, Type.TYPE_HASINDIRECTOBJECT),</span>
+
+    // Misc
+<span class="fc" id="L66">    ACTION_UNKNOWN(new String[]{}, Type.TYPE_UNKNOWN),</span>
+<span class="fc" id="L67">    ACTION_ERROR(new String[]{}, Type.TYPE_UNKNOWN),</span>
+<span class="fc" id="L68">    ACTION_PASS(new String[]{&quot;pass&quot;, &quot;\n&quot;}, Type.TYPE_UNKNOWN);</span>
+
+    /**
+     * Create an new action
+     * @param aliases THe set of alias fo rthe action
+     * @param type the type of action
+     */
+<span class="fc" id="L75">    Action(String[] aliases, Type type) {</span>
+<span class="fc" id="L76">        this.aliases = aliases;</span>
+<span class="fc" id="L77">        this.type = type;</span>
+<span class="fc" id="L78">    }</span>
+
+    // Shortcuts to reverse movement
+    static {
+<span class="fc" id="L82">        ACTION_GO_EAST.opposite = ACTION_GO_WEST;</span>
+<span class="fc" id="L83">        ACTION_GO_WEST.opposite = ACTION_GO_EAST;</span>
+<span class="fc" id="L84">        ACTION_GO_NORTH.opposite = ACTION_GO_SOUTH;</span>
+<span class="fc" id="L85">        ACTION_GO_SOUTH.opposite = ACTION_GO_NORTH;</span>
+<span class="fc" id="L86">        ACTION_GO_NORTHEAST.opposite = ACTION_GO_SOUTHWEST;</span>
+<span class="fc" id="L87">        ACTION_GO_SOUTHEAST.opposite = ACTION_GO_NORTHWEST;</span>
+<span class="fc" id="L88">        ACTION_GO_NORTHWEST.opposite = ACTION_GO_SOUTHEAST;</span>
+<span class="fc" id="L89">        ACTION_GO_SOUTHWEST.opposite = ACTION_GO_NORTHEAST;</span>
+<span class="fc" id="L90">        ACTION_GO_UP.opposite = ACTION_GO_DOWN;</span>
+<span class="fc" id="L91">        ACTION_GO_DOWN.opposite = ACTION_GO_UP;</span>
+<span class="fc" id="L92">    }</span>
+
+    // Getters and Setters
+    public String[] getAliases() {
+<span class="fc" id="L96">        return this.aliases;</span>
+    }
+
+    public Type type() {
+<span class="fc" id="L100">        return this.type;</span>
+    }
+
+    public void setDirectObject(Item directObject) {
+<span class="fc" id="L104">        this.directObject = directObject;</span>
+<span class="fc" id="L105">    }</span>
+
+    public Item directObject() {
+<span class="fc" id="L108">        return this.directObject;</span>
+    }
+
+    public void setIndirectObject(Item indirectObject) {
+<span class="fc" id="L112">        this.indirectObject = indirectObject;</span>
+<span class="fc" id="L113">    }</span>
+
+    public Item indirectObject() {
+<span class="fc" id="L116">        return this.indirectObject;</span>
+    }
+
+    // opposite directions are used for the directional enumeration constants.
+    public Action getOppositeDirection() {
+
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        if (this.type() == Type.TYPE_DIRECTIONAL) {</span>
+<span class="fc" id="L123">            return this.opposite;</span>
+        } else {
+<span class="fc" id="L125">            return null;</span>
+        }
+    }
+
+    //The message when Player is can't see an item.
+    private static final String MSG_IDONOTSEETHATHERE = &quot;I don't see that here.&quot;;
+
+    //String of taken
+    private static final String MSG_TAKEN = &quot;Taken.&quot;;
+
+    /**
+     * Execute ActionPickup of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionPickup(Action a, Player player) {
+<span class="fc" id="L141">        Item o = a.directObject();</span>
+<span class="fc" id="L142">        Item container = null;</span>
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        if(player.currentRoom().hasItem(o)) {</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">            if(o instanceof Holdable) {</span>
+<span class="fc" id="L145">                PrintMessage.printConsole(MSG_TAKEN);</span>
+
+<span class="fc" id="L147">                player.currentRoom().remove(o);</span>
+<span class="fc" id="L148">                player.pickup(o);</span>
+<span class="fc" id="L149">                player.score( ((Holdable)o).value());</span>
+            }
+            else {
+<span class="fc" id="L152">                PrintMessage.printConsole(&quot;You cannot pick up this item.&quot;);</span>
+            }
+        }
+<span class="pc bpc" id="L155" title="1 of 2 branches missed.">        else if((container = containerForItem(o, player)) != null) {</span>
+
+<span class="nc" id="L157">            PrintMessage.printConsole(MSG_TAKEN);</span>
+<span class="nc" id="L158">            ((Hostable)container).uninstall(o);</span>
+<span class="nc" id="L159">            player.pickup(o);</span>
+<span class="nc" id="L160">            player.score( ((Holdable)o).value());</span>
+        }
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        else if(player.hasItem(o)) {</span>
+<span class="nc" id="L163">            PrintMessage.printConsole(&quot;You already have that item in your inventory.&quot;);</span>
+        }
+        else {
+<span class="fc" id="L166">            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</span>
+        }
+<span class="fc" id="L168">    }</span>
+
+    /**
+     * Execute ActionError of ActionLists
+     */
+    public void actionError() {
+<span class="nc" id="L174">        PrintMessage.printConsole(&quot;I don't understand that.&quot;);</span>
+<span class="nc" id="L175">    }</span>
+
+    /**
+     * Execute ActionDie of ActionLists
+     */
+    public void actionDie(Player player) {
+<span class="nc" id="L181">        player.terminate();</span>
+<span class="nc" id="L182">    }</span>
+
+    /**
+     * Execute ActionViewItems of ActionLists
+     * @param player
+     */
+    public void actionViewItems(Player player) {
+<span class="nc" id="L189">        List&lt;Item&gt; items = player.getCollectedItems();</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        if (items.isEmpty()) {</span>
+<span class="nc" id="L191">            PrintMessage.printConsole(&quot;You don't have any items.&quot;);</span>
+        }
+        else {
+<span class="nc bnc" id="L194" title="All 2 branches missed.">            for(Item item : player.getCollectedItems()) {</span>
+<span class="nc" id="L195">                PrintMessage.printConsole(&quot;You have a &quot; + item.description() + &quot;.&quot;);</span>
+<span class="nc" id="L196">            }</span>
+        }
+<span class="nc" id="L198">    }</span>
+
+    /**
+     * Execute ActionError of ActionLists
+     * @param player
+     */
+    public void actionJump(Player player) {
+<span class="fc" id="L205">        player.move(Action.ACTION_GO_DOWN);</span>
+<span class="fc" id="L206">    }</span>
+
+    /**
+     * Execute ActionClimb of ActionLists
+     * @param player
+     */
+    public void actionClimb(Player player) {
+<span class="fc" id="L213">        player.move(Action.ACTION_GO_UP);</span>
+<span class="fc" id="L214">    }</span>
+
+    /**
+     * Execute ActionLook of ActionLists
+     * @param player
+     */
+    public void actionLook(Player player) {
+<span class="fc" id="L221">        player.lookAround();</span>
+<span class="fc" id="L222">    }</span>
+
+    /**
+     * Execute ActionTask of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionTask(Action a, Player player) {
+<span class="fc" id="L230">        Item contents = a.directObject();</span>
+<span class="fc" id="L231">        Item container = a.indirectObject();</span>
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">        if(!player.currentRoom().hasItem(container)) {</span>
+<span class="fc" id="L233">            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</span>
+        }
+<span class="nc bnc" id="L235" title="All 2 branches missed.">        else if(!(container instanceof Hostable)) {</span>
+<span class="nc" id="L236">            PrintMessage.printConsole(&quot;You can't have an item inside that.&quot;);</span>
+        }
+        else {
+<span class="nc bnc" id="L239" title="All 2 branches missed.">            if(((Hostable)container).installedItem() == contents) {</span>
+<span class="nc" id="L240">                ((Hostable)container).uninstall(contents);</span>
+<span class="nc" id="L241">                player.pickup(contents);</span>
+<span class="nc" id="L242">                PrintMessage.printConsole(MSG_TAKEN);</span>
+            }
+            else {
+<span class="nc" id="L245">                PrintMessage.printConsole(&quot;That item is not inside this &quot; + container);</span>
+            }
+        }
+<span class="fc" id="L248">    }</span>
+
+    /**
+     * Execute ActionPut of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionPut(Action a, Player player) {
+<span class="nc" id="L256">        Item itemToPut = a.directObject();</span>
+<span class="nc" id="L257">        Item itemToBePutInto = a.indirectObject();</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">        if(!player.hasItem(itemToPut)) {</span>
+<span class="nc" id="L259">            PrintMessage.printConsole(&quot;You don't have that object in your inventory.&quot;);</span>
+        }
+<span class="nc bnc" id="L261" title="All 2 branches missed.">        else if(itemToBePutInto == null) {</span>
+<span class="nc" id="L262">            PrintMessage.printConsole(&quot;You must supply an indirect object.&quot;);</span>
+        }
+<span class="nc bnc" id="L264" title="All 2 branches missed.">        else if(!player.currentRoom().hasItem(itemToBePutInto)) {</span>
+<span class="nc" id="L265">            PrintMessage.printConsole(&quot;That object doesn't exist in this room.&quot;);</span>
+        }
+<span class="nc bnc" id="L267" title="All 4 branches missed.">        else if(itemToBePutInto instanceof ItemMagicBox &amp;&amp; !(itemToPut instanceof Valuable)) {</span>
+<span class="nc" id="L268">            PrintMessage.printConsole(&quot;This item has no value--putting it in this &quot; + itemToBePutInto + &quot; will not score you any points.&quot;);</span>
+        }
+<span class="nc bnc" id="L270" title="All 4 branches missed.">        else if(!(itemToBePutInto instanceof Hostable) || !(itemToPut instanceof Installable)) {</span>
+<span class="nc" id="L271">            PrintMessage.printConsole(&quot;You cannot put a &quot; + itemToPut + &quot; into this &quot; + itemToBePutInto);</span>
+        }
+        else {
+<span class="nc" id="L274">            PrintMessage.printConsole(&quot;Done.&quot;);</span>
+<span class="nc" id="L275">            player.drop(itemToPut);</span>
+<span class="nc" id="L276">            player.putItemInItem(itemToPut, itemToBePutInto);</span>
+        }
+<span class="nc" id="L278">    }</span>
+
+    /**
+     * Execute ActionExplode of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionExplode(Action a, Player player) {
+<span class="nc" id="L286">        Item dynamite = a.directObject();</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">        if(player.currentRoom().hasItem(dynamite)) {</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">            if(dynamite instanceof Explodable) {</span>
+<span class="nc bnc" id="L289" title="All 2 branches missed.">                if(player.currentRoom().isAdjacentToRoom(dynamite.relatedRoom())) {</span>
+<span class="nc" id="L290">                    Explodable explode = (Explodable)dynamite;</span>
+<span class="nc" id="L291">                    explode.explode();</span>
+<span class="nc" id="L292">                    player.score(explode.value());</span>
+<span class="nc" id="L293">                }</span>
+                else {
+<span class="nc" id="L295">                    PrintMessage.printConsole(&quot;There isn't anything to blow up here.&quot;);</span>
+                }
+            }
+            else {
+<span class="nc" id="L299">                PrintMessage.printConsole(&quot;That item is not an explosive.&quot;);</span>
+            }
+        }
+        else {
+<span class="nc" id="L303">            PrintMessage.printConsole(&quot;You do not have that item in your inventory.&quot;);</span>
+        }
+<span class="nc" id="L305">    }</span>
+
+    /**
+     * Execute ActionOpen of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionOpen(Action a, Player player) {
+<span class="fc" id="L313">        Item item = a.directObject();</span>
+<span class="pc bpc" id="L314" title="2 of 4 branches missed.">        if(player.hasItem(item) || player.currentRoom().hasItem(item)) {</span>
+<span class="pc bpc" id="L315" title="1 of 2 branches missed.">            if(item instanceof Openable) {</span>
+<span class="fc" id="L316">                Openable o = ((Openable)item);</span>
+                // if you can open the item , you score!
+<span class="pc bpc" id="L318" title="1 of 2 branches missed.">                if (o.open() == true) {</span>
+<span class="fc" id="L319">                    player.score(item.value());</span>
+<span class="fc" id="L320">                    player.currentRoom().remove(item);</span>
+                }
+<span class="fc" id="L322">            }</span>
+            else {
+<span class="nc" id="L324">                PrintMessage.printConsole(&quot;You cannot open this.&quot;);</span>
+            }
+        }
+        else {
+<span class="nc" id="L328">            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</span>
+        }
+<span class="fc" id="L330">    }</span>
+
+    /**
+     * Execute ActionEat of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionEat(Action a, Player player) {
+<span class="fc" id="L338">        Item item = a.directObject();</span>
+<span class="pc bpc" id="L339" title="3 of 4 branches missed.">        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {</span>
+<span class="pc bpc" id="L340" title="1 of 2 branches missed.">            if(item instanceof Edible) {</span>
+                // eating something gives scores
+<span class="fc" id="L342">                Edible e = (Edible)item;</span>
+<span class="fc" id="L343">                e.eat();</span>
+<span class="fc" id="L344">                player.score(item.value());</span>
+                // Once we eat it, then it's gone
+<span class="fc" id="L346">                player.currentRoom().remove(item);</span>
+<span class="fc" id="L347">            }</span>
+            else {
+<span class="nc bnc" id="L349" title="All 2 branches missed.">                if(item instanceof Holdable) {</span>
+<span class="nc" id="L350">                    PrintMessage.printConsole(&quot;As you  shove the &quot; + a.directObject() + &quot; down your throat, you begin to choke.&quot;);</span>
+<span class="nc" id="L351">                    actionDie(player);</span>
+                }
+                else {
+<span class="nc" id="L354">                    PrintMessage.printConsole(&quot;That cannot be consumed.&quot;);</span>
+                }
+            }
+        }
+<span class="fc" id="L358">    }</span>
+
+    /**
+     * Execute ActionDig of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionDig(Action a, Player player) {
+<span class="nc" id="L366">        Item item = a.directObject();</span>
+<span class="nc bnc" id="L367" title="All 4 branches missed.">        if (player.currentRoom() instanceof RoomExcavatable &amp;&amp; item.description() == &quot;Shovel&quot;) {</span>
+<span class="nc" id="L368">            RoomExcavatable curr = (RoomExcavatable) player.currentRoom();</span>
+<span class="nc" id="L369">            curr.dig();</span>
+<span class="nc" id="L370">        } else {</span>
+<span class="nc" id="L371">            PrintMessage.printConsole(&quot;You are not allowed to dig here&quot;);</span>
+        }
+<span class="nc" id="L373">    }</span>
+
+    /**
+     * Execute ActionPush of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionPush(Action a, Player player) {
+<span class="nc" id="L381">        Item item = a.directObject();</span>
+<span class="nc bnc" id="L382" title="All 4 branches missed.">        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {</span>
+<span class="nc bnc" id="L383" title="All 2 branches missed.">            if(item instanceof Pushable) {</span>
+
+                // Pushing the button is worth points
+<span class="nc" id="L386">                Pushable p = (Pushable) item;</span>
+<span class="nc" id="L387">                p.push();</span>
+<span class="nc" id="L388">                player.score(item.value());</span>
+
+<span class="nc bnc" id="L390" title="All 2 branches missed.">                if(item.relatedRoom() instanceof RoomElevator) { // player is next to an elevator</span>
+<span class="nc" id="L391">                    ((RoomElevator)item.relatedRoom()).call(player.currentRoom());</span>
+                }
+<span class="nc bnc" id="L393" title="All 2 branches missed.">                else if(player.currentRoom() instanceof RoomElevator) { // player is in an elevator</span>
+<span class="nc" id="L394">                    ((RoomElevator)player.currentRoom()).call(Integer.parseInt(item.getAliases()[0])-1);</span>
+                }
+<span class="nc" id="L396">            }</span>
+            else {
+<span class="nc" id="L398">                PrintMessage.printConsole(&quot;Nothing happens.&quot;);</span>
+            }
+        }
+        else {
+<span class="nc" id="L402">            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</span>
+        }
+<span class="nc" id="L404">    }</span>
+
+    /**
+     * Execute ActionEnable of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionEnable(Action a, Player player) {
+<span class="nc" id="L412">        Item item = a.directObject();</span>
+<span class="nc bnc" id="L413" title="All 4 branches missed.">        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {</span>
+<span class="nc bnc" id="L414" title="All 2 branches missed.">            if(item instanceof Startable) {</span>
+<span class="nc" id="L415">                PrintMessage.printConsole(&quot;Done.&quot;);</span>
+<span class="nc" id="L416">                ((Startable)item).start();</span>
+            }
+            else {
+<span class="nc" id="L419">                PrintMessage.printConsole(&quot;I don't know how to do that.&quot;);</span>
+            }
+        }
+        else {
+<span class="nc" id="L423">            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</span>
+        }
+<span class="nc" id="L425">    }</span>
+
+    /**
+     * Execute ActionShake of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionShake(Action a, Player player) {
+<span class="nc" id="L433">        Item item = a.directObject();</span>
+<span class="nc bnc" id="L434" title="All 4 branches missed.">        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {</span>
+<span class="nc bnc" id="L435" title="All 2 branches missed.">            if(item instanceof Shakeable) {</span>
+<span class="nc" id="L436">                ((Shakeable)item).shake();</span>
+<span class="nc bnc" id="L437" title="All 2 branches missed.">                if(((Shakeable)item).accident()) {</span>
+<span class="nc" id="L438">                    actionDie(player);</span>
+                }
+            }
+            else {
+<span class="nc" id="L442">                PrintMessage.printConsole(&quot;I don't know how to do that.&quot;);</span>
+            }
+        }
+        else {
+<span class="nc" id="L446">            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</span>
+        }
+<span class="nc" id="L448">    }</span>
+
+    /**
+     * Execute ActionThrow of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionThrow(Action a, Player player) {
+<span class="nc" id="L456">        Item item = a.directObject();</span>
+<span class="nc bnc" id="L457" title="All 2 branches missed.">        if(player.hasItem(item)) {</span>
+<span class="nc bnc" id="L458" title="All 2 branches missed.">            if(item instanceof Chuckable) {</span>
+<span class="nc" id="L459">                PrintMessage.printConsole(&quot;Thrown.&quot;);</span>
+<span class="nc" id="L460">                ((Chuckable)item).chuck();</span>
+<span class="nc" id="L461">                player.drop(item);</span>
+<span class="nc" id="L462">                player.currentRoom().putItem(item);</span>
+            }
+            else {
+<span class="nc" id="L465">                PrintMessage.printConsole(&quot;You cannot throw this item.&quot;);</span>
+            }
+        }
+        else {
+<span class="nc" id="L469">            PrintMessage.printConsole(&quot;You don't have that item to throw.&quot;);</span>
+        }
+<span class="nc" id="L471">    }</span>
+
+    /**
+     * Execute ActionDrop of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionDrop(Action a, Player player) {
+<span class="nc" id="L479">        Item item = a.directObject();</span>
+<span class="nc bnc" id="L480" title="All 2 branches missed.">        if(player.hasItem(item)) {</span>
+<span class="nc bnc" id="L481" title="All 2 branches missed.">            if(item instanceof Holdable) {</span>
+<span class="nc" id="L482">                PrintMessage.printConsole(&quot;Dropped.&quot;);</span>
+<span class="nc" id="L483">                player.drop(item);</span>
+<span class="nc" id="L484">                PrintMessage.printConsole(&quot;You Dropped '&quot; +item.description() + &quot;' costing you &quot;</span>
+<span class="nc" id="L485">                        + item.value() + &quot; points.&quot;);</span>
+<span class="nc" id="L486">                player.currentRoom().putItem(item);</span>
+            }
+            else {
+<span class="nc" id="L489">                PrintMessage.printConsole(&quot;You cannot drop this item.&quot;);</span>
+            }
+        }
+        else {
+<span class="nc" id="L493">            PrintMessage.printConsole(&quot;You don't have that item to drop.&quot;);</span>
+        }
+<span class="nc bnc" id="L495" title="All 2 branches missed.">        if(player.currentRoom() instanceof RoomRequiredItem) {</span>
+<span class="nc" id="L496">            RoomRequiredItem r = (RoomRequiredItem)player.currentRoom();</span>
+<span class="nc" id="L497">            r.playerDidDropRequiredItem();</span>
+        }
+<span class="nc" id="L499">    }</span>
+
+    /**
+     * Execute ActionInspect of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionInspect(Action a, Player player) {
+<span class="nc" id="L507">        Item item = a.directObject();</span>
+<span class="nc bnc" id="L508" title="All 4 branches missed.">        if(player.currentRoom().hasItem(item) || player.hasItem(item)) {</span>
+<span class="nc bnc" id="L509" title="All 2 branches missed.">            if(item instanceof Inspectable) {</span>
+<span class="nc" id="L510">                (item).inspect();</span>
+            }
+            else {
+<span class="nc" id="L513">                PrintMessage.printConsole(&quot;You cannot inspect this item.&quot;);</span>
+            }
+        }
+        else {
+<span class="nc" id="L517">            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</span>
+        }
+<span class="nc" id="L519">    }</span>
+
+    /**
+     * Execute ActionDestroy of ActionLists
+     * @param a
+     * @param player
+     */
+    public void actionDestroy(Action a, Player player) {
+<span class="nc" id="L527">        Item item = a.directObject();</span>
+<span class="nc bnc" id="L528" title="All 4 branches missed.">        if (player.currentRoom().hasItem(item) || player.hasItem(item)) {</span>
+<span class="nc bnc" id="L529" title="All 2 branches missed.">            if (item instanceof Destroyable) {</span>
+<span class="nc" id="L530">                PrintMessage.printConsole(&quot;Smashed.&quot;);</span>
+<span class="nc" id="L531">                ((Destroyable)item).destroy();</span>
+<span class="nc" id="L532">                item.setDescription(&quot;broken &quot; + item.toString());</span>
+<span class="nc" id="L533">                item.setDetailDescription(&quot;broken &quot; + item.detailDescription());</span>
+<span class="nc bnc" id="L534" title="All 2 branches missed.">                if (((Destroyable)item).disappears()) {</span>
+<span class="nc" id="L535">                    player.drop(item);</span>
+<span class="nc" id="L536">                    player.currentRoom().remove(item);</span>
+                    // Get points!
+<span class="nc" id="L538">                    player.score(item.value());</span>
+                }
+
+<span class="nc bnc" id="L541" title="All 2 branches missed.">                if(item instanceof Hostable) {</span>
+<span class="nc" id="L542">                    player.currentRoom().putItem(((Hostable)item).installedItem());</span>
+<span class="nc" id="L543">                    ((Hostable)item).uninstall(((Hostable)item).installedItem());</span>
+                }
+            }
+            else {
+<span class="nc" id="L547">                PrintMessage.printConsole(&quot;You cannot break this item.&quot;);</span>
+            }
+        }
+        else {
+<span class="nc" id="L551">            PrintMessage.printConsole(MSG_IDONOTSEETHATHERE);</span>
+        }
+<span class="nc" id="L553">    }</span>
+
+    /**
+     * Determine if item in room
+     *
+     * @param item
+     *            the item to check
+     * @return not null if the time is hosted in the room
+     */
+    private Item containerForItem(Item item, Player player) {
+<span class="pc bpc" id="L563" title="1 of 2 branches missed.">        for (Item i : player.currentRoom().items) {</span>
+<span class="nc bnc" id="L564" title="All 6 branches missed.">            if (i instanceof Hostable &amp;&amp; item == ((Hostable) i).installedItem() &amp;&amp; item.isVisible()) {</span>
+<span class="nc" id="L565">                return i;</span>
+            }
+<span class="nc" id="L567">        }</span>
+<span class="fc" id="L568">        return null;</span>
+    }
+
+
+    /**
+     * Fields to describe actions
+     */
+    private Action opposite;
+    private String[] aliases;
+    private Type type;
+    private Item directObject;
+    private Item indirectObject;
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

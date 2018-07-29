@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PointsGame.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.games</a> &gt; <span class="el_source">PointsGame.java</span></div><h1>PointsGame.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.games;
+
+import edu.cmu.tartan.Game;
+import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.Player;
+import edu.cmu.tartan.goal.GamePointsGoal;
+import edu.cmu.tartan.item.*;
+import edu.cmu.tartan.room.Room;
+
+/**
+ * Demonstrating a points-based game.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+ public class PointsGame extends GameConfiguration {
+
+<span class="fc" id="L20">    public PointsGame() {</span>
+<span class="fc" id="L21">        super.name = &quot;Points&quot;;</span>
+<span class="fc" id="L22">    }</span>
+
+    /**
+     * Configure the game.
+     * @param game the Game object that will manage execution
+     * @throws InvalidGameException
+     */
+    @Override
+    public void configure(Game game) throws InvalidGameException{
+
+<span class="fc" id="L32">        String officeD = &quot;You are in an office. It seems that the occupant has only recently left.&quot;;</span>
+<span class="fc" id="L33">        String officeSD = &quot;Office.&quot;;</span>
+
+<span class="fc" id="L35">        Room office = new Room(officeD, officeSD);</span>
+<span class="fc" id="L36">        ItemComputer computer = (ItemComputer) Item.getInstance(&quot;computer&quot;);</span>
+<span class="fc" id="L37">        computer.setInspectMessage(&quot;You flip the computer's keyboard over, and unsuprisingly encounter a yellow sticky note. It reads:\n\n9292\n&quot;);</span>
+<span class="fc" id="L38">        ItemSafe safe = (ItemSafe)Item.getInstance(&quot;safe&quot;);</span>
+<span class="fc" id="L39">        safe.setInspectMessage(&quot;This safe appears to require a 4 digit PIN number.&quot;);</span>
+<span class="fc" id="L40">        safe.setPIN(9292);</span>
+
+<span class="fc" id="L42">        ItemDocument document = (ItemDocument) Item.getInstance(&quot;document&quot;);</span>
+<span class="fc" id="L43">        document.setVisible(false);</span>
+<span class="fc" id="L44">        document.setInspectMessage(&quot;The document is encrypted with a cipher. The cryptographers at the CIA will need to decrypt it.&quot;);</span>
+<span class="fc" id="L45">        safe.install(document);</span>
+
+<span class="fc" id="L47">        office.putItem(document); // in the room but invisible</span>
+<span class="fc" id="L48">        office.putItem(safe);</span>
+<span class="fc" id="L49">        office.putItem(computer);</span>
+
+<span class="fc" id="L51">        ItemCoffee coffee = (ItemCoffee)Item.getInstance(&quot;coffee&quot;);</span>
+<span class="fc" id="L52">        office.putItem(coffee);</span>
+<span class="fc" id="L53">        office.putItem(Item.getInstance(&quot;light&quot;));</span>
+
+        // Keep scores for things in this room
+<span class="fc" id="L56">        int points = document.value() + coffee.value() + safe.value();</span>
+
+<span class="fc" id="L58">        Player player = new Player(office);</span>
+<span class="fc" id="L59">        game.setPlayer(player);</span>
+<span class="fc" id="L60">        game.addGoal(new GamePointsGoal(points, player));</span>
+
+<span class="fc" id="L62">        game.setDescription(&quot;The objective of this game is to earn points by doing certain things. You must earn&quot; + points + &quot; to win&quot;);</span>
+
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        if (!(game.validate())) throw new InvalidGameException(&quot;Game improperly configured&quot;);</span>
+<span class="fc" id="L65">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

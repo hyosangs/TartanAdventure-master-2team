@@ -1,0 +1,767 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Game.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan</a> &gt; <span class="el_source">Game.java</span></div><h1>Game.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan;
+
+import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.action.Type;
+import edu.cmu.tartan.games.*;
+import edu.cmu.tartan.goal.GameGoal;
+import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.item.ItemMagicBox;
+import edu.cmu.tartan.properties.*;
+import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.room.RoomElevator;
+import edu.cmu.tartan.room.RoomExcavatable;
+import edu.cmu.tartan.room.RoomRequiredItem;
+import edu.cmu.tartan.PrintMessage;
+import edu.cmu.tartan.util.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.io.IOException;
+import java.util.*;
+
+/**
+ * The main class for game logic. Many if not all decisions about game play are
+ * made from this class.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program 2018 Jeffrey S. Gennari Versions: 1.0 March
+ * 2018 - initial version
+ */
+public class Game {
+
+	/**
+	 * Reads input from the command line.
+	 */
+	private Scanner scanner;
+
+	/**
+	 * Attempt to interpret input more flexibly.
+	 */
+	private PlayerInterpreter interpreter;
+	/**
+	 * The player for the game
+	 */
+	private Player player;
+
+	/**
+	 * The name and description of the active game
+	 */
+<span class="fc" id="L49">	private String gameName = &quot;&quot;;</span>
+<span class="fc" id="L50">	private String gameDescription = &quot;&quot;;</span>
+	/**
+	 * The set of goals for a game
+	 */
+<span class="fc" id="L54">	private List&lt;GameGoal&gt; goals = new LinkedList&lt;&gt;();</span>
+
+	private ScannerInInterface scannerInInterface;
+	private PrintOutInterface printOutInterface;
+	private WriteFileInterface writeFileInterface;
+	private ReadFileInterface readFileInterface;
+
+<span class="fc" id="L61">	public List&lt;Room&gt; roomArrayList = new ArrayList&lt;&gt;();</span>
+
+	///////////////////////////////////////////////////////////
+	/**
+	 * Create and configure a new game.
+	 */
+<span class="fc" id="L67">	public Game() {</span>
+
+		// Parse room from file
+		//this.scanner = new Scanner(System.in);
+<span class="fc" id="L71">		this.scannerInInterface = new ScannerIn();</span>
+<span class="fc" id="L72">		this.printOutInterface = new PrintOut();</span>
+<span class="fc" id="L73">		this.writeFileInterface = new WriteFile();</span>
+<span class="fc" id="L74">		this.readFileInterface = new ReadFile();</span>
+
+		// Configure the game, add the goals and exe
+//		configureGame();
+//
+<span class="fc" id="L79">		this.interpreter = new PlayerInterpreter();</span>
+//
+//		for (GameGoal g : goals) {
+//			this.player.addGoal(g);
+//		}
+<span class="fc" id="L84">	}</span>
+
+<span class="fc" id="L86">	public Game(ScannerInInterface scannerInInterface, PrintOutInterface printOutInterface){</span>
+<span class="fc" id="L87">		this.scannerInInterface = scannerInInterface;</span>
+<span class="fc" id="L88">		this.printOutInterface = printOutInterface;</span>
+
+<span class="fc" id="L90">		this.interpreter = new PlayerInterpreter();</span>
+<span class="fc" id="L91">	}</span>
+
+    /**
+     * Configure the game.
+     */
+    public void configureGame() {
+<span class="fc" id="L97">        List&lt;GameConfiguration&gt; menu = new LinkedList&lt;&gt;();</span>
+
+        // These are the currently supported games.
+<span class="fc" id="L100">		printOutInterface.console(&quot;[Game Configuration]&quot;);</span>
+<span class="fc" id="L101">        menu.add(new CollectGame());</span>
+<span class="fc" id="L102">        menu.add(new PointsGame());</span>
+<span class="fc" id="L103">        menu.add(new ExploreGame());</span>
+<span class="fc" id="L104">        menu.add(new DarkRoomGame());</span>
+<span class="fc" id="L105">        menu.add(new LockRoomGame());</span>
+<span class="fc" id="L106">        menu.add(new RideElevatorGame());</span>
+<span class="fc" id="L107">        menu.add(new ObscuredRoomGame());</span>
+<span class="fc" id="L108">        menu.add(new DemoGame());</span>
+
+<span class="fc" id="L110">        int choice = 0;</span>
+        while (true) {
+<span class="fc" id="L112">            printMenu(menu);</span>
+<span class="fc" id="L113">            PrintMessage.printChar(&quot;&gt; &quot;);</span>
+<span class="fc" id="L114">            String input = this.scannerInInterface.nextLine();</span>
+            try {
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                if (input.equalsIgnoreCase(&quot;help&quot;)) {</span>
+<span class="fc" id="L117">                    help();</span>
+<span class="fc" id="L118">                    continue;</span>
+                }
+<span class="fc" id="L120">                choice = Integer.parseInt(input) - 1;</span>
+<span class="fc" id="L121">            } catch (Exception e) {</span>
+<span class="fc" id="L122">                PrintMessage.printSevereLog(&quot;Invalid selection.&quot;);</span>
+<span class="fc" id="L123">				printOutInterface.console(&quot;Invalid input.&quot;);</span>
+<span class="fc" id="L124">                continue;</span>
+<span class="fc" id="L125">            }</span>
+            try {
+<span class="fc" id="L127">                GameConfiguration gameConfig = menu.get(choice);</span>
+<span class="fc" id="L128">                gameName = gameConfig.name;</span>
+<span class="fc" id="L129">                gameConfig.configure(this);</span>
+<span class="fc" id="L130">                player.setPrintOutInterface(this.printOutInterface);</span>
+<span class="fc" id="L131">                break;</span>
+<span class="nc" id="L132">            } catch (InvalidGameException ige) {</span>
+<span class="nc" id="L133">                PrintMessage.printSevereLog(&quot;Game improperly configured, please try again.&quot;);</span>
+            }
+<span class="nc" id="L135">        }</span>
+        // Once the game has been configured, it is time to play!
+<span class="fc" id="L137">        this.showIntro();</span>
+
+<span class="fc" id="L139">        setGoal();</span>
+<span class="fc" id="L140">    }</span>
+
+    /**
+     * Start the Game.
+     *
+     * @throws NullPointerException
+     */
+    public void start() throws NullPointerException {
+        // Orient the player
+<span class="fc" id="L149">        this.player.lookAround();</span>
+
+        try {
+<span class="fc" id="L152">            String input = null;</span>
+            while (true) {
+<span class="fc" id="L154">                PrintMessage.printChar(&quot;&gt; &quot;);</span>
+
+<span class="fc" id="L156">                input = this.scannerInInterface.nextLine();</span>
+
+<span class="fc bfc" id="L158" title="All 2 branches covered.">                if (input.compareTo(&quot;quit&quot;) == 0) {</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">                    for (GameGoal g : goals) {</span>
+<span class="fc" id="L160">                        PrintMessage.printConsole(g.getStatus());</span>
+<span class="fc" id="L161">                    }</span>
+<span class="fc" id="L162">                    printOutInterface.console(&quot;[Quit]&quot;);</span>
+<span class="fc" id="L163">                    break;</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">                } else if (input.compareTo(&quot;look&quot;) == 0) {</span>
+<span class="fc" id="L165">                    printOutInterface.console(&quot;[Look at below]&quot;);</span>
+<span class="fc" id="L166">                    Sleep.mSec(10);</span>
+<span class="fc" id="L167">					this.player.lookAround();</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">                } else if (input.compareTo(&quot;help&quot;) == 0) {</span>
+<span class="fc" id="L169">                    help();</span>
+<span class="fc bfc" id="L170" title="All 2 branches covered.">                } else if (input.compareTo(&quot;status&quot;) == 0) {</span>
+<span class="fc" id="L171">                    status();</span>
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">                } else if(input.compareTo(&quot;save&quot;) == 0){</span>
+<span class="nc" id="L173">					printOutInterface.console(&quot;save....&quot;);</span>
+<span class="nc" id="L174">					save();</span>
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">				}else if(input.compareTo(&quot;load&quot;) == 0){</span>
+<span class="nc" id="L176">					printOutInterface.console(&quot;load....&quot;);</span>
+<span class="nc" id="L177">					load();</span>
+				} else{
+<span class="fc" id="L179">                    executeAction(this.interpreter.interpretString(input));</span>
+                    // every time an action is executed the game state must be evaluated
+<span class="fc bfc" id="L181" title="All 2 branches covered.">                    if (evaluateGame()) {</span>
+<span class="fc" id="L182">                        winGame();</span>
+<span class="fc" id="L183">                        break;</span>
+                    }
+                }
+            }
+<span class="nc" id="L187">        } catch (Exception e) {</span>
+<span class="nc" id="L188">            PrintMessage.printSevereLog(&quot;I don't understand that \n\nException: \n&quot; + e);</span>
+<span class="nc" id="L189">            e.printStackTrace();</span>
+<span class="nc" id="L190">            start();</span>
+<span class="fc" id="L191">        }</span>
+
+<span class="fc" id="L193">        PrintMessage.printConsole(&quot;Game Over&quot;);</span>
+<span class="fc" id="L194">    }</span>
+
+    /**
+     * Getter for a player.
+     *
+     * @return the current player.
+     */
+    public Player getPlayer() {
+<span class="fc" id="L202">        return player;</span>
+    }
+
+
+
+    /**
+     * Add a goal to the game.
+     *
+     * @param g
+     *            the goal to add.
+     */
+    public void addGoal(GameGoal g) {
+<span class="fc" id="L214">        goals.add(g);</span>
+<span class="fc" id="L215">    }</span>
+
+    /**
+     * Set the player for the game.
+     *
+     * @param player
+     *            the player to add to the game.
+     */
+    public void setPlayer(Player player) {
+<span class="fc" id="L224">        this.player = player;</span>
+<span class="fc" id="L225">    }</span>
+
+    /**
+     * Show the game introduction
+     */
+    public void showIntro() {
+<span class="fc" id="L231">        printOutInterface.console(&quot;[Show Intro]&quot;);</span>
+<span class="fc" id="L232">        Sleep.mSec(10);</span>
+<span class="fc" id="L233">        PrintMessage.printConsole(&quot;Welcome to Tartan Adventure (1.0), by Tartan Inc..&quot;);</span>
+<span class="fc" id="L234">        PrintMessage.printConsole(&quot;Game: &quot; + gameDescription);</span>
+<span class="fc" id="L235">        PrintMessage.printConsole(&quot;To get help type 'help' ... let's begin\n&quot;);</span>
+<span class="fc" id="L236">    }</span>
+
+    /**
+     * Setter for game description
+     *
+     * @param description
+     *            the description
+     */
+    public void setDescription(String description) {
+<span class="fc" id="L245">        this.gameDescription = description;</span>
+<span class="fc" id="L246">    }</span>
+
+    /**
+     * Setter for game description
+     *
+     */
+    public String getGameDescription(){
+<span class="fc" id="L253">        return this.gameDescription;</span>
+    }
+
+    /**
+     * Ensure that the game parameters are all set
+     *
+     * @return true if valid, false otherwise
+     */
+    public boolean validate() {
+        // TODO: This method is way too simple. A more thorough validation must be done!
+<span class="pc bpc" id="L263" title="1 of 4 branches missed.">        return (gameName != null &amp;&amp; gameDescription != null);</span>
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private void setGoal(){
+
+<span class="fc bfc" id="L270" title="All 2 branches covered.">		for (GameGoal g : goals) {</span>
+<span class="fc" id="L271">			this.player.addGoal(g);</span>
+<span class="fc" id="L272">		}</span>
+<span class="fc" id="L273">	}</span>
+
+	/**
+	 * Display the game menu
+	 * 
+	 * @param menu
+	 *            The game menu
+	 */
+	private void printMenu(List&lt;GameConfiguration&gt; menu) {
+
+<span class="fc" id="L283">		StringBuilder sb = new StringBuilder(&quot;Choose a game from the options to below or type 'help' for help. \n&quot;);</span>
+<span class="fc bfc" id="L284" title="All 2 branches covered.">		for (int i = 0; i &lt; menu.size(); i++) {</span>
+<span class="fc" id="L285">			sb.append((i + 1) + &quot;:  &quot; + menu.get(i).name + &quot;\n&quot;);</span>
+		}
+<span class="fc" id="L287">		PrintMessage.printConsole(sb.toString());</span>
+<span class="fc" id="L288">	}</span>
+
+
+
+	/**
+	 * Execute an action in the game. This method is where gameplay really occurs.
+	 * 
+	 * @param a
+	 *            The action to execute
+	 */
+	private void executeAction(Action a) {
+
+<span class="pc bpc" id="L300" title="1 of 6 branches missed.">		switch (a.type()) {</span>
+
+            // Handle navigation
+            case TYPE_DIRECTIONAL:
+<span class="fc" id="L304">            	executeTypeDirectonal(a);</span>
+<span class="fc" id="L305">                break;</span>
+
+            // A direct item is an item that is required for an action. These
+            // items can be picked up, eaten, pushed
+            // destroyed, etc.
+
+            case TYPE_HASDIRECTOBJECT:
+<span class="fc" id="L312">            	executeTypeHasDirectObject(a);</span>
+<span class="fc" id="L313">            	break;</span>
+            // Indirect objects are secondary objects that may be used by direct objects, such as a key for a lock
+            case TYPE_HASINDIRECTOBJECT:
+<span class="fc" id="L316">            	executeTypeHasIndirectObject(a);</span>
+<span class="fc" id="L317">                break;</span>
+            // Some actions do not require an object
+            case TYPE_HASNOOBJECT:
+<span class="fc" id="L320">                executeTypeHasObject(a);</span>
+<span class="fc" id="L321">                break;</span>
+            case TYPE_UNKNOWN:
+<span class="fc" id="L323">                executeTypeUnknown(a);</span>
+<span class="fc" id="L324">                break;</span>
+            default:
+<span class="nc" id="L326">                PrintMessage.printConsole(&quot;I don't understand that&quot;);</span>
+                break;
+        }
+<span class="fc" id="L329">    }</span>
+
+	/**
+	 * Execute action in Action Type TYPE_DIRECTIONAL
+	 * @param a
+	 */
+	private void executeTypeDirectonal(Action a) {
+<span class="fc" id="L336">		player.move(a);</span>
+<span class="fc" id="L337">	}</span>
+	
+	/**
+	 * Execute action in Action Type TYPE_HASDIRECTOBJECT
+	 * @param a
+	 */
+	private void executeTypeHasDirectObject(Action a) {
+<span class="pc bpc" id="L344" title="1 of 13 branches missed.">		switch(a) {</span>
+
+		    case ACTION_PICK_UP:
+<span class="fc" id="L347">		        a.actionPickup(a, player);</span>
+<span class="fc" id="L348">		        break;</span>
+		    case ACTION_DESTROY:
+<span class="fc" id="L350">		        a.actionDestroy(a, player);</span>
+<span class="fc" id="L351">		        break;</span>
+		    case ACTION_INSPECT:
+<span class="fc" id="L353">		        a.actionInspect(a, player);</span>
+<span class="fc" id="L354">		        break;</span>
+		    case ACTION_DROP:
+<span class="fc" id="L356">		        a.actionDrop(a, player);</span>
+<span class="fc" id="L357">		        break;</span>
+		    case ACTION_THROW:
+<span class="fc" id="L359">		        a.actionThrow(a, player);</span>
+<span class="fc" id="L360">		        break;</span>
+		    case ACTION_SHAKE:
+<span class="fc" id="L362">		        a.actionShake(a, player);</span>
+<span class="fc" id="L363">		        break;</span>
+		    case ACTION_ENABLE:
+<span class="fc" id="L365">		        a.actionEnable(a, player);</span>
+<span class="fc" id="L366">		        break;</span>
+		    case ACTION_PUSH:
+<span class="fc" id="L368">		        a.actionPush(a, player);</span>
+<span class="fc" id="L369">		        break;</span>
+		    case ACTION_DIG:
+<span class="fc" id="L371">		        a.actionDig(a, player);</span>
+<span class="fc" id="L372">		        break;</span>
+		    case ACTION_EAT:
+<span class="fc" id="L374">		        a.actionEat(a, player);</span>
+<span class="fc" id="L375">		        break;</span>
+		    case ACTION_OPEN:
+<span class="fc" id="L377">		        a.actionOpen(a, player);</span>
+<span class="fc" id="L378">		        break;</span>
+		    case ACTION_EXPLODE:
+<span class="fc" id="L380">		        a.actionExplode(a, player);</span>
+<span class="fc" id="L381">		        break;</span>
+			default:
+				break;
+
+		}
+<span class="fc" id="L386">	}</span>
+
+	/**
+	 * Execute action in Action Type TYPE_HASINDIRECTOBJECT
+	 * @param a
+	 */
+	private void executeTypeHasIndirectObject(Action a) {
+<span class="pc bpc" id="L393" title="2 of 3 branches missed.">		switch(a) {</span>
+		    case ACTION_PUT:
+<span class="fc" id="L395">		    	a.actionPut(a, player);</span>
+<span class="fc" id="L396">		        break;</span>
+		    case ACTION_TAKE:
+<span class="nc" id="L398">		    	a.actionTask(a, player);</span>
+<span class="nc" id="L399">		        break;</span>
+		default:
+			break;
+		}
+<span class="fc" id="L403">	}</span>
+	
+	/**
+	 * Execute action in Action Type TYPE_HASDIRECTOBJECT
+	 * @param a
+	 */
+	private void executeTypeHasObject(Action a) {
+<span class="pc bpc" id="L410" title="3 of 7 branches missed.">		switch(a) {</span>
+		    case ACTION_LOOK:
+<span class="fc" id="L412">		    	a.actionLook(player);</span>
+<span class="fc" id="L413">		        break;</span>
+		    case ACTION_CLIMB:
+<span class="fc" id="L415">		    	a.actionClimb(player);</span>
+<span class="fc" id="L416">		        break;</span>
+		    case ACTION_JUMP:
+<span class="fc" id="L418">		    	a.actionJump(player);</span>
+<span class="fc" id="L419">		        break;</span>
+		    case ACTION_VIEW_ITMES:
+<span class="fc" id="L421">		    	a.actionViewItems(player);</span>
+<span class="fc" id="L422">		        break;</span>
+		    case ACTION_DIE:
+<span class="nc" id="L424">		    	a.actionDie(player);</span>
+<span class="nc" id="L425">		        break;</span>
+		    case ACTION_HELP:
+<span class="nc" id="L427">		        help();</span>
+<span class="nc" id="L428">		        break;</span>
+		default:
+			break;
+		}
+<span class="fc" id="L432">	}</span>
+	
+	/**
+	 * Execute action in Action Type TYPE_UNKNOWN
+	 * @param a
+	 */
+	private void executeTypeUnknown(Action a) {
+<span class="pc bpc" id="L439" title="3 of 4 branches missed.">		switch(a) {</span>
+		    case ACTION_PASS:
+		        // intentionally blank
+<span class="nc" id="L442">		        break;</span>
+		    case ACTION_ERROR:
+<span class="fc" id="L444">		        a.actionError();</span>
+<span class="fc" id="L445">		        break;</span>
+		    case ACTION_UNKNOWN:
+<span class="nc" id="L447">		        a.actionError();</span>
+<span class="nc" id="L448">		        break;</span>
+			default:
+				break;
+		}
+<span class="fc" id="L452">	}</span>
+
+
+
+	/**
+	 * Display the win game message
+	 */
+	private void winGame() {
+<span class="fc" id="L460">		printOutInterface.console(&quot;[Win Game]\n&quot;);</span>
+<span class="fc" id="L461">		PrintMessage.printConsole(&quot;Congrats!&quot;);</span>
+
+<span class="fc" id="L463">		PrintMessage.printConsole(&quot;You've won the '&quot; + gameName + &quot;' game!\n&quot;);</span>
+<span class="fc" id="L464">		PrintMessage.printConsole(&quot;- Final score: &quot; + player.getScore());</span>
+<span class="fc" id="L465">		PrintMessage.printConsole(&quot;- Final inventory: &quot;);</span>
+<span class="pc bpc" id="L466" title="1 of 2 branches missed.">		if (player.getCollectedItems().isEmpty()) {</span>
+<span class="fc" id="L467">			PrintMessage.printConsole(&quot;You don't have any items.&quot;);</span>
+		} else {
+<span class="nc bnc" id="L469" title="All 2 branches missed.">			for (Item i : player.getCollectedItems()) {</span>
+<span class="nc" id="L470">				PrintMessage.printConsole(i.toString() + &quot; &quot;);</span>
+<span class="nc" id="L471">			}</span>
+		}
+<span class="fc" id="L473">		PrintMessage.printConsole(&quot;\n&quot;);</span>
+<span class="fc" id="L474">	}</span>
+
+	/**
+	 * Determine if all the game goals have been completed
+	 * 
+	 * @return
+	 */
+	private Boolean evaluateGame() {
+<span class="fc" id="L482">		List&lt;GameGoal&gt; ldlevaluateGamegoals = player.getGoals();</span>
+
+<span class="fc bfc" id="L484" title="All 2 branches covered.">		for (Iterator&lt;GameGoal&gt; iterator = ldlevaluateGamegoals.iterator(); iterator.hasNext();) {</span>
+<span class="fc" id="L485">			GameGoal g = iterator.next();</span>
+<span class="fc bfc" id="L486" title="All 2 branches covered.">			if (g.isAchieved()) {</span>
+<span class="fc" id="L487">				iterator.remove();</span>
+			}
+<span class="fc" id="L489">		}</span>
+<span class="fc" id="L490">		return ldlevaluateGamegoals.isEmpty();</span>
+	}
+
+	private void status() {
+<span class="fc" id="L494">        printOutInterface.console(&quot;[Status of Game]&quot;);</span>
+<span class="fc" id="L495">        Sleep.mSec(10);</span>
+<span class="fc" id="L496">		PrintMessage.printConsole(&quot;The current game is '&quot; + gameName + &quot;': &quot; + gameDescription + &quot;\n&quot;);</span>
+<span class="fc" id="L497">		PrintMessage.printConsole(&quot;- There are &quot; + goals.size() + &quot; goals to achieve:&quot;);</span>
+
+<span class="fc bfc" id="L499" title="All 2 branches covered.">		for (int i = 0; i &lt; goals.size(); i++) {</span>
+<span class="fc" id="L500">			PrintMessage.printConsole(&quot;  * &quot; + (i + 1) + &quot;: &quot; + goals.get(i).describe() + &quot;, status: &quot;</span>
+<span class="fc" id="L501">					+ goals.get(i).getStatus());</span>
+		}
+<span class="fc" id="L503">		PrintMessage.printConsole(&quot;\n&quot;);</span>
+<span class="fc" id="L504">		PrintMessage.printConsole(&quot;- Current room:  &quot; + player.currentRoom() + &quot;\n&quot;);</span>
+<span class="fc" id="L505">		PrintMessage.printConsole(&quot;- Items in current room: &quot;);</span>
+<span class="fc bfc" id="L506" title="All 2 branches covered.">		for (Item i : player.currentRoom().items) {</span>
+<span class="fc" id="L507">			PrintMessage.printConsole(&quot;   * &quot; + i.toString() + &quot; &quot;);</span>
+<span class="fc" id="L508">		}</span>
+<span class="fc" id="L509">		PrintMessage.printConsole(&quot;\n&quot;);</span>
+
+<span class="fc" id="L511">		PrintMessage.printConsole(&quot;- Current score: &quot; + player.getScore());</span>
+
+<span class="fc" id="L513">		PrintMessage.printConsole(&quot;- Current inventory: &quot;);</span>
+<span class="pc bpc" id="L514" title="1 of 2 branches missed.">		if (player.getCollectedItems().isEmpty()) {</span>
+<span class="fc" id="L515">			PrintMessage.printConsole(&quot;   You don't have any items.&quot;);</span>
+		} else {
+<span class="nc bnc" id="L517" title="All 2 branches missed.">			for (Item i : player.getCollectedItems()) {</span>
+<span class="nc" id="L518">				PrintMessage.printConsole(&quot;   * &quot; + i.toString() + &quot; &quot;);</span>
+<span class="nc" id="L519">			}</span>
+		}
+<span class="fc" id="L521">		PrintMessage.printConsole(&quot;\n&quot;);</span>
+
+<span class="fc" id="L523">		PrintMessage.printConsole(&quot;- Rooms visited: &quot;);</span>
+<span class="fc" id="L524">		List&lt;Room&gt; rooms = player.getRoomsVisited();</span>
+<span class="fc bfc" id="L525" title="All 2 branches covered.">		if (rooms.isEmpty()) {</span>
+<span class="fc" id="L526">			PrintMessage.printConsole(&quot;You have not been to any rooms.&quot;);</span>
+		} else {
+<span class="fc bfc" id="L528" title="All 2 branches covered.">			for (Room r : rooms) {</span>
+<span class="fc" id="L529">				PrintMessage.printConsole(&quot;  * &quot; + r.description() + &quot; &quot;);</span>
+<span class="fc" id="L530">			}</span>
+		}
+<span class="fc" id="L532">	}</span>
+
+
+	/**
+	 * Display help menu
+	 */
+	private void help() {
+
+		// Credit to emacs Dunnet by Ron Schnell
+<span class="fc" id="L541">        printOutInterface.console(&quot;[Help Description]&quot;);</span>
+<span class="fc" id="L542">        Sleep.mSec(10);</span>
+<span class="fc" id="L543">		PrintMessage.printConsole(&quot;Welcome to TartanAdventure RPG Help.&quot;</span>
+				+ &quot;Here is some useful information (read carefully because there are one\n&quot;
+				+ &quot;or more clues in here):\n&quot;);
+
+<span class="fc" id="L547">		PrintMessage.printConsole(&quot;- To view your current items: type \&quot;inventory\&quot;\n&quot;);</span>
+<span class="fc" id="L548">		PrintMessage.printConsole(&quot;- You have a number of actions available:\n&quot;);</span>
+
+<span class="fc" id="L550">		StringBuilder directions = new StringBuilder(&quot;Direction: go [&quot;);</span>
+<span class="fc" id="L551">		StringBuilder dirobj = new StringBuilder(&quot;Manipulate object directly: [&quot;);</span>
+<span class="fc" id="L552">		StringBuilder indirobj = new StringBuilder(&quot;Manipulate objects indirectly, e.g. Put cpu in computer: [&quot;);</span>
+<span class="fc" id="L553">		StringBuilder misc = new StringBuilder(&quot;Misc. actions [&quot;);</span>
+
+<span class="fc bfc" id="L555" title="All 2 branches covered.">		for (Action a : Action.values()) {</span>
+<span class="fc bfc" id="L556" title="All 2 branches covered.">			for (String s : a.getAliases()){</span>
+<span class="fc bfc" id="L557" title="All 2 branches covered.">				if (a.type() == Type.TYPE_DIRECTIONAL) {</span>
+<span class="fc" id="L558">					directions.append(&quot;'&quot; + s + &quot;' &quot;);</span>
+<span class="fc bfc" id="L559" title="All 2 branches covered.">				} else if (a.type() == Type.TYPE_HASDIRECTOBJECT) {</span>
+<span class="fc" id="L560">					dirobj.append(&quot;'&quot; + s + &quot;' &quot;);</span>
+<span class="fc bfc" id="L561" title="All 2 branches covered.">				} else if (a.type() == Type.TYPE_HASINDIRECTOBJECT) {</span>
+<span class="fc" id="L562">					indirobj.append(&quot;'&quot; + s + &quot;' &quot;);</span>
+<span class="fc bfc" id="L563" title="All 2 branches covered.">				} else if (a.type() == Type.TYPE_UNKNOWN) {</span>
+<span class="fc" id="L564">					misc.append(&quot;'&quot; + s + &quot;' &quot;);</span>
+				}
+			}
+		}
+
+<span class="fc" id="L569">		directions.append(&quot;]&quot;);</span>
+<span class="fc" id="L570">		dirobj.append(&quot;]&quot;);</span>
+<span class="fc" id="L571">		indirobj.append(&quot;]&quot;);</span>
+<span class="fc" id="L572">		misc.append(&quot;]&quot;);</span>
+
+<span class="fc" id="L574">		PrintMessage.printConsole(&quot;- &quot; + directions.toString() + &quot;\n&quot;);</span>
+<span class="fc" id="L575">		PrintMessage.printConsole(&quot;- &quot; + dirobj.toString() + &quot;\n&quot;);</span>
+<span class="fc" id="L576">		PrintMessage.printConsole(&quot;- &quot; + indirobj.toString() + &quot;\n&quot;);</span>
+<span class="fc" id="L577">		PrintMessage.printConsole(&quot;- &quot; + misc.toString() + &quot;\n&quot;);</span>
+<span class="fc" id="L578">		PrintMessage.printConsole(&quot;- You can inspect an inspectable item by typing \&quot;Inspect &lt;item&gt;\&quot;\n&quot;);</span>
+<span class="fc" id="L579">		PrintMessage.printConsole(&quot;- You can quit by typing \&quot;quit\&quot;\n&quot;);</span>
+<span class="fc" id="L580">		PrintMessage.printConsole(&quot;- Good luck!\n&quot;);</span>
+
+<span class="fc" id="L582">	}</span>
+
+	public JSONObject roomArrayListConvertJSONObject(){
+        //save game's room list
+<span class="nc" id="L586">        JSONObject roomList = new JSONObject();</span>
+
+<span class="nc bnc" id="L588" title="All 2 branches missed.">        for(Room r : roomArrayList){</span>
+<span class="nc" id="L589">            JSONObject room = new JSONObject();</span>
+<span class="nc" id="L590">            JSONArray itemList = new JSONArray();</span>
+<span class="nc bnc" id="L591" title="All 2 branches missed.">            for(Item i : r.items){</span>
+<span class="nc" id="L592">                itemList.add(i.toString());</span>
+<span class="nc" id="L593">            }</span>
+<span class="nc" id="L594">            room.put(&quot;room&quot;,r.shortDescription());</span>
+<span class="nc" id="L595">            room.put(&quot;items&quot;,itemList);</span>
+<span class="nc" id="L596">            roomList.put(&quot;room&quot;+roomArrayList.indexOf(r),room);</span>
+<span class="nc" id="L597">        }</span>
+<span class="nc" id="L598">        return roomList;</span>
+    }
+
+    public JSONArray visitedRoomListConvertJSONArray(){
+        //save vistied room list
+<span class="nc" id="L603">        JSONArray visitedRooms = new JSONArray();</span>
+<span class="nc bnc" id="L604" title="All 2 branches missed.">        for(Room r : player.getRoomsVisited()){</span>
+<span class="nc" id="L605">            visitedRooms.add(r.shortDescription());</span>
+<span class="nc" id="L606">        }</span>
+<span class="nc" id="L607">        return visitedRooms;</span>
+    }
+
+    public JSONArray collectedItemListConvertJSONArray(){
+        //save player's item list
+<span class="nc" id="L612">        JSONArray collectedItems = new JSONArray();</span>
+<span class="nc bnc" id="L613" title="All 2 branches missed.">        for(Item i : player.getCollectedItems()){</span>
+<span class="nc" id="L614">            collectedItems.add(i.toString());</span>
+<span class="nc" id="L615">        }</span>
+<span class="nc" id="L616">        return collectedItems;</span>
+    }
+
+	public void save(){
+<span class="nc" id="L620">		printOutInterface.console(&quot;Save start&quot;);</span>
+
+<span class="nc" id="L622">		JSONObject jsonObject = new JSONObject();</span>
+
+		//Save this.roomArrayList
+<span class="nc" id="L625">		jsonObject.put(&quot;roomList&quot;,roomArrayListConvertJSONObject());</span>
+
+        //Save player.getRoomsVisited()
+<span class="nc" id="L628">		jsonObject.put(&quot;visitedRoomList&quot;,visitedRoomListConvertJSONArray());</span>
+
+		//Save player score
+<span class="nc" id="L631">		jsonObject.put(&quot;score&quot;,player.getScore());</span>
+
+        //Save player.getCollectedItems()
+<span class="nc" id="L634">		jsonObject.put(&quot;collectedItems&quot;,collectedItemListConvertJSONArray());</span>
+
+		//Save player current room
+<span class="nc" id="L637">		jsonObject.put(&quot;currentRoom&quot;,player.currentRoom().shortDescription());</span>
+
+        try {
+<span class="nc" id="L640">            writeFileInterface.write(gameName,jsonObject.toJSONString());</span>
+<span class="nc" id="L641">        } catch (IOException e) {</span>
+<span class="nc" id="L642">            e.printStackTrace();</span>
+<span class="nc" id="L643">        }</span>
+
+<span class="nc" id="L645">        printOutInterface.console(&quot;Save Done&quot;);</span>
+<span class="nc" id="L646">	}</span>
+
+	public List&lt;Room&gt; loadRoomArrayList(JSONObject roomList){
+        //make load rooms status
+<span class="nc" id="L650">        List&lt;Room&gt; loadedRooms = new ArrayList&lt;&gt;();</span>
+
+<span class="nc bnc" id="L652" title="All 2 branches missed.">        for(int i = 0; i&lt;roomList.size(); i++){</span>
+
+<span class="nc" id="L654">            JSONObject roomNumber = (JSONObject) roomList.get(&quot;room&quot;+i);</span>
+
+            //get room description and make room
+<span class="nc" id="L657">            String roomDescription = (String) roomNumber.get(&quot;room&quot;);</span>
+<span class="nc" id="L658">            Room room = new Room(&quot;&quot;,roomDescription);</span>
+
+            //make item list
+<span class="nc" id="L661">            JSONArray itemList = (JSONArray) roomNumber.get(&quot;items&quot;);</span>
+<span class="nc" id="L662">            ArrayList&lt;Item&gt; itemArrayList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L663">            Iterator&lt;String&gt; iterator = itemList.iterator();</span>
+<span class="nc bnc" id="L664" title="All 2 branches missed.">            while (iterator.hasNext()){</span>
+<span class="nc" id="L665">                itemArrayList.add(Item.getInstance(iterator.next()));</span>
+            }
+
+            //clear item list then put new item list
+<span class="nc" id="L669">            room.items.clear();</span>
+<span class="nc" id="L670">            room.putItems(itemArrayList);</span>
+
+<span class="nc" id="L672">            loadedRooms.add(room);</span>
+        }
+
+<span class="nc" id="L675">        return loadedRooms;</span>
+    }
+
+    public void updateRoomsItemList(List&lt;Room&gt; loadedRooms){
+<span class="nc bnc" id="L679" title="All 2 branches missed.">        for(Room gameRoom : roomArrayList){</span>
+<span class="nc bnc" id="L680" title="All 2 branches missed.">            for(Room loadRoom : loadedRooms){</span>
+<span class="nc bnc" id="L681" title="All 2 branches missed.">                if(gameRoom.shortDescription().equals(loadRoom.shortDescription())){</span>
+<span class="nc" id="L682">                    gameRoom.items.clear();</span>
+<span class="nc" id="L683">                    gameRoom.putItems(loadRoom.items);</span>
+                }
+<span class="nc" id="L685">            }</span>
+<span class="nc" id="L686">        }</span>
+<span class="nc" id="L687">    }</span>
+
+    public void updateCurrentRoom(String currentRoom){
+        //set current room
+
+<span class="nc bnc" id="L692" title="All 2 branches missed.">        for(Room gameRoom : roomArrayList){</span>
+<span class="nc bnc" id="L693" title="All 2 branches missed.">            if(gameRoom.toString().compareTo(currentRoom) == 0){</span>
+<span class="nc" id="L694">                player.setCurrentRoom(gameRoom);</span>
+<span class="nc" id="L695">                break;</span>
+            }
+<span class="nc" id="L697">        }</span>
+<span class="nc" id="L698">    }</span>
+
+    public void updateVisitedRoomList(JSONArray visitiedRooms){
+<span class="nc" id="L701">        Iterator&lt;String&gt; iterator = visitiedRooms.iterator();</span>
+<span class="nc bnc" id="L702" title="All 2 branches missed.">        if(iterator.hasNext()){</span>
+            //clear visited room list
+<span class="nc" id="L704">            player.getRoomsVisited().clear();</span>
+        }
+<span class="nc bnc" id="L706" title="All 2 branches missed.">        while (iterator.hasNext()){</span>
+<span class="nc" id="L707">            String visitedRoom = iterator.next();</span>
+<span class="nc bnc" id="L708" title="All 2 branches missed.">            for(Room gameRoom :roomArrayList){</span>
+<span class="nc bnc" id="L709" title="All 2 branches missed.">                if(gameRoom.shortDescription().compareTo(visitedRoom) == 0){</span>
+<span class="nc" id="L710">                    gameRoom.setRoomWasVisited(true);</span>
+<span class="nc" id="L711">                    player.getRoomsVisited().add(gameRoom);</span>
+                }
+<span class="nc" id="L713">            }</span>
+<span class="nc" id="L714">        }</span>
+<span class="nc" id="L715">    }</span>
+
+    public void updateCollectedItemList(JSONArray collectedItems){
+<span class="nc" id="L718">        Iterator&lt;String&gt; collectedItemsiterator = collectedItems.iterator();</span>
+
+        //clear player's collected items
+<span class="nc" id="L721">        player.getCollectedItems().clear();</span>
+
+<span class="nc bnc" id="L723" title="All 2 branches missed.">        while (collectedItemsiterator.hasNext()){</span>
+<span class="nc" id="L724">            player.grabItem(Item.getInstance(collectedItemsiterator.next()));</span>
+        }
+<span class="nc" id="L726">    }</span>
+
+	public void load(){
+<span class="nc" id="L729">		JSONParser jsonParser = new JSONParser();</span>
+
+		try {
+<span class="nc" id="L732">			JSONObject jsonObject = (JSONObject) jsonParser.parse(readFileInterface.read(gameName));</span>
+
+			//load room status
+<span class="nc" id="L735">			JSONObject roomList = (JSONObject)jsonObject.get(&quot;roomList&quot;);</span>
+<span class="nc" id="L736">			List&lt;Room&gt; loadedRooms = loadRoomArrayList(roomList);</span>
+
+			//upadate roomArrayList's item list
+<span class="nc" id="L739">            updateRoomsItemList(loadedRooms);</span>
+
+			//set current room
+<span class="nc" id="L742">			String currentRoom = (String)jsonObject.get(&quot;currentRoom&quot;);</span>
+<span class="nc" id="L743">            updateCurrentRoom(currentRoom);</span>
+
+			//set visitedRoomList
+<span class="nc" id="L746">			JSONArray visitiedRooms = (JSONArray) jsonObject.get(&quot;visitedRoomList&quot;);</span>
+<span class="nc" id="L747">			updateVisitedRoomList(visitiedRooms);</span>
+
+			//set collected items
+<span class="nc" id="L750">			JSONArray collectedItems = (JSONArray) jsonObject.get(&quot;collectedItems&quot;);</span>
+<span class="nc" id="L751">            updateCollectedItemList(collectedItems);</span>
+
+			//load player score
+<span class="nc" id="L754">			int loadedScore = (int)(long)jsonObject.get(&quot;score&quot;);</span>
+<span class="nc" id="L755">			player.setScore(loadedScore);</span>
+
+<span class="nc" id="L757">			evaluateGame();</span>
+<span class="nc" id="L758">			status();</span>
+
+<span class="nc" id="L760">		} catch (Exception e) {</span>
+<span class="nc" id="L761">			e.printStackTrace();</span>
+<span class="nc" id="L762">		}</span>
+
+<span class="nc" id="L764">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

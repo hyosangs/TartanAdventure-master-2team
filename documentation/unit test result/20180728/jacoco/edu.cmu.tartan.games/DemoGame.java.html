@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DemoGame.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.games</a> &gt; <span class="el_source">DemoGame.java</span></div><h1>DemoGame.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.games;
+
+import edu.cmu.tartan.Game;
+import edu.cmu.tartan.GameConfiguration;
+import edu.cmu.tartan.Player;
+import edu.cmu.tartan.action.Action;
+import edu.cmu.tartan.goal.DemoGoal;
+import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.item.ItemLock;
+import edu.cmu.tartan.room.*;
+
+/**
+ * Example game to explore a series of rooms. This is the configuraion discussed in the project description.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class DemoGame extends GameConfiguration {
+
+<span class="fc" id="L22">    public DemoGame() {</span>
+<span class="fc" id="L23">        super.name = &quot;Demo&quot;;</span>
+<span class="fc" id="L24">    }</span>
+
+    /**
+     * Configure the game
+     * @param game the Game object that will manage exectuion
+     * @throws InvalidGameException
+     */
+    @Override
+    public void configure(Game game) throws InvalidGameException {
+
+<span class="fc" id="L34">        Room room1 = new Room(&quot;You are in the first room. There seems to be a dark room to the East.&quot;,</span>
+                &quot;Room1&quot;);
+
+<span class="fc" id="L37">        game.roomArrayList.add(room1);</span>
+
+        // put the item in room1 for use in room 2
+<span class="fc" id="L40">        room1.putItem(Item.getInstance(&quot;torch&quot;));</span>
+<span class="fc" id="L41">        RoomDark room2 = new RoomDark(&quot;You are in a dark room. You can go South to West to the beginning and you can go South&quot;,</span>
+                &quot;room2&quot;, &quot;You cannot see&quot;, &quot;blind!&quot;);
+
+
+<span class="fc" id="L45">        game.roomArrayList.add(room2);</span>
+
+<span class="fc" id="L47">        Room room3 = new Room(&quot;You are in room3. There is a locked room to the West and a room to the East.&quot;,</span>
+                &quot;room3&quot;);
+
+<span class="fc" id="L50">        game.roomArrayList.add(room3);</span>
+
+<span class="fc" id="L52">        Item key = Item.getInstance(&quot;key&quot;);</span>
+        // Install the lock and key to open room 4
+<span class="fc" id="L54">        Room room4 = new RoomLockable(&quot;You are in the locked room. There is a fridge here&quot;, &quot;locked&quot;,</span>
+                true, key);
+
+<span class="fc" id="L57">        game.roomArrayList.add(room4);</span>
+
+        // Create the new lock item (note that key was created above)
+<span class="fc" id="L60">        Item lock = Item.getInstance(&quot;lock&quot;);</span>
+<span class="fc" id="L61">        ((ItemLock) lock).install(key);</span>
+        // This lock &quot;locks&quot; room4
+<span class="fc" id="L63">        lock.setRelatedRoom(room4);</span>
+        // Install the items
+<span class="fc" id="L65">        room3.putItem(lock);</span>
+<span class="fc" id="L66">        room3.putItem(key);</span>
+
+<span class="fc" id="L68">        Item food = Item.getInstance(&quot;food&quot;);</span>
+<span class="fc" id="L69">        RoomRequiredItem room6 = new RoomRequiredItem(&quot;You are in the room that required food&quot;, &quot;Required&quot;,</span>
+                &quot;food&quot;, &quot;Warning you need food&quot;, food);
+
+<span class="fc" id="L72">        game.roomArrayList.add(room6);</span>
+
+<span class="fc" id="L74">        room3.putItem(food);</span>
+<span class="fc" id="L75">        Item fridge = Item.getInstance(&quot;fridge&quot;);</span>
+<span class="fc" id="L76">        RoomObscured room5 = new RoomObscured(&quot;Obscured Room 5&quot; ,&quot;Room5&quot;, fridge);</span>
+<span class="fc" id="L77">        room5.setObscured(true);</span>
+<span class="fc" id="L78">        room5.setUnobscureMessage(&quot;You've revelealed a hidden room to the West!&quot;);</span>
+<span class="fc" id="L79">        room5.setObscureMessage(&quot;This room is hidden&quot;);</span>
+<span class="fc" id="L80">        fridge.setRelatedRoom(room5);</span>
+
+<span class="fc" id="L82">        game.roomArrayList.add(room5);</span>
+
+<span class="fc" id="L84">        room4.putItem(fridge);</span>
+
+        // Connect the rooms.
+        // From room 1 a player can go east to
+        // room2, which is a dark room (i.e. they need a Luminous object).
+<span class="fc" id="L89">        room1.setAdjacentRoom(Action.ACTION_GO_EAST, room2);</span>
+        // From room2 a player can go south to room 3
+<span class="fc" id="L91">        room2.setAdjacentRoom(Action.ACTION_GO_SOUTH, room3);</span>
+        // from room3 a player can go east to room6 if they have the required item
+<span class="fc" id="L93">        room3.setAdjacentRoom(Action.ACTION_GO_EAST, room6);</span>
+        // from room3 a player can go west to room4 if they can unlock the door
+<span class="fc" id="L95">        room3.setAdjacentRoom(Action.ACTION_GO_WEST, room4);</span>
+        // from room4 a player can go west to room5 if they move the obscuring item
+<span class="fc" id="L97">        room4.setAdjacentRoom(Action.ACTION_GO_WEST, room5);</span>
+
+        // Set the initial room
+<span class="fc" id="L100">        Player player = new Player(room1);</span>
+<span class="fc" id="L101">        game.setPlayer(player);</span>
+<span class="fc" id="L102">        game.addGoal(new DemoGoal());</span>
+
+<span class="fc" id="L104">        game.setDescription(&quot;Demo game rooms.&quot;);</span>
+
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">        if (!(game.validate())) throw new InvalidGameException(&quot;Game improperly configured&quot;);</span>
+<span class="fc" id="L107">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

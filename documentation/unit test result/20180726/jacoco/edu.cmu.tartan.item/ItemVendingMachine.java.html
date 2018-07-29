@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemVendingMachine.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.item</a> &gt; <span class="el_source">ItemVendingMachine.java</span></div><h1>ItemVendingMachine.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.item;
+
+import edu.cmu.tartan.properties.Shakeable;
+
+/**
+ * This class for a keycard, which can be shaken.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class ItemVendingMachine extends Item implements Shakeable {
+
+    /**
+     * Constructor
+     * @param d description
+     * @param sd long description
+     * @param a aliases
+     */
+    public ItemVendingMachine(String d, String sd, String[] a) {
+<span class="fc" id="L22">        super(d, sd, a);</span>
+<span class="fc" id="L23">        this.count = 0;</span>
+<span class="fc" id="L24">        setValue(15);</span>
+<span class="fc" id="L25">    }</span>
+
+    /**
+     * Shaking this machine too much can cause an accident
+     * @return true if an accident can occur; false otherwise
+     */
+    public boolean accident() {
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        return this.count &gt; 2;</span>
+    }
+
+    public void shake() {
+<span class="fc bfc" id="L36" title="All 4 branches covered.">        switch (this.count) {</span>
+            case 0:
+<span class="fc" id="L38">                super.printOut.console(&quot;You shake the vending machine, and your favorite treat inches its way off the tray.&quot;);</span>
+<span class="fc" id="L39">                break;</span>
+            case 1:
+<span class="fc" id="L41">                super.printOut.console(&quot;The treat begins to bend toward the will of gravity.&quot;);</span>
+<span class="fc" id="L42">                break;</span>
+            case 2:
+<span class="fc" id="L44">                super.printOut.console(&quot;Just as the candy falls, the machine also falls over and crushes you.&quot;);</span>
+<span class="fc" id="L45">                break;</span>
+            default:
+                break;
+        }
+<span class="fc" id="L49">        this.count++;</span>
+<span class="fc" id="L50">    }</span>
+
+    protected int count;
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

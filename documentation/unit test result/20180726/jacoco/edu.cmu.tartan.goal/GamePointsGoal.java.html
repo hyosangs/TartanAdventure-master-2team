@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GamePointsGoal.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.goal</a> &gt; <span class="el_source">GamePointsGoal.java</span></div><h1>GamePointsGoal.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.goal;
+
+import edu.cmu.tartan.Player;
+
+/**
+ * A game goal based on scoring points.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class GamePointsGoal implements GameGoal {
+    // The score needed to reach this goal
+<span class="fc" id="L15">    private Integer winningScore = 0;</span>
+
+    // The player working to achieve this goal
+    private Player player;
+
+<span class="fc" id="L20">    public GamePointsGoal(Integer g, Player p) {</span>
+<span class="fc" id="L21">        this.winningScore = g;</span>
+<span class="fc" id="L22">        this.player = p;</span>
+<span class="fc" id="L23">    }</span>
+
+    /**
+     * Describe this goal
+     * @return
+     */
+    @Override
+    public String describe() {
+<span class="fc" id="L31">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L32">        sb.append(&quot;Game Points Goal: You must score &quot; + winningScore + &quot; points&quot; );</span>
+<span class="fc" id="L33">        return sb.toString();</span>
+    }
+
+    /**
+     * Fetch the current status of this goal.
+     * @return the current status for display.
+     */
+    public String getStatus() {
+<span class="fc" id="L41">        return &quot;You scored &quot; + player.getScore() + &quot; out of &quot; + winningScore + &quot; points.&quot;;</span>
+    }
+
+    /**
+     * Check if the goal is achieved
+     * @return true if the goal is achieved; false otherwise.
+     */
+    @Override
+    public Boolean isAchieved() {
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (player.getScore() &gt;= winningScore) {</span>
+<span class="fc" id="L51">            return true;</span>
+        }
+<span class="fc" id="L53">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

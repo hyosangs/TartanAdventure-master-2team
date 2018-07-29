@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ko"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemMicrowave.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Ant Example</a> &gt; <a href="index.source.html" class="el_package">edu.cmu.tartan.item</a> &gt; <span class="el_source">ItemMicrowave.java</span></div><h1>ItemMicrowave.java</h1><pre class="source lang-java linenums">package edu.cmu.tartan.item;
+
+import edu.cmu.tartan.properties.Hostable;
+import edu.cmu.tartan.properties.Meltable;
+import edu.cmu.tartan.properties.Startable;
+
+/**
+ * This class for a microwave, which can hold something and be started.
+ * &lt;p&gt;
+ * Project: LG Exec Ed SDET Program
+ * 2018 Jeffrey S. Gennari
+ * Versions:
+ * 1.0 March 2018 - initial version
+ */
+public class ItemMicrowave extends Item implements Hostable, Startable {
+
+
+    /**
+     * Constructor
+     * @param s description
+     * @param sd long description
+     * @param a aliases
+     */
+    public ItemMicrowave(String s, String sd, String[] a) {
+<span class="fc" id="L25">        super(s, sd, a);</span>
+<span class="fc" id="L26">        setValue(5);</span>
+<span class="fc" id="L27">    }</span>
+
+    /**
+     * Start the microwave. If the installed item is meltable, then melt it
+     * @return true if started
+     */
+    @Override
+    public Boolean start() {
+
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        for (int i = 0; i &lt; 3; i++) {</span>
+<span class="fc" id="L37">            super.printOut.console(&quot;...&quot;);</span>
+            try {
+<span class="fc" id="L39">                Thread.sleep(1000);</span>
+<span class="nc" id="L40">            } catch (Exception e1) {</span>
+<span class="nc" id="L41">                e1.printStackTrace();</span>
+<span class="fc" id="L42">            }</span>
+        }
+<span class="fc" id="L44">        super.printOut.console(&quot;Beep beep beep&quot;);</span>
+
+        // Only meltable things can be microwaved
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (super.installedItem() instanceof Meltable) {</span>
+<span class="fc" id="L48">            Item item = ((Meltable) super.installedItem()).meltItem();</span>
+<span class="fc" id="L49">            super.printOut.console(&quot;You melted the &quot; + super.installedItem().detailDescription() + &quot;, and it revealed a &quot; + item.detailDescription() + &quot;!&quot;);</span>
+<span class="fc" id="L50">            super.install(item);</span>
+<span class="fc" id="L51">            return true;</span>
+        }
+<span class="fc" id="L53">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.1.201803210924</span></div></body></html>

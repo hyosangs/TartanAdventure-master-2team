@@ -1,0 +1,179 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ItemKeycardReader</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">edu.cmu.tartan.item</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ItemKeycardReader (edu.cmu.tartan.item)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ItemKeycardReader</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    92.6%
+  </span>
+  <span class="absValue">
+    (25/ 27)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package edu.cmu.tartan.item;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import edu.cmu.tartan.properties.Hostable;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * This class for a keycard reader, which can hold a keycard.
+<i>7</i>&nbsp; * &lt;p&gt;
+<i>8</i>&nbsp; * Project: LG Exec Ed SDET Program
+<i>9</i>&nbsp; * 2018 Jeffrey S. Gennari
+<i>10</i>&nbsp; * Versions:
+<i>11</i>&nbsp; * 1.0 March 2018 - initial version
+<i>12</i>&nbsp; */
+<i>13</i>&nbsp;public class ItemKeycardReader extends Item implements Hostable {
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    private Item installedItem;
+<i>16</i>&nbsp;    private String installMessage;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * Constructor
+<i>20</i>&nbsp;     * @param s description
+<i>21</i>&nbsp;     * @param sd long description
+<i>22</i>&nbsp;     * @param a aliases
+<i>23</i>&nbsp;     */
+<i>24</i>&nbsp;    public ItemKeycardReader(String s, String sd, String[] a) {
+<b class="fc"><i>25</i>&nbsp;        super(s, sd, a);</b>
+<b class="fc"><i>26</i>&nbsp;        this.installMessage = null;</b>
+<b class="fc"><i>27</i>&nbsp;        setValue(25);</b>
+<b class="fc"><i>28</i>&nbsp;    }</b>
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /**
+<i>31</i>&nbsp;     * Install a keycard
+<i>32</i>&nbsp;     * @param item the keycard to install in the reader
+<i>33</i>&nbsp;     */
+<i>34</i>&nbsp;    public void install(Item item) {
+<b class="fc"><i>35</i>&nbsp;        if (!(item instanceof ItemKeycard)) return;</b>
+<b class="fc"><i>36</i>&nbsp;        this.installedItem = item;</b>
+<i>37</i>&nbsp;
+<b class="fc"><i>38</i>&nbsp;        for (int i = 0; i &lt; 3; i++) {</b>
+<b class="fc"><i>39</i>&nbsp;            super.printOut.console(&quot;...&quot;);</b>
+<i>40</i>&nbsp;            try {
+<b class="fc"><i>41</i>&nbsp;                Thread.sleep(1000);</b>
+<b class="nc"><i>42</i>&nbsp;            } catch (Exception e1) {</b>
+<b class="nc"><i>43</i>&nbsp;                e1.printStackTrace();</b>
+<b class="fc"><i>44</i>&nbsp;            }</b>
+<i>45</i>&nbsp;        }
+<b class="fc"><i>46</i>&nbsp;        if (this.installMessage != null) {</b>
+<b class="fc"><i>47</i>&nbsp;            super.printOut.console(this.installMessage);</b>
+<i>48</i>&nbsp;        }
+<b class="fc"><i>49</i>&nbsp;        this.relatedItem.setVisible(true);</b>
+<b class="fc"><i>50</i>&nbsp;    }</b>
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    /**
+<i>53</i>&nbsp;     * Unstall the keycard
+<i>54</i>&nbsp;     * @param i the keycard to uninstall
+<i>55</i>&nbsp;     * @return true if uninstalled; false otherwise
+<i>56</i>&nbsp;     */
+<i>57</i>&nbsp;    @Override
+<i>58</i>&nbsp;    public boolean uninstall(Item i) {
+<b class="fc"><i>59</i>&nbsp;        if (!(i instanceof ItemKeycard)) return false;</b>
+<i>60</i>&nbsp;
+<b class="fc"><i>61</i>&nbsp;        if (this.installedItem == null) {</b>
+<b class="fc"><i>62</i>&nbsp;            return false;</b>
+<b class="fc"><i>63</i>&nbsp;        } else if (this.installedItem == i) {</b>
+<b class="fc"><i>64</i>&nbsp;            this.installedItem = null;</b>
+<b class="fc"><i>65</i>&nbsp;            return true;</b>
+<i>66</i>&nbsp;        } else {
+<b class="fc"><i>67</i>&nbsp;            return false;</b>
+<i>68</i>&nbsp;        }
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    /**
+<i>72</i>&nbsp;     * Fetch the installed keycard
+<i>73</i>&nbsp;     * @return
+<i>74</i>&nbsp;     */
+<i>75</i>&nbsp;    public Item installedItem() {
+<b class="fc"><i>76</i>&nbsp;        return this.installedItem;</b>
+<i>77</i>&nbsp;    }
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    /**
+<i>80</i>&nbsp;     * Set the install message
+<i>81</i>&nbsp;     * @param s the message
+<i>82</i>&nbsp;     */
+<i>83</i>&nbsp;    public void setInstallMessage(String s) {
+<b class="fc"><i>84</i>&nbsp;        this.installMessage = s;</b>
+<b class="fc"><i>85</i>&nbsp;    }</b>
+<i>86</i>&nbsp;
+<i>87</i>&nbsp;    /**
+<i>88</i>&nbsp;     * Get the install Message
+<i>89</i>&nbsp;     * @return installMessage
+<i>90</i>&nbsp;     */
+<i>91</i>&nbsp;    public String installMessage() {
+<b class="fc"><i>92</i>&nbsp;        return installMessage;</b>
+<i>93</i>&nbsp;    }
+<i>94</i>&nbsp;
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2018-07-29 11:10</div>
+</div>
+</body>
+</html>
