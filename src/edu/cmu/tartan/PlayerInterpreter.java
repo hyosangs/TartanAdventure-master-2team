@@ -31,10 +31,6 @@ public class PlayerInterpreter {
      * @throws ArrayIndexOutOfBoundsException
      */
     private Action action(String[] string){
-//        if(string == null || string.length == 0) {
-//            return Action.ACTION_PASS;
-//        }
-
         Action retVal = null;
         String[] command = getCommendString(string);
         Action action = getActionFromString(command);

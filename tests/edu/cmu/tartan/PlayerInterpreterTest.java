@@ -21,13 +21,37 @@ public class PlayerInterpreterTest {
         assertEquals(Action.ACTION_PASS, action);
     }
 
-    @Ignore
-    public void interpretStringNullTest() {
+    @Test
+    public void interpretStringNoneTest() {
         // given
         PlayerInterpreter playerInterpreter = new PlayerInterpreter();
 
         // when
-        Action action = playerInterpreter.interpretString(null);
+        Action action = playerInterpreter.interpretString("");
+
+        // then
+        assertEquals(Action.ACTION_PASS, action);
+    }
+
+    @Test
+    public void interpretStringUnknownTest() {
+        // given
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+
+        // when
+        Action action = playerInterpreter.interpretString("unknown");
+
+        // then
+        assertEquals(Action.ACTION_ERROR, action);
+    }
+
+    @Test
+    public void interpretStringPassTest() {
+        // given
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+
+        // when
+        Action action = playerInterpreter.interpretString("pass");
 
         // then
         assertEquals(Action.ACTION_ERROR, action);
@@ -43,6 +67,18 @@ public class PlayerInterpreterTest {
 
         // then
         assertEquals(Action.ACTION_GO_EAST, action);
+    }
+
+    @Test
+    public void interpretStringDirectObjectStringOneActionTest(){
+        // given
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+
+        // when
+        Action action = playerInterpreter.interpretString("pickup");
+
+        // then
+        assertEquals(Action.ACTION_PASS, action);
     }
 
     @Test
@@ -67,5 +103,29 @@ public class PlayerInterpreterTest {
 
         // then
         assertEquals(Action.ACTION_PUT, action);
+    }
+
+    @Test
+    public void interpretStringIndirectObjectStringTreeActionTest(){
+        // given
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+
+        // when
+        Action action = playerInterpreter.interpretString("put food in");
+
+        // then
+        assertEquals(Action.ACTION_ERROR, action);
+    }
+
+    @Test
+    public void interpretStringIndirectObjectforActionTest(){
+        // given
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+
+        // when
+        Action action = playerInterpreter.interpretString("put food for fridge");
+
+        // then
+        assertEquals(Action.ACTION_PASS, action);
     }
 }
