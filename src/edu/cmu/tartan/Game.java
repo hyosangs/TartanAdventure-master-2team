@@ -3,9 +3,18 @@ package edu.cmu.tartan;
 import edu.cmu.tartan.action.Action;
 import edu.cmu.tartan.action.Type;
 import edu.cmu.tartan.games.*;
+import edu.cmu.tartan.goal.GameCollectGoal;
+import edu.cmu.tartan.goal.GameExploreGoal;
 import edu.cmu.tartan.goal.GameGoal;
+import edu.cmu.tartan.goal.GamePointsGoal;
 import edu.cmu.tartan.item.Item;
+import edu.cmu.tartan.item.ItemMagicBox;
+import edu.cmu.tartan.properties.*;
 import edu.cmu.tartan.room.Room;
+import edu.cmu.tartan.room.RoomElevator;
+import edu.cmu.tartan.room.RoomExcavatable;
+import edu.cmu.tartan.room.RoomRequiredItem;
+import edu.cmu.tartan.PrintMessage;
 import edu.cmu.tartan.util.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -259,7 +268,34 @@ public class Game {
      */
     public boolean validate() {
         // TODO: This method is way too simple. A more thorough validation must be done!
-        return (gameName != null && gameDescription != null);
+		if(this.goals instanceof GameCollectGoal){
+			List<String> itemsListGoal = ((GameCollectGoal) this.goals).getItemsList();
+			int numItem = 0;
+
+			for (Room i : this.roomArrayList){
+				numItem += i.items.size();
+			}
+
+			return itemsListGoal.size() > numItem;
+		}
+		else if(this.goals instanceof GameExploreGoal){
+			List<String> itineraryListGoal = ((GameExploreGoal) this.goals).getItinerary();
+
+			return itineraryListGoal.size() > this.roomArrayList.size();
+		}
+		else if(this.goals instanceof GamePointsGoal){
+			int score = 0;
+			for (Room i : this.roomArrayList){
+				for (Item j : i.items){
+					score += j.value();
+				}
+			}
+
+			return ((GamePointsGoal) this.goals).getWinningScore() > score;
+		}
+		else{
+			return true;
+		}
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

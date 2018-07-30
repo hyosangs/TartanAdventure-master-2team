@@ -22,6 +22,10 @@ public class GameExploreGoal implements GameGoal {
 
     private Player player;
 
+    public List<String> getItinerary() {
+        return itinerary;
+    }
+
     /**
      * Create a new exploration goal.
      * @param places the list of places to explore
