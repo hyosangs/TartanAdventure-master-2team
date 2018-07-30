@@ -33,6 +33,9 @@ import edu.cmu.tartan.room.Room;
         String officeSD = "Office.";
 
         Room office = new Room(officeD, officeSD);
+
+        game.roomArrayList.add(office);
+
         ItemComputer computer = (ItemComputer) Item.getInstance("computer");
         computer.setInspectMessage("You flip the computer's keyboard over, and unsuprisingly encounter a yellow sticky note. It reads:\n\n9292\n");
         ItemSafe safe = (ItemSafe)Item.getInstance("safe");

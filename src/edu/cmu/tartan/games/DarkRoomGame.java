@@ -38,6 +38,8 @@ public class DarkRoomGame extends GameConfiguration {
     public void configure(Game game) throws InvalidGameException{
 
         Room room1 = new Room("You are in the first room. There seems to be a room to the North.", "Room1");
+
+        game.roomArrayList.add(room1);
         // player would type 'go north'
 
         List<Item> items = new LinkedList<>();
@@ -56,6 +58,8 @@ public class DarkRoomGame extends GameConfiguration {
                         classroomDarkShortDescription, true);
         room1.putItems(items);
         classroom.setDeathMessage("As walk in the dark room, you trip on a mysterious object. You fall toward the floor, and hit your head against a large rock.");
+
+        game.roomArrayList.add(classroom);
 
         room1.setAdjacentRoom(Action.ACTION_GO_NORTH, classroom);
 

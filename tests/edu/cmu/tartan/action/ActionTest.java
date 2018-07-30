@@ -228,7 +228,35 @@ public class ActionTest {
     }
 
     @Test
-    public void actionExplode() {
+    public void actionExplodeExplodable() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_EXPLODE;
+
+        ItemDynamite dynamite = (ItemDynamite)Item.getInstance("dynamite");
+        action.setDirectObject(dynamite);
+        room.player.currentRoom().putItem(dynamite);
+
+        action.actionExplode(playerInterpreter.interpretString("explode dynamite"), room.player);
+
+        assertTrue(room.player.currentRoom().hasItem(dynamite));
+    }
+
+    @Test
+    public void actionExplodeUnexplodable() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_EXPLODE;
+
+        ItemKey key = (ItemKey)Item.getInstance("key");
+        action.setDirectObject(key);
+        room.player.currentRoom().putItem(key);
+
+        action.actionExplode(playerInterpreter.interpretString("explode key"), room.player);
+
+        assertFalse(room.player.currentRoom().hasItem(key));
     }
 
     @Test
@@ -268,7 +296,35 @@ public class ActionTest {
     }
 
     @Test
-    public void actionPush() {
+    public void actionPushPushable() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_PUSH;
+
+        ItemButton button = (ItemButton)Item.getInstance("button");
+        action.setDirectObject(button);
+        room.player.currentRoom().putItem(button);
+
+        action.actionPush(playerInterpreter.interpretString("push button"), room.player);
+
+        assertEquals(2, room.player.getScore());
+    }
+
+    @Test
+    public void actionPushUnpushable() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_PUSH;
+
+        ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee");
+        action.setDirectObject(coffee);
+        room.player.currentRoom().putItem(coffee);
+
+        action.actionPush(playerInterpreter.interpretString("push coffee"), room.player);
+
+        assertEquals(0, room.player.getScore());
     }
 
     @Test
@@ -280,11 +336,34 @@ public class ActionTest {
     }
 
     @Test
-    public void actionThrow() {
+    public void actionThrowChuckable() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_PICK_UP;
+        ItemClayPot clayPot = (ItemClayPot)Item.getInstance("clayPot");
+        action.setIndirectObject(clayPot);
+        room.player.currentRoom().putItem(clayPot);
+        action.actionPickup(playerInterpreter.interpretString("pickup clayPot"), room.player);
+
+        action = Action.ACTION_THROW;
+        action.actionThrow(playerInterpreter.interpretString("throw clayPot"), room.player);
+        assertFalse(room.player.hasItem(clayPot));
     }
 
     @Test
     public void actionDrop() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_PICK_UP;
+        ItemKey key = (ItemKey)Item.getInstance("key");
+        action.setIndirectObject(key);
+        room.player.currentRoom().putItem(key);
+        action.actionPickup(playerInterpreter.interpretString("pickup key"), room.player);
+        action = Action.ACTION_DROP;
+        action.actionDrop(playerInterpreter.interpretString("drop key"), room.player);
+        assertFalse(room.player.hasItem(key));
     }
 
     @Test
@@ -292,7 +371,35 @@ public class ActionTest {
     }
 
     @Test
-    public void actionDestroy() {
+    public void actionDestroyIndestroyable() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_PICK_UP;
+        ItemKey key = (ItemKey)Item.getInstance("key");
+        action.setIndirectObject(key);
+        room.player.currentRoom().putItem(key);
+        action.actionPickup(playerInterpreter.interpretString("pickup key"), room.player);
+
+        action = Action.ACTION_DESTROY;
+        action.actionDestroy(playerInterpreter.interpretString("destroy key"), room.player);
+        assertTrue(room.player.hasItem(key));
+    }
+
+    @Test
+    public void actionDestroyDestroyable() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_PICK_UP;
+        ItemClayPot clayPot = (ItemClayPot)Item.getInstance("clayPot");
+        action.setIndirectObject(clayPot);
+        room.player.currentRoom().putItem(clayPot);
+        action.actionPickup(playerInterpreter.interpretString("pickup clayPot"), room.player);
+
+        action = Action.ACTION_DESTROY;
+        action.actionDestroy(playerInterpreter.interpretString("destroy clayPot"), room.player);
+        assertFalse(room.player.hasItem(clayPot));
     }
 
 }

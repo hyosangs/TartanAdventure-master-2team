@@ -5,20 +5,14 @@ import edu.cmu.tartan.action.Type;
 import edu.cmu.tartan.games.*;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
-import edu.cmu.tartan.item.ItemMagicBox;
-import edu.cmu.tartan.properties.*;
 import edu.cmu.tartan.room.Room;
-import edu.cmu.tartan.room.RoomElevator;
-import edu.cmu.tartan.room.RoomExcavatable;
-import edu.cmu.tartan.room.RoomRequiredItem;
-import edu.cmu.tartan.PrintMessage;
 import edu.cmu.tartan.util.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
-import java.util.Iterator;
-import java.util.Scanner;
-
-import java.util.List;
-import java.util.LinkedList;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * The main class for game logic. Many if not all decisions about game play are
@@ -28,12 +22,6 @@ import java.util.LinkedList;
  * 2018 - initial version
  */
 public class Game {
-
-	/**
-	 * Reads input from the command line.
-	 */
-	private Scanner scanner;
-
 	/**
 	 * Attempt to interpret input more flexibly.
 	 */
@@ -55,6 +43,11 @@ public class Game {
 
 	private ScannerInInterface scannerInInterface;
 	private PrintOutInterface printOutInterface;
+	private WriteFileInterface writeFileInterface;
+	private ReadFileInterface readFileInterface;
+	private Timer saveScheduler = new Timer();
+
+	public List<Room> roomArrayList = new ArrayList<>();
 
 	///////////////////////////////////////////////////////////
 	/**
@@ -63,18 +56,12 @@ public class Game {
 	public Game() {
 
 		// Parse room from file
-		//this.scanner = new Scanner(System.in);
 		this.scannerInInterface = new ScannerIn();
 		this.printOutInterface = new PrintOut();
+		this.writeFileInterface = new WriteFile();
+		this.readFileInterface = new ReadFile();
 
-		// Configure the game, add the goals and exe
-//		configureGame();
-//
 		this.interpreter = new PlayerInterpreter();
-//
-//		for (GameGoal g : goals) {
-//			this.player.addGoal(g);
-//		}
 	}
 
 	public Game(ScannerInInterface scannerInInterface, PrintOutInterface printOutInterface){
@@ -150,6 +137,14 @@ public class Game {
                 input = this.scannerInInterface.nextLine();
 
                 if (input.compareTo("quit") == 0) {
+					saveScheduler.cancel();
+
+                	printOutInterface.console("Do you want to save the game? (Yes/No)");
+                	String response = scannerInInterface.nextLine();
+
+                	if(response.equalsIgnoreCase("yes") || response.equalsIgnoreCase("y")){
+                		save();
+					}
                     for (GameGoal g : goals) {
                         PrintMessage.printConsole(g.getStatus());
                     }
@@ -163,7 +158,23 @@ public class Game {
                     help();
                 } else if (input.compareTo("status") == 0) {
                     status();
-                } else {
+                } else if(input.split(" ")[0].compareTo("save") == 0){
+					printOutInterface.console("save....");
+					if(input.split(" ").length > 1){
+						int min = Integer.parseInt(input.split(" ")[1]);
+						if(min < 1 || min >10){
+							printOutInterface.console("save time period  allow 1 min to 10 min");
+							printOutInterface.console("save fail");
+							continue;
+						}
+						save(min*1000*60);
+					}else {
+						save();
+					}
+				}else if(input.compareTo("load") == 0){
+					printOutInterface.console("load....");
+					load();
+				} else{
                     executeAction(this.interpreter.interpretString(input));
                     // every time an action is executed the game state must be evaluated
                     if (evaluateGame()) {
@@ -564,8 +575,199 @@ public class Game {
 		PrintMessage.printConsole("- " + indirobj.toString() + "\n");
 		PrintMessage.printConsole("- " + misc.toString() + "\n");
 		PrintMessage.printConsole("- You can inspect an inspectable item by typing \"Inspect <item>\"\n");
+		PrintMessage.printConsole("- You can save the game by typing \"save\"\n");
+		PrintMessage.printConsole("- You can periodic save the game by typing \"save <minute>\"\n");
+		PrintMessage.printConsole("- You can load the game by typing \"load\"\n");
 		PrintMessage.printConsole("- You can quit by typing \"quit\"\n");
 		PrintMessage.printConsole("- Good luck!\n");
+
+	}
+
+	public JSONObject roomArrayListConvertJSONObject(){
+        //save game's room list
+        JSONObject roomList = new JSONObject();
+
+        for(Room r : roomArrayList){
+            JSONObject room = new JSONObject();
+            JSONArray itemList = new JSONArray();
+            for(Item i : r.items){
+                itemList.add(i.toString());
+            }
+            room.put("room",r.shortDescription());
+            room.put("items",itemList);
+            roomList.put("room"+roomArrayList.indexOf(r),room);
+        }
+        return roomList;
+    }
+
+    public JSONArray visitedRoomListConvertJSONArray(){
+        //save vistied room list
+        JSONArray visitedRooms = new JSONArray();
+        for(Room r : player.getRoomsVisited()){
+            visitedRooms.add(r.shortDescription());
+        }
+        return visitedRooms;
+    }
+
+    public JSONArray collectedItemListConvertJSONArray(){
+        //save player's item list
+        JSONArray collectedItems = new JSONArray();
+        for(Item i : player.getCollectedItems()){
+            collectedItems.add(i.toString());
+        }
+        return collectedItems;
+    }
+
+    public void save(int period){
+		SaveTask saveTask = new SaveTask(this);
+		saveScheduler.schedule(saveTask,100,period);
+	}
+
+	public synchronized void save()  {
+		printOutInterface.console("Save start");
+
+		JSONObject jsonObject = new JSONObject();
+
+		//Save this.roomArrayList
+		jsonObject.put("roomList",roomArrayListConvertJSONObject());
+
+        //Save player.getRoomsVisited()
+		jsonObject.put("visitedRoomList",visitedRoomListConvertJSONArray());
+
+		//Save player score
+		jsonObject.put("score",player.getScore());
+
+        //Save player.getCollectedItems()
+		jsonObject.put("collectedItems",collectedItemListConvertJSONArray());
+
+		//Save player current room
+		jsonObject.put("currentRoom",player.currentRoom().shortDescription());
+
+        try {
+            writeFileInterface.write(gameName,jsonObject.toJSONString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        printOutInterface.console("Save Done");
+	}
+
+	public List<Room> loadRoomArrayList(JSONObject roomList){
+        //make load rooms status
+        List<Room> loadedRooms = new ArrayList<>();
+
+        for(int i = 0; i<roomList.size(); i++){
+
+            JSONObject roomNumber = (JSONObject) roomList.get("room"+i);
+
+            //get room description and make room
+            String roomDescription = (String) roomNumber.get("room");
+            Room room = new Room("",roomDescription);
+
+            //make item list
+            JSONArray itemList = (JSONArray) roomNumber.get("items");
+            ArrayList<Item> itemArrayList = new ArrayList<>();
+            Iterator<String> iterator = itemList.iterator();
+            while (iterator.hasNext()){
+                itemArrayList.add(Item.getInstance(iterator.next()));
+            }
+
+            //clear item list then put new item list
+            room.items.clear();
+            room.putItems(itemArrayList);
+
+            loadedRooms.add(room);
+        }
+
+        return loadedRooms;
+    }
+
+    public void updateRoomsItemList(List<Room> loadedRooms){
+        for(Room gameRoom : roomArrayList){
+            for(Room loadRoom : loadedRooms){
+                if(gameRoom.shortDescription().equals(loadRoom.shortDescription())){
+                    gameRoom.items.clear();
+                    gameRoom.putItems(loadRoom.items);
+                }
+            }
+        }
+    }
+
+    public void updateCurrentRoom(String currentRoom){
+        //set current room
+
+        for(Room gameRoom : roomArrayList){
+            if(gameRoom.toString().compareTo(currentRoom) == 0){
+                player.setCurrentRoom(gameRoom);
+                break;
+            }
+        }
+    }
+
+    public void updateVisitedRoomList(JSONArray visitiedRooms){
+        Iterator<String> iterator = visitiedRooms.iterator();
+        if(iterator.hasNext()){
+            //clear visited room list
+            player.getRoomsVisited().clear();
+        }
+        while (iterator.hasNext()){
+            String visitedRoom = iterator.next();
+            for(Room gameRoom :roomArrayList){
+                if(gameRoom.shortDescription().compareTo(visitedRoom) == 0){
+                    gameRoom.setRoomWasVisited(true);
+                    player.getRoomsVisited().add(gameRoom);
+                }
+            }
+        }
+    }
+
+    public void updateCollectedItemList(JSONArray collectedItems){
+        Iterator<String> collectedItemsiterator = collectedItems.iterator();
+
+        //clear player's collected items
+        player.getCollectedItems().clear();
+
+        while (collectedItemsiterator.hasNext()){
+            player.grabItem(Item.getInstance(collectedItemsiterator.next()));
+        }
+    }
+
+	public synchronized void load(){
+		JSONParser jsonParser = new JSONParser();
+
+		try {
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(readFileInterface.read(gameName));
+
+			//load room status
+			JSONObject roomList = (JSONObject)jsonObject.get("roomList");
+			List<Room> loadedRooms = loadRoomArrayList(roomList);
+
+			//upadate roomArrayList's item list
+            updateRoomsItemList(loadedRooms);
+
+			//set current room
+			String currentRoom = (String)jsonObject.get("currentRoom");
+            updateCurrentRoom(currentRoom);
+
+			//set visitedRoomList
+			JSONArray visitiedRooms = (JSONArray) jsonObject.get("visitedRoomList");
+			updateVisitedRoomList(visitiedRooms);
+
+			//set collected items
+			JSONArray collectedItems = (JSONArray) jsonObject.get("collectedItems");
+            updateCollectedItemList(collectedItems);
+
+			//load player score
+			int loadedScore = (int)(long)jsonObject.get("score");
+			player.setScore(loadedScore);
+
+			evaluateGame();
+			status();
+
+		} catch (Exception e) {
+				printOutInterface.console("The save file does not exist.");
+				printOutInterface.console("Load failed.");
+		}
 
 	}
 

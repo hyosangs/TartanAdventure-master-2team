@@ -41,6 +41,10 @@ public class CollectGame extends GameConfiguration {
         Room mid2 = new Room("Ferocious bear", "bear");
         Room end = new RoomLockable("You are inside of a building", "Building interior", true, Item.getInstance("key"));
 
+        game.roomArrayList.add(mid1);
+        game.roomArrayList.add(mid2);
+        game.roomArrayList.add(end);
+
         end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);
 
         List<Item> startItems = new LinkedList<>();
@@ -54,6 +58,8 @@ public class CollectGame extends GameConfiguration {
         start.setAdjacentRoom(Action.ACTION_GO_EAST, mid2);
         start.setAdjacentRoom(Action.ACTION_GO_WEST, end);
         start.putItems(startItems);
+
+        game.roomArrayList.add(start);
 
         // Now we configure the goal based on picking up items
         List<String> goalItems = new LinkedList<>();
