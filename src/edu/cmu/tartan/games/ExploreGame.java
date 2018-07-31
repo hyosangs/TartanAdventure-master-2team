@@ -38,6 +38,10 @@ public class ExploreGame extends GameConfiguration {
         Room room2 = new Room("You are in the second room. You can go South to return to the beginning and you can go East to get to Room 3.", "Room2");
         Room room3 = new Room("You are in the third room. You can go West to return to the Room 2.", "Room3");
 
+        game.roomArrayList.add(room1);
+        game.roomArrayList.add(room2);
+        game.roomArrayList.add(room3);
+
         // player would type 'go north'
         room1.setAdjacentRoom(Action.ACTION_GO_NORTH, room2);
         room2.setAdjacentRoom(Action.ACTION_GO_EAST, room3);

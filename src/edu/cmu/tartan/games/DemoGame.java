@@ -34,19 +34,28 @@ public class DemoGame extends GameConfiguration {
         Room room1 = new Room("You are in the first room. There seems to be a dark room to the East.",
                 "Room1");
 
+        game.roomArrayList.add(room1);
+
         // put the item in room1 for use in room 2
         room1.putItem(Item.getInstance("torch"));
         RoomDark room2 = new RoomDark("You are in a dark room. You can go South to West to the beginning and you can go South",
                 "room2", "You cannot see", "blind!");
 
 
+        game.roomArrayList.add(room2);
+
         Room room3 = new Room("You are in room3. There is a locked room to the West and a room to the East.",
                 "room3");
+
+        game.roomArrayList.add(room3);
 
         Item key = Item.getInstance("key");
         // Install the lock and key to open room 4
         Room room4 = new RoomLockable("You are in the locked room. There is a fridge here", "locked",
                 true, key);
+
+        game.roomArrayList.add(room4);
+
         // Create the new lock item (note that key was created above)
         Item lock = Item.getInstance("lock");
         ((ItemLock) lock).install(key);
@@ -60,6 +69,8 @@ public class DemoGame extends GameConfiguration {
         RoomRequiredItem room6 = new RoomRequiredItem("You are in the room that required food", "Required",
                 "food", "Warning you need food", food);
 
+        game.roomArrayList.add(room6);
+
         room3.putItem(food);
         Item fridge = Item.getInstance("fridge");
         RoomObscured room5 = new RoomObscured("Obscured Room 5" ,"Room5", fridge);
@@ -67,6 +78,8 @@ public class DemoGame extends GameConfiguration {
         room5.setUnobscureMessage("You've revelealed a hidden room to the West!");
         room5.setObscureMessage("This room is hidden");
         fridge.setRelatedRoom(room5);
+
+        game.roomArrayList.add(room5);
 
         room4.putItem(fridge);
 

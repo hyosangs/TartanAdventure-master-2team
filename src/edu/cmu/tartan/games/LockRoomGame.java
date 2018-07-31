@@ -41,6 +41,10 @@ public class LockRoomGame extends GameConfiguration {
         Room end = new RoomLockable("You are inside of a building", "interior",
                 true, key);
 
+        game.roomArrayList.add(mid1);
+        game.roomArrayList.add(mid2);
+        game.roomArrayList.add(end);
+
         end.setAdjacentRoom(Action.ACTION_GO_NORTHEAST, mid1);
 
         List<Item> startItems = new LinkedList<>();
@@ -60,6 +64,8 @@ public class LockRoomGame extends GameConfiguration {
         start.setAdjacentRoom(Action.ACTION_GO_EAST, mid2);
         start.setAdjacentRoom(Action.ACTION_GO_WEST, end);
         start.putItems(startItems);
+
+        game.roomArrayList.add(start);
 
         List<String> goals = new LinkedList<>();
         goals.add("Fork");

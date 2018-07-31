@@ -17,6 +17,10 @@ public class GamePointsGoal implements GameGoal {
     // The player working to achieve this goal
     private Player player;
 
+    public Integer getWinningScore() {
+        return winningScore;
+    }
+
     public GamePointsGoal(Integer g, Player p) {
         this.winningScore = g;
         this.player = p;

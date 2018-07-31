@@ -16,7 +16,19 @@ public class LGTestRunnerJUnit {
     public static void main(String[] args) {
 
         // Load and run the tests defined in the LGTests class
-        Result result = JUnitCore.runClasses(ActionTest.class);
+        Result result = JUnitCore.runClasses(GameTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(GameCollectGoalTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(GameExploreGoalTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(GamePointsGoalTest.class);
+        printResult(result);
+
+        result = JUnitCore.runClasses(ActionTest.class);
         printResult(result);
 
         result = JUnitCore.runClasses(ItemBrickTest.class);
@@ -119,18 +131,6 @@ public class LGTestRunnerJUnit {
         printResult(result);
 
         result = JUnitCore.runClasses(RoomTest.class);
-        printResult(result);
-
-        result = JUnitCore.runClasses(GameTest.class);
-        printResult(result);
-
-        result = JUnitCore.runClasses(GameCollectGoalTest.class);
-        printResult(result);
-
-        result = JUnitCore.runClasses(GameExploreGoalTest.class);
-        printResult(result);
-
-        result = JUnitCore.runClasses(GamePointsGoalTest.class);
         printResult(result);
     }
 

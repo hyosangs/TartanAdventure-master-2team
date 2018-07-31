@@ -11,7 +11,7 @@ Contributors:
 Marc R. Hoffmann - initial API and implementation
 -->
 
-<project name="Example Ant Build of RpnCalculator with JaCoCo" default="rebuild" xmlns:jacoco="antlib:org.jacoco.ant">
+<project name="Ant Build of Tartan Adventure Game with JaCoCo" default="rebuild" xmlns:jacoco="antlib:org.jacoco.ant">
 
 <description>
   Example Ant build file that demonstrates how a JaCoCo coverage report
@@ -47,6 +47,7 @@ Marc R. Hoffmann - initial API and implementation
       <pathelement location="./lib/byte-buddy-1.8.10.jar"/>
       <pathelement location="./lib/byte-buddy-agent-1.8.10.jar"/>
       <pathelement location="./lib/objenesis-2.6.jar"/>
+      <pathelement location="./lib/json-simple-1.1.1.jar"/>
     </classpath>
   </javac>
 
@@ -60,6 +61,7 @@ Marc R. Hoffmann - initial API and implementation
       <pathelement location="./lib/byte-buddy-1.8.10.jar"/>
       <pathelement location="./lib/byte-buddy-agent-1.8.10.jar"/>
       <pathelement location="./lib/objenesis-2.6.jar"/>
+      <pathelement location="./lib/json-simple-1.1.1.jar"/>
     </classpath>
   </javac>
 
@@ -78,6 +80,7 @@ Marc R. Hoffmann - initial API and implementation
         <pathelement location="./lib/byte-buddy-1.8.10.jar"/>
         <pathelement location="./lib/byte-buddy-agent-1.8.10.jar"/>
         <pathelement location="./lib/objenesis-2.6.jar"/>
+        <pathelement location="./lib/json-simple-1.1.1.jar"/>
       </classpath>
     </java>
   </jacoco:coverage>

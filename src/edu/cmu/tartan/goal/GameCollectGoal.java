@@ -15,7 +15,16 @@ import java.util.ArrayList;
  * 1.0 March 2018 - initial version
  */
 public class GameCollectGoal implements GameGoal {
+    public Player getPlayer() {
+        return player;
+    }
+
     private Player player = null;
+
+    public List<String> getItemsList() {
+        return itemsList;
+    }
+
     private List<String> itemsList = new ArrayList<>();
     private int count=0;
 
