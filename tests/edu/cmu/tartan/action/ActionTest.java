@@ -293,6 +293,18 @@ public class ActionTest {
 
     @Test
     public void actionDig() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_DIG;
+
+        ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee");
+        action.setDirectObject(coffee);
+        room.player.currentRoom().putItem(coffee);
+
+        action.actionDig(playerInterpreter.interpretString("dig coffee"), room.player);
+
+        assertEquals(0, room.player.getScore());
     }
 
     @Test
@@ -328,11 +340,67 @@ public class ActionTest {
     }
 
     @Test
-    public void actionEnable() {
+    public void actionEnableNoItem() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_ENABLE;
+
+        ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee");
+        action.setDirectObject(coffee);
+        room.player.currentRoom().putItem(coffee);
+
+        action.actionEnable(playerInterpreter.interpretString("start key"), room.player);
+
+        assertEquals(0, room.player.getScore());
     }
 
     @Test
-    public void actionShake() {
+    public void actionEnableCoffee() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_ENABLE;
+
+        ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee");
+        action.setDirectObject(coffee);
+        room.player.currentRoom().putItem(coffee);
+
+        action.actionEnable(playerInterpreter.interpretString("start coffee"), room.player);
+
+        assertEquals(0, room.player.getScore());
+    }
+
+    @Test
+    public void actionShakeCoffee() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_SHAKE;
+
+        ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee");
+        action.setDirectObject(coffee);
+        room.player.currentRoom().putItem(coffee);
+
+        action.actionShake(playerInterpreter.interpretString("shake coffee"), room.player);
+
+        assertEquals(0, room.player.getScore());
+    }
+
+    @Test
+    public void actionShakeNoItem() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_SHAKE;
+
+        ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee");
+        action.setDirectObject(coffee);
+        room.player.currentRoom().putItem(coffee);
+
+        action.actionShake(playerInterpreter.interpretString("shake key"), room.player);
+
+        assertEquals(0, room.player.getScore());
     }
 
     @Test
@@ -367,7 +435,35 @@ public class ActionTest {
     }
 
     @Test
-    public void actionInspect() {
+    public void actionInspectCoffee() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_INSPECT;
+
+        ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee");
+        action.setDirectObject(coffee);
+        room.player.currentRoom().putItem(coffee);
+
+        action.actionInspect(playerInterpreter.interpretString("inspect coffee"), room.player);
+
+        assertEquals(0, room.player.getScore());
+    }
+
+    @Test
+    public void actionInspectNoItem() {
+        PlayerInterpreter playerInterpreter = new PlayerInterpreter();
+        Room room = new Room();
+        room.player = new Player(room);
+        Action action = Action.ACTION_INSPECT;
+
+        ItemCoffee coffee = (ItemCoffee)Item.getInstance("coffee");
+        action.setDirectObject(coffee);
+        room.player.currentRoom().putItem(coffee);
+
+        action.actionInspect(playerInterpreter.interpretString("inspect key"), room.player);
+
+        assertEquals(0, room.player.getScore());
     }
 
     @Test
