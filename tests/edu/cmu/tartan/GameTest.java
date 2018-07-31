@@ -997,4 +997,195 @@ public class GameTest {
         game.clearSaveTask();
     }
 
+    @Test
+    public void updateCurrentRoomWhenRoomArrayListNull(){
+        Game game = new Game();
+
+        String currentRoom = "room2";
+        List<Room> rooms = new ArrayList<>();
+        Room room1 = mock(Room.class);
+
+        when(room1.toString()).thenReturn("room1");
+
+
+        Player player = new Player(room1);
+        game.setPlayer(player);
+
+        game.roomArrayList = rooms;
+        game.updateCurrentRoom(currentRoom);
+
+        assertEquals(player.currentRoom(),room1);
+
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void updateVisitedRoomListWhenVisitiedRoomsEmpty(){
+        Game game = new Game();
+        List<Room> rooms = new ArrayList<>();
+        Room room1 = mock(Room.class);
+
+        game.roomArrayList = rooms;
+
+        when(room1.shortDescription()).thenReturn("room1");
+
+        Player player = new Player(room1);
+        game.setPlayer(player);
+
+        JSONArray visitedRooms = new JSONArray();
+
+        game.updateVisitedRoomList(visitedRooms);
+
+        assertEquals(0,player.getRoomsVisited().size());
+
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void loadTestWhenLoadFileNotExist(){
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+
+        Game game = new Game(scannerInInterface,printOutInterface);
+        game.clearSaveTask();
+        Room room = new Room();
+        Player player = new Player(room);
+        game.setPlayer(player);
+
+        game.setGameName("loadTestWhenLoadFileNotExist");
+
+        game.load();
+
+        verify(printOutInterface, times(1)).console("The save file does not exist.");
+        verify(printOutInterface, times(1)).console("Load failed.");
+    }
+
+    @Test
+    public void WhenQuitThenInputYes(){
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+        game.clearSaveTask();
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("quit").thenReturn("yes");
+        game.start();
+
+        File file = new File("Demo");
+        assertTrue(file.exists());
+        file.delete();
+    }
+
+    @Test
+    public void WhenQuitThenInputY(){
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+        game.clearSaveTask();
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("quit").thenReturn("y");
+        game.start();
+
+        File file = new File("Demo");
+        assertTrue(file.exists());
+        file.delete();
+    }
+
+    @Test
+    public void WhenStartThenSaveTest(){
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+        game.clearSaveTask();
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("save").thenReturn("quit").thenReturn("n");
+        game.start();
+
+        File file = new File("Demo");
+        assertTrue(file.exists());
+        file.delete();
+
+    }
+
+    @Test
+    public void WhenStartThenSaveOneMinTest() {
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("save 1").thenReturn("quit").thenReturn("n");
+        game.start();
+
+        verify(printOutInterface,times(1)).console("[Game Configuration]");
+        verify(printOutInterface,times(1)).console("[Show Intro]");
+        verify(printOutInterface, times(1)).console("save....");
+
+        game.clearSaveTask();
+
+    }
+
+    @Test
+    public void WhenStartThenSaveZeroMinTest() {
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("save 0").thenReturn("quit").thenReturn("n");
+        game.start();
+
+        verify(printOutInterface,times(1)).console("[Game Configuration]");
+        verify(printOutInterface,times(1)).console("[Show Intro]");
+        verify(printOutInterface, times(1)).console("save....");
+        verify(printOutInterface, times(1)).console("save time period  allow 1 min to 10 min");
+
+        game.clearSaveTask();
+
+    }
+
+    @Test
+    public void WhenStartThenSaveElevenMinTest() {
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("save 11").thenReturn("quit").thenReturn("n");
+        game.start();
+
+        verify(printOutInterface,times(1)).console("[Game Configuration]");
+        verify(printOutInterface,times(1)).console("[Show Intro]");
+        verify(printOutInterface, times(1)).console("save....");
+        verify(printOutInterface, times(1)).console("save time period  allow 1 min to 10 min");
+
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void WhenStartThenLoadTest() {
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("load").thenReturn("quit").thenReturn("n");
+        game.start();
+
+        verify(printOutInterface,times(1)).console("[Game Configuration]");
+        verify(printOutInterface,times(1)).console("[Show Intro]");
+        verify(printOutInterface, times(1)).console("load....");
+
+        game.clearSaveTask();
+    }
+
 }
