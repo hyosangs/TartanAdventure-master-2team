@@ -291,4 +291,8 @@ public class Room implements Comparable {
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
     }
+
+    public List<Item> getItems() {
+        return items;
+    }
 }

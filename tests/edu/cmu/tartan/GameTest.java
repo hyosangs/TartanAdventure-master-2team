@@ -1,15 +1,17 @@
 package edu.cmu.tartan;
 
-import edu.cmu.tartan.Game;
-import edu.cmu.tartan.Player;
 import edu.cmu.tartan.goal.DemoGoal;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
 import edu.cmu.tartan.util.PrintOutInterface;
 import edu.cmu.tartan.util.ScannerInInterface;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -30,6 +32,8 @@ public class GameTest {
 
         // Then
         verify(printOutInterface).console("[Game Configuration]");
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -45,6 +49,8 @@ public class GameTest {
 
         // Then
         verify(printOutInterface).console("[Help Description]");
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -60,6 +66,8 @@ public class GameTest {
 
         // Then
         verify(printOutInterface).console("Invalid input.");
+
+        game.clearSaveTask();
     }
 
 
@@ -78,6 +86,8 @@ public class GameTest {
 
         // then
         verify(printOutInterface).console("[Quit]");
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -95,6 +105,8 @@ public class GameTest {
 
         //then
         verify(printOutInterface).console("[Look at below]");
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -112,6 +124,8 @@ public class GameTest {
 
         // then
         verify(printOutInterface).console("[Help Description]");
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -129,6 +143,8 @@ public class GameTest {
 
         // then
         verify(printOutInterface).console("[Status of Game]");
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -146,6 +162,8 @@ public class GameTest {
 
         // then
         verify(printOutInterface).console(game.getPlayer().currentRoom().description());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -163,6 +181,8 @@ public class GameTest {
 
         // then
         assertTrue(game.getPlayer().getCollectedItems().contains(Item.getInstance("torch")));
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -180,6 +200,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -197,6 +219,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -214,6 +238,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -231,6 +257,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -248,6 +276,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -265,6 +295,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -282,6 +314,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -299,6 +333,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -316,6 +352,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -333,6 +371,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -350,6 +390,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -367,6 +409,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -384,6 +428,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -401,6 +447,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -418,6 +466,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -435,6 +485,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -452,6 +504,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -469,6 +523,8 @@ public class GameTest {
 
         // then
         assertEquals(0, game.getPlayer().getCollectedItems().size());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -486,6 +542,8 @@ public class GameTest {
 
         // then
         assertTrue(game.getPlayer().getCollectedItems().contains(Item.getInstance("torch")));
+
+        game.clearSaveTask();
     }
 
 
@@ -505,6 +563,8 @@ public class GameTest {
 
         // then
         verify(printOutInterface).console("[Win Game]\n");
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -519,6 +579,8 @@ public class GameTest {
 
         // then
         assertEquals(player, game.getPlayer());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -531,6 +593,8 @@ public class GameTest {
         // when
         game.addGoal(demoGoal);
         // then
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -544,6 +608,8 @@ public class GameTest {
 
         // then
         verify(printOutInterface).console("[Show Intro]");
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -557,6 +623,8 @@ public class GameTest {
 
         // then
         assertEquals(description, game.getGameDescription());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -571,6 +639,8 @@ public class GameTest {
 
         // then
         assertTrue(game.validate());
+
+        game.clearSaveTask();
     }
 
     @Test
@@ -583,5 +653,98 @@ public class GameTest {
 
         // then
         assertFalse(game.validate());
+
+        game.clearSaveTask();
+    }
+
+    @Ignore
+    @Test
+    public void saveCollectedItemTest(){
+        Game game = new Game();
+        Player player = mock(Player.class);
+
+        ArrayList<Item> items = new ArrayList<>();
+        Item item1 = mock(Item.class);
+        Item item2 = mock(Item.class);
+        Item item3 = mock(Item.class);
+
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+
+        when(player.getCollectedItems()).thenReturn(items);
+
+        game.setPlayer(player);
+
+        JSONArray result = game.collectedItemListConvertJSONArray();
+
+        assertEquals(3,result.size());
+
+        game.clearSaveTask();
+    }
+
+    @Ignore
+    @Test
+    public void saveVisitedRoomTest(){
+        Game game = new Game();
+        Player player = mock(Player.class);
+
+        ArrayList<Room> rooms = new ArrayList<>();
+        Room room1 = mock(Room.class);
+        Room room2 = mock(Room.class);
+        Room room3 = mock(Room.class);
+
+        rooms.add(room1);
+        rooms.add(room2);
+        rooms.add(room3);
+
+        game.setPlayer(player);
+
+        when(player.getRoomsVisited()).thenReturn(rooms);
+
+        JSONArray result = game.visitedRoomListConvertJSONArray();
+
+        assertEquals(3,result.size());
+
+        game.clearSaveTask();
+    }
+
+    @Ignore
+    @Test
+    public void saveRoomArrayListTest(){
+        Game game = new Game();
+
+        Room room1 = mock(Room.class);
+        Item item1 = mock(Item.class);
+        Item item2 = mock(Item.class);
+
+        ArrayList<Item> items = new ArrayList<>();
+        items.add(item1);
+        items.add(item2);
+
+        Room room2 = mock(Room.class);
+
+        game.roomArrayList.add(room1);
+        game.roomArrayList.add(room2);
+
+        when(room1.getItems()).thenReturn(items);
+        when(room1.shortDescription()).thenReturn("room1");
+        when(room2.shortDescription()).thenReturn("room2");
+
+        JSONObject result = game.roomArrayListConvertJSONObject();
+        JSONObject room0_result = (JSONObject) result.get("room0");
+        JSONArray room1_items = (JSONArray) room0_result.get("items");
+        JSONObject room1_result = (JSONObject) result.get("room1");
+        JSONArray room2_items = (JSONArray) room1_result.get("items");
+
+        //check JSONObejct
+        assertEquals(2,result.size());
+        assertEquals("room1", room0_result.get("room"));
+        assertEquals(2, room1_items.size());
+        assertEquals("room2", room1_result.get("room"));
+        assertEquals(0, room2_items.size());
+
+        game.clearSaveTask();
+
     }
 }

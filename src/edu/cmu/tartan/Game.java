@@ -146,7 +146,7 @@ public class Game {
                 input = this.scannerInInterface.nextLine();
 
                 if (input.compareTo("quit") == 0) {
-					saveScheduler.cancel();
+					clearSaveTask();
 
                 	printOutInterface.console("Do you want to save the game? (Yes/No)");
                 	String response = scannerInInterface.nextLine();
@@ -626,7 +626,7 @@ public class Game {
         for(Room r : roomArrayList){
             JSONObject room = new JSONObject();
             JSONArray itemList = new JSONArray();
-            for(Item i : r.items){
+            for(Item i : r.getItems()){
                 itemList.add(i.toString());
             }
             room.put("room",r.shortDescription());
@@ -657,6 +657,11 @@ public class Game {
     public void save(int period){
 		SaveTask saveTask = new SaveTask(this);
 		saveScheduler.schedule(saveTask,100,period);
+	}
+
+	public void clearSaveTask(){
+		saveScheduler.cancel();
+		saveScheduler.purge();
 	}
 
 	public synchronized void save()  {
