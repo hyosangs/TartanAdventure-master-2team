@@ -1,0 +1,1 @@
+{"score":100,"currentRoom":"room2","visitedRoomList":["room1","room2"],"collectedItems":["food"],"roomList":{"room1":{"items":[],"room":"room2"},"room0":{"items":["gold","key"],"room":"room1"}}}
