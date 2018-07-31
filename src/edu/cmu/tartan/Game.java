@@ -54,7 +54,7 @@ public class Game {
 	private PrintOutInterface printOutInterface;
 	private WriteFileInterface writeFileInterface;
 	private ReadFileInterface readFileInterface;
-	private Timer saveScheduler = new Timer();
+	private Timer saveScheduler;
 
 	public List<Room> roomArrayList = new ArrayList<>();
 
@@ -71,6 +71,7 @@ public class Game {
 		this.readFileInterface = new ReadFile();
 
 		this.interpreter = new PlayerInterpreter();
+		this.saveScheduler = new Timer();
 	}
 
 	public Game(ScannerInInterface scannerInInterface, PrintOutInterface printOutInterface){
@@ -78,6 +79,9 @@ public class Game {
 		this.printOutInterface = printOutInterface;
 
 		this.interpreter = new PlayerInterpreter();
+		this.writeFileInterface = new WriteFile();
+		this.readFileInterface = new ReadFile();
+		this.saveScheduler = new Timer();
 	}
 
     /**
@@ -305,6 +309,10 @@ public class Game {
 		for (GameGoal g : goals) {
 			this.player.addGoal(g);
 		}
+	}
+
+	public void setGameName(String gameName) {
+		this.gameName = gameName;
 	}
 
 	/**
@@ -536,21 +544,21 @@ public class Game {
 					+ goals.get(i).getStatus());
 		}
 		PrintMessage.printConsole("\n");
-		PrintMessage.printConsole("- Current room:  " + player.currentRoom() + "\n");
+		printOutInterface.console("- Current room:  " + player.currentRoom() + "\n");
 		PrintMessage.printConsole("- Items in current room: ");
-		for (Item i : player.currentRoom().items) {
+		for (Item i : player.currentRoom().getItems()) {
 			PrintMessage.printConsole("   * " + i.toString() + " ");
 		}
 		PrintMessage.printConsole("\n");
 
-		PrintMessage.printConsole("- Current score: " + player.getScore());
+		printOutInterface.console("- Current score: " + player.getScore());
 
 		PrintMessage.printConsole("- Current inventory: ");
 		if (player.getCollectedItems().isEmpty()) {
 			PrintMessage.printConsole("   You don't have any items.");
 		} else {
 			for (Item i : player.getCollectedItems()) {
-				PrintMessage.printConsole("   * " + i.toString() + " ");
+				printOutInterface.console("   * " + i.toString() + " ");
 			}
 		}
 		PrintMessage.printConsole("\n");
@@ -561,7 +569,7 @@ public class Game {
 			PrintMessage.printConsole("You have not been to any rooms.");
 		} else {
 			for (Room r : rooms) {
-				PrintMessage.printConsole("  * " + r.description() + " ");
+				printOutInterface.console("  * " + r.description() + " ");
 			}
 		}
 	}
@@ -727,8 +735,8 @@ public class Game {
         for(Room gameRoom : roomArrayList){
             for(Room loadRoom : loadedRooms){
                 if(gameRoom.shortDescription().equals(loadRoom.shortDescription())){
-                    gameRoom.items.clear();
-                    gameRoom.putItems(loadRoom.items);
+                    gameRoom.getItems().clear();
+                    gameRoom.putItems(loadRoom.getItems());
                 }
             }
         }
