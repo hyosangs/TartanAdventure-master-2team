@@ -256,7 +256,7 @@ public class ActionTest {
 
         action.actionExplode(playerInterpreter.interpretString("explode key"), room.player);
 
-        assertFalse(room.player.currentRoom().hasItem(key));
+        assertEquals(room.player.getScore(), 0);
     }
 
     @Test
