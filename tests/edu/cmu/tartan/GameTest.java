@@ -4,13 +4,12 @@ import edu.cmu.tartan.goal.DemoGoal;
 import edu.cmu.tartan.goal.GameGoal;
 import edu.cmu.tartan.item.Item;
 import edu.cmu.tartan.room.Room;
-import edu.cmu.tartan.util.PrintOutInterface;
-import edu.cmu.tartan.util.ScannerInInterface;
+import edu.cmu.tartan.util.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -647,17 +646,15 @@ public class GameTest {
     public void validateFalseTest(){
         // given
         Game game = new Game();
+        game.clearSaveTask();
 
         // when
         game.setDescription(null);
 
         // then
         assertFalse(game.validate());
-
-        game.clearSaveTask();
     }
 
-    @Ignore
     @Test
     public void saveCollectedItemTest(){
         Game game = new Game();
@@ -679,11 +676,10 @@ public class GameTest {
         JSONArray result = game.collectedItemListConvertJSONArray();
 
         assertEquals(3,result.size());
-
         game.clearSaveTask();
     }
 
-    @Ignore
+
     @Test
     public void saveVisitedRoomTest(){
         Game game = new Game();
@@ -709,7 +705,7 @@ public class GameTest {
         game.clearSaveTask();
     }
 
-    @Ignore
+
     @Test
     public void saveRoomArrayListTest(){
         Game game = new Game();
@@ -745,6 +741,451 @@ public class GameTest {
         assertEquals(0, room2_items.size());
 
         game.clearSaveTask();
+    }
+
+    @Test
+    public void saveTest(){
+        Game game = new Game();
+
+        Room room1 = mock(Room.class);
+        Item item1 = mock(Item.class);
+        Item item2 = mock(Item.class);
+
+        ArrayList<Item> items = new ArrayList<>();
+        items.add(item1);
+        items.add(item2);
+
+        Room room2 = mock(Room.class);
+
+        game.roomArrayList.add(room1);
+        game.roomArrayList.add(room2);
+
+        when(room1.getItems()).thenReturn(items);
+        when(room1.shortDescription()).thenReturn("room1");
+        when(room2.shortDescription()).thenReturn("room2");
+
+        game.setGameName("test");
+
+        Player player = mock(Player.class);
+        game.setPlayer(player);
+
+        when(player.currentRoom()).thenReturn(room1);
+
+        game.save();
+        File file = new File("test");
+        assertTrue(file.exists());
+
+        file.delete();
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void loadRoomArrayListTest() {
+        JSONObject jsonObject = new JSONObject();
+
+        //make room1
+        JSONObject room1 = new JSONObject();
+        room1.put("room","room1");
+
+        JSONArray itemList1 = new JSONArray();
+        itemList1.add("item1");
+        itemList1.add("item2");
+        room1.put("items",itemList1);
+        jsonObject.put("room0",room1);
+
+        //make room2
+        JSONObject room2 = new JSONObject();
+        JSONArray itemList2 = new JSONArray();
+        room2.put("room","room2");
+        room2.put("items",itemList2);
+        jsonObject.put("room1",room2);
+
+        //make room3
+        JSONObject room3 = new JSONObject();
+        JSONArray itemList3 = new JSONArray();
+        room3.put("room","room3");
+        room3.put("items",itemList3);
+        jsonObject.put("room2",room3);
+
+        Game game = new Game();
+
+
+        List<Room> roomArrayList = game.loadRoomArrayList(jsonObject);
+        assertEquals(3,roomArrayList.size());
+        assertEquals("room1",roomArrayList.get(0).shortDescription());
+        assertEquals("room2",roomArrayList.get(1).shortDescription());
+        assertEquals("room3",roomArrayList.get(2).shortDescription());
+        assertEquals(2,roomArrayList.get(0).items.size());
+
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void updateRoomsItemListTest(){
+        Game game = new Game();
+
+        List<Room> rooms = new ArrayList<>();
+        Room room1 = mock(Room.class);
+        Room room2 = mock(Room.class);
+        Room room3 = mock(Room.class);
+
+        rooms.add(room1);
+        rooms.add(room2);
+        rooms.add(room3);
+
+        List<Item> items1 = new ArrayList<>();
+        Item item1 = mock(Item.class);
+        Item item2 = mock(Item.class);
+
+        items1.add(item1);
+        items1.add(item2);
+
+        List<Item> items2 = new ArrayList<>();
+        List<Item> items3 = new ArrayList<>();
+
+        when(room1.shortDescription()).thenReturn("room1");
+        when(room2.shortDescription()).thenReturn("room2");
+        when(room3.shortDescription()).thenReturn("room3");
+
+        when(room1.getItems()).thenReturn(items1);
+        when(room2.getItems()).thenReturn(items2);
+        when(room3.getItems()).thenReturn(items3);
+
+
+        game.roomArrayList = rooms;
+        game.updateRoomsItemList(rooms);
+
+        assertEquals(rooms,game.roomArrayList);
+
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void updateCurrentRoomTest(){
+        Game game = new Game();
+
+        String currentRoom = "room2";
+        List<Room> rooms = new ArrayList<>();
+        Room room1 = mock(Room.class);
+        Room room2 = mock(Room.class);
+        Room room3 = mock(Room.class);
+        rooms.add(room1);
+        rooms.add(room2);
+        rooms.add(room3);
+
+        when(room1.toString()).thenReturn("room1");
+        when(room2.toString()).thenReturn("room2");
+        when(room3.toString()).thenReturn("room3");
+
+        Player player = new Player(room1);
+        game.setPlayer(player);
+
+        game.roomArrayList = rooms;
+        game.updateCurrentRoom(currentRoom);
+
+        assertEquals(player.currentRoom(),room2);
+
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void updateVisitedRoomListTest(){
+        Game game = new Game();
+        List<Room> rooms = new ArrayList<>();
+        Room room1 = mock(Room.class);
+        Room room2 = mock(Room.class);
+        Room room3 = mock(Room.class);
+
+        rooms.add(room1);
+        rooms.add(room2);
+        rooms.add(room3);
+
+        game.roomArrayList = rooms;
+
+        when(room1.shortDescription()).thenReturn("room1");
+        when(room2.shortDescription()).thenReturn("room2");
+        when(room3.shortDescription()).thenReturn("room3");
+
+        Player player = new Player(room1);
+        game.setPlayer(player);
+
+        JSONArray visitedRooms = new JSONArray();
+        visitedRooms.add("room1");
+        visitedRooms.add("room2");
+
+        game.updateVisitedRoomList(visitedRooms);
+
+        assertEquals(2,player.getRoomsVisited().size());
+
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void updateCollectedItemListTest(){
+        Game game = new Game();
+        Room room = new Room();
+        Player player = new Player(room);
+        game.setPlayer(player);
+
+        JSONArray items = new JSONArray();
+        items.add("key");
+        items.add("gold");
+        items.add("food");
+
+        game.updateCollectedItemList(items);
+
+        assertEquals(3,player.getCollectedItems().size());
+
+        game.clearSaveTask();
 
     }
+
+    @Test
+    public void loadTest(){
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+
+        Game game = new Game(scannerInInterface,printOutInterface);
+        Room room = new Room();
+        Player player = new Player(room);
+        game.setPlayer(player);
+
+        List<Room> rooms = new ArrayList<>();
+
+        Room room1 = mock(Room.class);
+        Room room2 = mock(Room.class);
+        Room room3 = mock(Room.class);
+
+        rooms.add(room1);
+        rooms.add(room2);
+        rooms.add(room3);
+
+        List<Item> items1 = new ArrayList<>();
+        List<Item> items2 = new ArrayList<>();
+        List<Item> items3 = new ArrayList<>();
+
+
+        when(room1.shortDescription()).thenReturn("room1");
+        when(room2.shortDescription()).thenReturn("room2");
+        when(room3.shortDescription()).thenReturn("room3");
+
+        when(room1.description()).thenReturn("room1");
+        when(room2.description()).thenReturn("room2");
+        when(room3.description()).thenReturn("room3");
+
+        when(room1.toString()).thenReturn("room1");
+        when(room2.toString()).thenReturn("room2");
+        when(room3.toString()).thenReturn("room3");
+
+        when(room1.getItems()).thenReturn(items1);
+        when(room2.getItems()).thenReturn(items2);
+        when(room3.getItems()).thenReturn(items3);
+
+        game.roomArrayList = rooms;
+
+        game.setGameName("loadTest");
+
+        game.load();
+
+        verify(printOutInterface,times(1)).console("[Status of Game]");
+        verify(printOutInterface,times(1)).console("- Current room:  room2"+"\n");
+        verify(printOutInterface,times(1)).console("- Current score: 100");
+        verify(printOutInterface,times(1)).console("   * food ");
+        verify(printOutInterface,times(1)).console("  * room1 ");
+        verify(printOutInterface,times(1)).console("  * room2 ");
+
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void updateCurrentRoomWhenRoomArrayListNull(){
+        Game game = new Game();
+
+        String currentRoom = "room2";
+        List<Room> rooms = new ArrayList<>();
+        Room room1 = mock(Room.class);
+
+        when(room1.toString()).thenReturn("room1");
+
+
+        Player player = new Player(room1);
+        game.setPlayer(player);
+
+        game.roomArrayList = rooms;
+        game.updateCurrentRoom(currentRoom);
+
+        assertEquals(player.currentRoom(),room1);
+
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void updateVisitedRoomListWhenVisitiedRoomsEmpty(){
+        Game game = new Game();
+        List<Room> rooms = new ArrayList<>();
+        Room room1 = mock(Room.class);
+
+        game.roomArrayList = rooms;
+
+        when(room1.shortDescription()).thenReturn("room1");
+
+        Player player = new Player(room1);
+        game.setPlayer(player);
+
+        JSONArray visitedRooms = new JSONArray();
+
+        game.updateVisitedRoomList(visitedRooms);
+
+        assertEquals(0,player.getRoomsVisited().size());
+
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void loadTestWhenLoadFileNotExist(){
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+
+        Game game = new Game(scannerInInterface,printOutInterface);
+        game.clearSaveTask();
+        Room room = new Room();
+        Player player = new Player(room);
+        game.setPlayer(player);
+
+        game.setGameName("loadTestWhenLoadFileNotExist");
+
+        game.load();
+
+        verify(printOutInterface, times(1)).console("The save file does not exist.");
+        verify(printOutInterface, times(1)).console("Load failed.");
+    }
+
+    @Test
+    public void WhenQuitThenInputYes(){
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+        game.clearSaveTask();
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("quit").thenReturn("yes");
+        game.start();
+
+        File file = new File("Demo");
+        assertTrue(file.exists());
+        file.delete();
+    }
+
+    @Test
+    public void WhenQuitThenInputY(){
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+        game.clearSaveTask();
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("quit").thenReturn("y");
+        game.start();
+
+        File file = new File("Demo");
+        assertTrue(file.exists());
+        file.delete();
+    }
+
+    @Test
+    public void WhenStartThenSaveTest(){
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+        game.clearSaveTask();
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("save").thenReturn("quit").thenReturn("n");
+        game.start();
+
+        File file = new File("Demo");
+        assertTrue(file.exists());
+        file.delete();
+
+    }
+
+    @Test
+    public void WhenStartThenSaveOneMinTest() {
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("save 1").thenReturn("quit").thenReturn("n");
+        game.start();
+
+        verify(printOutInterface,times(1)).console("[Game Configuration]");
+        verify(printOutInterface,times(1)).console("[Show Intro]");
+        verify(printOutInterface, times(1)).console("save....");
+
+        game.clearSaveTask();
+
+    }
+
+    @Test
+    public void WhenStartThenSaveZeroMinTest() {
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("save 0").thenReturn("quit").thenReturn("n");
+        game.start();
+
+        verify(printOutInterface,times(1)).console("[Game Configuration]");
+        verify(printOutInterface,times(1)).console("[Show Intro]");
+        verify(printOutInterface, times(1)).console("save....");
+        verify(printOutInterface, times(1)).console("save time period  allow 1 min to 10 min");
+
+        game.clearSaveTask();
+
+    }
+
+    @Test
+    public void WhenStartThenSaveElevenMinTest() {
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("save 11").thenReturn("quit").thenReturn("n");
+        game.start();
+
+        verify(printOutInterface,times(1)).console("[Game Configuration]");
+        verify(printOutInterface,times(1)).console("[Show Intro]");
+        verify(printOutInterface, times(1)).console("save....");
+        verify(printOutInterface, times(1)).console("save time period  allow 1 min to 10 min");
+
+        game.clearSaveTask();
+    }
+
+    @Test
+    public void WhenStartThenLoadTest() {
+        PrintOutInterface printOutInterface = mock(PrintOut.class);
+        ScannerInInterface scannerInInterface = mock(ScannerIn.class);
+        Game game = new Game(scannerInInterface, printOutInterface);
+
+        when(scannerInInterface.nextLine()).thenReturn("8");
+        game.configureGame();
+        when(scannerInInterface.nextLine()).thenReturn("load").thenReturn("quit").thenReturn("n");
+        game.start();
+
+        verify(printOutInterface,times(1)).console("[Game Configuration]");
+        verify(printOutInterface,times(1)).console("[Show Intro]");
+        verify(printOutInterface, times(1)).console("load....");
+
+        game.clearSaveTask();
+    }
+
 }
