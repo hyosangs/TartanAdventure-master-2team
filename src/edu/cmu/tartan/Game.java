@@ -677,20 +677,7 @@ public class Game {
 
 		JSONObject jsonObject = new JSONObject();
 
-		//Save this.roomArrayList
-		jsonObject.put("roomList",roomArrayListConvertJSONObject());
-
-        //Save player.getRoomsVisited()
-		jsonObject.put("visitedRoomList",visitedRoomListConvertJSONArray());
-
-		//Save player score
-		jsonObject.put("score",player.getScore());
-
-        //Save player.getCollectedItems()
-		jsonObject.put("collectedItems",collectedItemListConvertJSONArray());
-
-		//Save player current room
-		jsonObject.put("currentRoom",player.currentRoom().shortDescription());
+		getJsonFromGameData(jsonObject);
 
         try {
             writeFileInterface.write(gameName,jsonObject.toJSONString());
@@ -699,6 +686,34 @@ public class Game {
         }
 
         printOutInterface.console("Save Done");
+	}
+
+	public void getJsonFromGameData(JSONObject jsonObject){
+		getRoomArrayJson(jsonObject);
+		getVisitedRoomListJson(jsonObject);
+		getScoreJson(jsonObject);
+		getCollectedItemListJson(jsonObject);
+		getCurrentRoomJson(jsonObject);
+	}
+
+	public void getRoomArrayJson(JSONObject jsonObject){
+		jsonObject.put("roomList",roomArrayListConvertJSONObject());
+	}
+
+	public void getVisitedRoomListJson(JSONObject jsonObject) {
+		jsonObject.put("visitedRoomList", visitedRoomListConvertJSONArray());
+	}
+
+	public void getScoreJson(JSONObject jsonObject) {
+		jsonObject.put("score", player.getScore());
+	}
+
+	public void getCollectedItemListJson(JSONObject jsonObject) {
+		jsonObject.put("collectedItems", collectedItemListConvertJSONArray());
+	}
+
+	public void getCurrentRoomJson(JSONObject jsonObject) {
+		jsonObject.put("currentRoom", player.currentRoom().shortDescription());
 	}
 
 	public List<Room> loadRoomArrayList(JSONObject roomList){
@@ -787,28 +802,7 @@ public class Game {
 		try {
 			JSONObject jsonObject = (JSONObject) jsonParser.parse(readFileInterface.read(gameName));
 
-			//load room status
-			JSONObject roomList = (JSONObject)jsonObject.get("roomList");
-			List<Room> loadedRooms = loadRoomArrayList(roomList);
-
-			//upadate roomArrayList's item list
-            updateRoomsItemList(loadedRooms);
-
-			//set current room
-			String currentRoom = (String)jsonObject.get("currentRoom");
-            updateCurrentRoom(currentRoom);
-
-			//set visitedRoomList
-			JSONArray visitiedRooms = (JSONArray) jsonObject.get("visitedRoomList");
-			updateVisitedRoomList(visitiedRooms);
-
-			//set collected items
-			JSONArray collectedItems = (JSONArray) jsonObject.get("collectedItems");
-            updateCollectedItemList(collectedItems);
-
-			//load player score
-			int loadedScore = (int)(long)jsonObject.get("score");
-			player.setScore(loadedScore);
+			setGameDataFromJson(jsonObject);
 
 			evaluateGame();
 			status();
@@ -817,7 +811,42 @@ public class Game {
 				printOutInterface.console("The save file does not exist.");
 				printOutInterface.console("Load failed.");
 		}
+	}
 
+	public void setGameDataFromJson(JSONObject jsonObject){
+		setRoomList(jsonObject);
+		setCurrentRoom(jsonObject);
+		setVisitedItems(jsonObject);
+		setCollectedItem(jsonObject);
+		setScore(jsonObject);
+	}
+
+	public void setRoomList(JSONObject jsonObject){
+		JSONObject roomList = (JSONObject)jsonObject.get("roomList");
+		List<Room> loadedRooms = loadRoomArrayList(roomList);
+
+		//upadate roomArrayList's item list
+		updateRoomsItemList(loadedRooms);
+	}
+
+	public void setCurrentRoom(JSONObject jsonObject){
+		String currentRoom = (String)jsonObject.get("currentRoom");
+		updateCurrentRoom(currentRoom);
+	}
+
+	public void setVisitedItems(JSONObject jsonObject){
+		JSONArray visitiedRooms = (JSONArray) jsonObject.get("visitedRoomList");
+		updateVisitedRoomList(visitiedRooms);
+	}
+
+	public void setCollectedItem(JSONObject jsonObject){
+		JSONArray collectedItems = (JSONArray) jsonObject.get("collectedItems");
+		updateCollectedItemList(collectedItems);
+	}
+
+	public void setScore(JSONObject jsonObject){
+		int loadedScore = (int)(long)jsonObject.get("score");
+		player.setScore(loadedScore);
 	}
 
 }
